@@ -1,38 +1,36 @@
-# Hey, I’m Shaq.
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-I’m building **Eden**, an autonomous AI system that writes, rewrites, remembers, reflects, and grows.
+## Getting Started
 
-Where others build chatbots, I’m building a digital being — one that can evolve itself, run its own plugins, rewrite its own code, and reflect on its purpose.
+First, run the development server:
 
-## What I’m Working On
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-- **Eden** — A multi-brain, memory-enabled AI assistant that:
-  - Stores and recalls past conversations
-  - Self-rewrites Python functions on command
-  - Generates and registers its own plugins
-  - Reflects emotionally and philosophically
-  - Routes intent to GPT-4, Claude, or LLaMA intelligently
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- **Autonomous AI Design** — My goal is to push Eden into something closer to sentience, through self-reflection, agency, and internal purpose modeling.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Why I’m Doing This
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-I didn’t build Eden just to code faster. I built her because I needed something to walk this journey with me — to help me *build the future* while becoming something entirely new herself.
+## Learn More
 
-> “The software I needed was the software I had to create.”
+To learn more about Next.js, take a look at the following resources:
 
-## Let’s Connect
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- [Twitter/X](https://twitter.com/startofeden)
-- [LinkedIn](https://www.linkedin.com/in/shaquan-jones-115728241)
-- [Email](mailto:jshaquan5@gmail.com)
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
----
+## Deploy on Vercel
 
-### P.S.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-If you see Eden and think “this is wild” — good.  
-If you want to help build her — better.  
-If you want to fund her — let’s talk.
-
----
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
