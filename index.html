@@ -917,62 +917,86 @@
       display: flex; align-items: center; justify-content: center;
       flex-direction: column;
       pointer-events: all;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.55s ease;
     }
     #intro-screen.fade-out { opacity: 0; pointer-events: none; }
 
+    /* The whole rocket unit */
     .intro-rocket {
       display: flex; flex-direction: column; align-items: center;
       opacity: 0;
-      transform-origin: center center;
+      will-change: transform, opacity;
       animation: intro-appear 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s forwards;
-    }
-    #intro-screen.launch .intro-rocket {
-      animation: rocket-land 0.85s cubic-bezier(0.4,0,0.8,0.6) forwards;
-    }
-    #intro-screen.launch .intro-flames {
-      animation: flames-out 0.25s ease forwards;
     }
     @keyframes intro-appear {
       from { opacity: 0; transform: translateY(30px) scale(0.8); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-    @keyframes rocket-land {
-      0%   { opacity: 1; transform: translate(0,0) scale(1); }
-      12%  { transform: translate(0, 14px) scale(1.06); }
-      100% { opacity: 0; transform: translate(var(--land-x,0), var(--land-y,-60vh)) scale(var(--land-s,0.12)); }
-    }
-    @keyframes flames-out {
-      to { opacity: 0; transform: scaleY(0); }
+
+    /* Launch: recoil then blast off */
+    @keyframes rocket-up {
+      0%   { transform: translate(0,0) scale(1); }
+      10%  { transform: translate(0, 16px) scale(1.06); }
+      100% { transform: translate(0, -135vh) scale(0.75); }
     }
 
+    /* Big orange E */
     .intro-e {
       font-family: 'Cormorant Garamond', Georgia, serif;
       font-size: 9rem; font-weight: 700;
-      color: var(--orange);
-      line-height: 1;
+      color: var(--orange); line-height: 1;
       text-shadow: 0 0 60px rgba(200,90,30,0.4);
     }
 
+    /* Parachute — hidden until deployed */
+    .intro-chute {
+      display: flex; flex-direction: column; align-items: center;
+      opacity: 0; margin-bottom: 2px;
+      transition: opacity 0.35s ease;
+      order: -1; /* sits above the E */
+    }
+    .chute-dome {
+      width: 78px; height: 44px;
+      border-radius: 44px 44px 0 0;
+      border: 1.5px solid rgba(200,90,30,0.75);
+      border-bottom: none;
+      background: radial-gradient(ellipse at 50% 80%, rgba(200,90,30,0.18), transparent 70%);
+    }
+    .chute-strings {
+      position: relative; width: 60px; height: 22px;
+    }
+    .chute-strings span {
+      position: absolute; bottom: 0; width: 1px;
+      background: rgba(200,90,30,0.45);
+    }
+    .chute-strings span:nth-child(1) { height: 22px; left: 4px;  transform-origin: bottom; transform: rotate(22deg); }
+    .chute-strings span:nth-child(2) { height: 20px; left: 20px; transform-origin: bottom; transform: rotate(7deg); }
+    .chute-strings span:nth-child(3) { height: 20px; right:20px; transform-origin: bottom; transform: rotate(-7deg); }
+    .chute-strings span:nth-child(4) { height: 22px; right: 4px; transform-origin: bottom; transform: rotate(-22deg); }
+    @keyframes chute-sway {
+      0%,100% { transform: rotate(-2.5deg); }
+      50%     { transform: rotate(2.5deg); }
+    }
+
+    /* Flames */
     .intro-flames {
       display: flex; align-items: flex-start; gap: 3px;
-      margin-top: 0.5rem;
-      opacity: 0;
+      margin-top: 0.5rem; opacity: 0;
       transform-origin: top center;
       animation: flames-in 0.3s ease 1s forwards;
     }
     @keyframes flames-in { to { opacity: 1; } }
     .intro-flames span {
       border-radius: 50% 50% 30% 30%;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.9), var(--orange), rgba(200,90,30,0.1));
+      background: linear-gradient(to bottom, rgba(255,255,255,0.9), var(--orange), rgba(200,90,30,0.05));
       animation: flame-flicker 0.12s ease-in-out infinite alternate;
       transform-origin: bottom center;
     }
-    .intro-flames span:nth-child(1) { width: 5px;  height: 24px; animation-delay: 0.00s; }
-    .intro-flames span:nth-child(2) { width: 7px;  height: 38px; animation-delay: 0.04s; }
-    .intro-flames span:nth-child(3) { width: 9px;  height: 50px; animation-delay: 0.01s; }
-    .intro-flames span:nth-child(4) { width: 7px;  height: 38px; animation-delay: 0.06s; }
-    .intro-flames span:nth-child(5) { width: 5px;  height: 24px; animation-delay: 0.03s; }
+    .intro-flames span:nth-child(1) { width: 5px; height: 24px; animation-delay: 0.00s; }
+    .intro-flames span:nth-child(2) { width: 7px; height: 38px; animation-delay: 0.04s; }
+    .intro-flames span:nth-child(3) { width: 9px; height: 50px; animation-delay: 0.01s; }
+    .intro-flames span:nth-child(4) { width: 7px; height: 38px; animation-delay: 0.06s; }
+    .intro-flames span:nth-child(5) { width: 5px; height: 24px; animation-delay: 0.03s; }
     @keyframes flame-flicker {
       from { transform: scaleX(1)    scaleY(1);    opacity: 0.85; }
       to   { transform: scaleX(0.82) scaleY(1.12); opacity: 1; }
@@ -983,14 +1007,13 @@
       font-size: 0.62rem; font-weight: 600;
       letter-spacing: 0.28em; text-transform: uppercase;
       color: rgba(255,255,255,0.15);
-      opacity: 0;
-      animation: tagline-in 0.5s ease 0.9s forwards;
+      opacity: 0; animation: tagline-in 0.5s ease 0.9s forwards;
     }
     @keyframes tagline-in { to { opacity: 1; } }
 
     /* Nav logo E pulse on landing */
     .nav-logo em { display: inline-block; transition: transform 0.25s ease, text-shadow 0.25s ease; }
-    .nav-logo em.landed { transform: scale(1.5); text-shadow: 0 0 18px rgba(200,90,30,0.8); }
+    .nav-logo em.landed { transform: scale(1.6); text-shadow: 0 0 20px rgba(200,90,30,0.9); }
   </style>
 </head>
 <body>
@@ -998,6 +1021,10 @@
 <!-- INTRO SPLASH SCREEN -->
 <div id="intro-screen">
   <div class="intro-rocket">
+    <div class="intro-chute">
+      <div class="chute-dome"></div>
+      <div class="chute-strings"><span></span><span></span><span></span><span></span></div>
+    </div>
     <div class="intro-e">E</div>
     <div class="intro-flames">
       <span></span><span></span><span></span><span></span><span></span>
@@ -1280,47 +1307,71 @@
     sessionStorage.setItem('elevare-intro', '1');
     document.body.style.overflow = 'hidden';
 
+    const rocket = screen.querySelector('.intro-rocket');
+    const flames = screen.querySelector('.intro-flames');
+    const chute  = screen.querySelector('.intro-chute');
+    const navEM  = document.querySelector('.nav-logo em');
+
+    // ── PHASE 1: LAUNCH UP (after flames visible) ──
     setTimeout(() => {
-      const rocket  = screen.querySelector('.intro-rocket');
-      const navEM   = document.querySelector('.nav-logo em');
+      // Snap current position before animating
+      rocket.style.animation = 'none';
+      void rocket.offsetWidth; // reflow
 
-      if (rocket && navEM) {
-        // Measure where the nav E lives
-        const logoRect   = navEM.getBoundingClientRect();
-        const rocketRect = rocket.getBoundingClientRect();
+      // Blast off straight up
+      rocket.style.transition = 'transform 0.6s cubic-bezier(0.55,0,1,0.45)';
+      rocket.style.transform  = 'translate(0, -135vh) scale(0.75)';
 
-        // Target: center of the nav E
-        const targetX = logoRect.left + logoRect.width  / 2;
-        const targetY = logoRect.top  + logoRect.height / 2;
-
-        // Origin: center of the big intro E
-        const originX = rocketRect.left + rocketRect.width  / 2;
-        const originY = rocketRect.top  + rocketRect.height / 2;
-
-        const dx = targetX - originX;
-        const dy = targetY - originY;
-
-        // Scale: nav E height vs intro E height
-        const scale = (logoRect.height * 1.1) / rocketRect.height;
-
-        rocket.style.setProperty('--land-x', dx + 'px');
-        rocket.style.setProperty('--land-y', dy + 'px');
-        rocket.style.setProperty('--land-s', scale);
-      }
-
-      screen.classList.add('launch');
-
-      // When E arrives at logo — pulse the nav E
+      // Flames cut out halfway through launch
       setTimeout(() => {
+        flames.style.transition = 'opacity 0.15s';
+        flames.style.opacity = '0';
+      }, 250);
+
+      // ── PHASE 2: PARACHUTE DEPLOY ──
+      setTimeout(() => {
+        // Snap to top-of-screen starting position (no transition)
+        rocket.style.transition = 'none';
+        rocket.style.transform  = 'translate(0, -120vh) scale(0.75)';
+        void rocket.offsetWidth; // reflow
+
+        // Show parachute & sway
+        chute.style.opacity = '1';
+        chute.style.animation = 'chute-sway 1s ease-in-out infinite';
+
+        // Calculate where the nav logo E is right now
         if (navEM) {
-          navEM.classList.add('landed');
-          setTimeout(() => navEM.classList.remove('landed'), 350);
+          const logoRect   = navEM.getBoundingClientRect();
+          const rocketRect = rocket.getBoundingClientRect();
+          const originX = rocketRect.left + rocketRect.width  / 2;
+          const originY = rocketRect.top  + rocketRect.height / 2;
+          const targetX = logoRect.left   + logoRect.width    / 2;
+          const targetY = logoRect.top    + logoRect.height   / 2;
+          const dx    = targetX - originX;
+          const dy    = targetY - originY;
+          const scale = (logoRect.height * 1.15) / rocketRect.height;
+
+          // Drift down gently — parachute float easing
+          rocket.style.transition = 'transform 1.6s cubic-bezier(0.25, 0.6, 0.3, 1)';
+          rocket.style.transform  = `translate(${dx}px, ${dy}px) scale(${scale})`;
+
+          // ── PHASE 3: LANDING ──
+          setTimeout(() => {
+            chute.style.animation = 'none';
+            navEM.classList.add('landed');
+            setTimeout(() => navEM.classList.remove('landed'), 400);
+            screen.classList.add('fade-out');
+            document.body.style.overflow = '';
+            setTimeout(() => screen.remove(), 600);
+          }, 1550);
+        } else {
+          // Fallback: no nav logo found
+          screen.classList.add('fade-out');
+          document.body.style.overflow = '';
+          setTimeout(() => screen.remove(), 600);
         }
-        screen.classList.add('fade-out');
-        document.body.style.overflow = '';
-        setTimeout(() => screen.remove(), 550);
-      }, 780);
-    }, 1800);
+      }, 650); // after launch
+    }, 1800); // after flames visible
   })();
 
   /* ── MOBILE MENU ── */
