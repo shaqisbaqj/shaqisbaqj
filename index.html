@@ -39,7 +39,6 @@
     }
 
     .container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
-
     section { padding: 6rem 0; }
 
     h1, h2, h3 {
@@ -76,666 +75,471 @@
 
     .btn-black  { background: var(--black); color: var(--white); }
     .btn-black:hover { background: var(--charcoal); }
-
     .btn-orange { background: var(--orange); color: var(--white); }
     .btn-orange:hover { background: var(--orange-deep); }
-
     .btn-outline { background: transparent; color: var(--black); border: 1px solid var(--black); }
     .btn-outline:hover { background: var(--black); color: var(--white); }
-
     .btn-outline-white { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.4); }
     .btn-outline-white:hover { border-color: var(--white); }
 
-    /* ─── NAV ─── */
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0;
       z-index: 1000;
       background: var(--white);
       border-bottom: 1px solid var(--border);
     }
-
     .nav-inner {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      max-width: 1160px; margin: 0 auto; padding: 0 2rem;
+      height: 68px; display: flex; align-items: center; justify-content: space-between;
     }
-
-    .nav-logo {
-      font-family: var(--serif);
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: var(--black);
-      text-decoration: none;
-    }
+    .nav-logo { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; letter-spacing: 0.1em; color: var(--black); text-decoration: none; }
     .nav-logo em { color: var(--orange); font-style: normal; }
-
     .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
-    .nav-links a {
-      font-size: 0.76rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--mid);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
+    .nav-links a { font-size: 0.76rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.15s; }
     .nav-links a:hover { color: var(--black); }
-
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
     .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--black); }
-
-    .mobile-menu {
-      display: none;
-      position: fixed; top: 68px; left: 0; right: 0;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 1.5rem 2rem 2rem;
-      z-index: 999;
-    }
+    .mobile-menu { display: none; position: fixed; top: 68px; left: 0; right: 0; background: var(--white); border-bottom: 1px solid var(--border); padding: 1.5rem 2rem 2rem; z-index: 999; }
     .mobile-menu.open { display: block; }
-    .mobile-menu a {
-      display: block;
-      padding: 0.8rem 0;
-      font-size: 0.82rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--mid);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border);
-    }
+    .mobile-menu a { display: block; padding: 0.8rem 0; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); text-decoration: none; border-bottom: 1px solid var(--border); }
     .mobile-menu .btn { display: block; text-align: center; margin-top: 1.5rem; }
+    @media (max-width: 860px) { .nav-links, nav .btn { display: none; } .hamburger { display: flex; } }
 
-    @media (max-width: 860px) {
-      .nav-links, nav > .nav-inner > .btn { display: none; }
-      .hamburger { display: flex; }
-    }
-
-    /* ─── HERO ─── */
+    /* ── HERO ── */
     #hero {
-      min-height: 100vh;
-      padding-top: 68px;
-      background: var(--black);
-      color: var(--white);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
+      min-height: 100vh; padding-top: 68px;
+      background: var(--black); color: var(--white);
+      display: grid; grid-template-columns: 1fr 1fr;
+      position: relative; overflow: hidden;
     }
 
-    .hero-accent {
-      position: absolute;
-      top: 0; right: 0;
-      width: 38%;
-      height: 100%;
-      background: var(--orange);
-      clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
-      opacity: 0.06;
-      pointer-events: none;
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 5rem 3rem 4rem 2rem;
+      max-width: 640px;
     }
 
-    .hero-content {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 4rem 2rem 3rem;
+    .hero-right {
+      position: relative; overflow: hidden;
     }
 
-    .hero-tag {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 2.25rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--orange);
+    .hero-right img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
     }
+
+    .hero-right-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, var(--black) 0%, transparent 30%);
+    }
+
+    /* fallback when no image */
+    .hero-right-fallback {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a1a10 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-right-fallback .fb-text {
+      font-family: var(--serif);
+      font-size: 8rem; font-weight: 700;
+      color: rgba(200,90,30,0.1);
+      letter-spacing: 0.05em;
+    }
+
+    .hero-tag { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.25rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); }
     .hero-tag::before { content: ''; display: block; width: 3rem; height: 1px; background: var(--orange); }
 
-    h1.hero-h {
-      font-size: clamp(3rem, 7vw, 5.8rem);
-      font-weight: 600;
-      line-height: 1.03;
-      letter-spacing: -0.02em;
-      max-width: 850px;
-      margin-bottom: 2rem;
-      color: var(--white);
-    }
-
+    h1.hero-h { font-size: clamp(2.8rem, 5.5vw, 5rem); font-weight: 600; line-height: 1.03; letter-spacing: -0.02em; margin-bottom: 2rem; color: var(--white); }
     h1.hero-h em { font-style: italic; color: var(--orange); }
 
-    .hero-sub {
-      font-size: 1rem;
-      font-weight: 300;
-      color: rgba(255,255,255,0.5);
-      max-width: 520px;
-      line-height: 1.85;
-      margin-bottom: 3rem;
-    }
+    .hero-sub { font-size: 1rem; font-weight: 300; color: rgba(255,255,255,0.5); max-width: 520px; line-height: 1.85; margin-bottom: 3rem; }
 
-    .hero-btns { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 5rem; }
-
-    .hero-ghost {
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.07em;
-      color: rgba(255,255,255,0.35);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+    .hero-btns { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 4rem; }
+    .hero-ghost { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.07em; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
     .hero-ghost:hover { color: rgba(255,255,255,0.65); }
 
-    .stats-row {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 3rem;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+    .stats-row { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2.5rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .stat-n { font-family: var(--serif); font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 600; color: var(--orange); line-height: 1; margin-bottom: 0.3rem; }
+    .stat-l { font-size: 0.72rem; color: rgba(255,255,255,0.35); line-height: 1.4; }
+
+    @media (max-width: 860px) {
+      #hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 4rem 2rem 3rem; max-width: 100%; }
+      .hero-right { height: 300px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
     }
 
-    .stat { padding-right: 2.5rem; border-right: 1px solid rgba(255,255,255,0.07); }
-    .stat:last-child { border-right: none; }
-    .stat:not(:first-child) { padding-left: 2.5rem; }
-
-    .stat-n {
-      font-family: var(--serif);
-      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-      font-weight: 600;
-      color: var(--orange);
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-
-    .stat-l { font-size: 0.75rem; color: rgba(255,255,255,0.35); line-height: 1.4; }
-
-    @media (max-width: 700px) {
-      .stats-row { grid-template-columns: 1fr 1fr; gap: 2rem 0; padding-top: 2rem; }
-      .stat { border-right: none !important; padding: 0 !important; }
-    }
-
-    /* ─── TAGLINE BAND ─── */
-    #tagline {
-      padding: 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .tagline-inner {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      min-height: 280px;
-    }
-
-    .tagline-left {
-      background: var(--orange);
-      padding: 3.5rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .tagline-left-text {
-      font-family: var(--serif);
-      font-size: clamp(1.5rem, 2.5vw, 2rem);
-      font-weight: 600;
-      font-style: italic;
-      color: var(--white);
-      line-height: 1.4;
-    }
-
-    .tagline-right {
-      background: var(--off-white);
-      padding: 3.5rem 4rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .tagline-right p {
-      font-size: 1rem;
-      color: var(--mid);
-      line-height: 1.85;
-      margin-bottom: 1rem;
-    }
-
+    /* ── TAGLINE BAND ── */
+    #tagline { padding: 0; border-bottom: 1px solid var(--border); }
+    .tagline-inner { display: grid; grid-template-columns: 1fr 2fr; min-height: 260px; }
+    .tagline-left { background: var(--orange); padding: 3.5rem; display: flex; align-items: center; }
+    .tagline-left-text { font-family: var(--serif); font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 600; font-style: italic; color: var(--white); line-height: 1.4; }
+    .tagline-right { background: var(--off-white); padding: 3.5rem 4rem; display: flex; flex-direction: column; justify-content: center; }
+    .tagline-right p { font-size: 1rem; color: var(--mid); line-height: 1.85; margin-bottom: 1rem; }
     @media (max-width: 700px) {
       .tagline-inner { grid-template-columns: 1fr; }
-      .tagline-left { padding: 2.5rem 2rem; }
-      .tagline-right { padding: 2.5rem 2rem; }
+      .tagline-left, .tagline-right { padding: 2.5rem 2rem; }
     }
 
-    /* ─── CLIENTS ─── */
-    #clients {
-      padding: 3rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
+    /* ── CLIENTS ── */
+    #clients { padding: 3rem 0; border-bottom: 1px solid var(--border); }
     .clients-row { display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; }
     .clients-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-gray); flex-shrink: 0; }
     .client-name { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-gray); }
 
-    /* ─── PROBLEM ─── */
+    /* ── PROBLEM ── */
     #problem { background: var(--white); }
-
     .problem-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-
     .problem-left h2 { font-size: clamp(2rem, 3.5vw, 2.9rem); color: var(--black); margin-bottom: 1.75rem; }
     .problem-left p { font-size: 0.975rem; color: var(--mid); line-height: 1.85; margin-bottom: 1rem; }
-
-    .cost-block {
-      margin: 2rem 0;
-      padding: 1.75rem;
-      background: var(--orange-pale);
-      border-left: 3px solid var(--orange);
-    }
-
+    .cost-block { margin: 2rem 0; padding: 1.75rem; background: var(--orange-pale); border-left: 3px solid var(--orange); }
     .cost-n { font-family: var(--serif); font-size: 3rem; font-weight: 600; color: var(--orange); line-height: 1; }
     .cost-l { font-size: 0.82rem; color: var(--mid); margin-top: 0.35rem; line-height: 1.5; }
-
     .problem-list { display: flex; flex-direction: column; }
-
-    .p-item {
-      padding: 1.75rem 0;
-      border-bottom: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 2rem 1fr;
-      gap: 1.25rem;
-    }
+    .p-item { padding: 1.75rem 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 2rem 1fr; gap: 1.25rem; }
     .p-item:first-child { border-top: 1px solid var(--border); }
-
     .p-num { font-family: var(--serif); font-size: 0.85rem; font-weight: 600; color: var(--orange); padding-top: 0.1rem; }
-
     .p-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--black); margin-bottom: 0.5rem; }
     .p-body { font-size: 0.875rem; color: var(--gray); line-height: 1.75; }
-
     @media (max-width: 860px) { .problem-layout { grid-template-columns: 1fr; gap: 3rem; } }
 
-    /* ─── CORE ─── */
-    #core { background: var(--black); color: var(--white); }
+    /* ── IN-SESSION PHOTO BAND ── */
+    #session-band {
+      padding: 0;
+      background: var(--off-white);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .session-band-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .session-photo {
+      overflow: hidden;
+      height: 420px;
+    }
+    .session-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      display: block;
+    }
+    .session-photo-fallback {
+      width: 100%; height: 100%;
+      background: #e8e4df;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .session-photo-fallback span {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--light-gray);
+    }
+    .session-caption {
+      padding: 3.5rem;
+      display: flex; flex-direction: column; justify-content: center;
+      background: var(--white);
+    }
+    .session-caption h3 { font-family: var(--serif); font-size: 1.75rem; font-weight: 600; color: var(--black); margin-bottom: 1rem; line-height: 1.2; }
+    .session-caption p { font-size: 0.925rem; color: var(--mid); line-height: 1.85; margin-bottom: 1.5rem; }
+    @media (max-width: 700px) {
+      .session-band-inner { grid-template-columns: 1fr; }
+      .session-photo { height: 280px; }
+      .session-caption { padding: 2.5rem 2rem; }
+    }
 
+    /* ── CORE ── */
+    #core { background: var(--black); color: var(--white); }
     .core-top { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem; }
     .core-top h2 { font-size: clamp(2rem, 3.5vw, 2.9rem); color: var(--white); max-width: 600px; }
     .core-top p { font-size: 0.9rem; color: rgba(255,255,255,0.45); max-width: 360px; line-height: 1.8; }
-
     .core-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.07); }
-
-    .c-pillar {
-      background: var(--black);
-      padding: 2.75rem 2rem;
-      transition: background 0.2s;
-    }
+    .c-pillar { background: var(--black); padding: 2.75rem 2rem; transition: background 0.2s; }
     .c-pillar:hover { background: #181818; }
-
     .c-letter { font-family: var(--serif); font-size: 4rem; font-weight: 600; color: var(--orange); line-height: 1; margin-bottom: 0.75rem; opacity: 0.85; }
     .c-word { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 1.25rem; }
     .c-body { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.8; }
-
     @media (max-width: 860px) { .core-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 480px) { .core-grid { grid-template-columns: 1fr; } }
 
-    /* ─── PROOF ─── */
+    /* ── PROOF ── */
     #proof { background: var(--off-white); }
-
     .proof-head { margin-bottom: 3.5rem; }
     .proof-head h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); color: var(--black); }
-
     .t-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-
     .t-card { background: var(--white); border: 1px solid var(--border); padding: 3rem; }
-
-    .t-body {
-      font-family: var(--serif);
-      font-size: 1.1rem;
-      font-style: italic;
-      line-height: 1.75;
-      color: var(--charcoal);
-      margin-bottom: 2rem;
-    }
-
+    .t-body { font-family: var(--serif); font-size: 1.1rem; font-style: italic; line-height: 1.75; color: var(--charcoal); margin-bottom: 2rem; }
     .t-bar { width: 2rem; height: 2px; background: var(--orange); margin-bottom: 1.25rem; }
     .t-name { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); margin-bottom: 0.2rem; }
     .t-role { font-size: 0.78rem; color: var(--gray); }
-
     @media (max-width: 700px) { .t-grid { grid-template-columns: 1fr; } }
 
-    /* ─── SERVICES ─── */
+    /* ── SERVICES ── */
     #engage { background: var(--white); }
-
     .engage-top { max-width: 580px; margin-bottom: 4rem; }
     .engage-top h2 { font-size: clamp(2rem, 3.5vw, 2.9rem); color: var(--black); margin-bottom: 1rem; }
     .engage-top p { font-size: 0.95rem; color: var(--mid); line-height: 1.8; }
 
-    .p-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 1.5px; background: var(--border); margin-bottom: 1.5px; }
-
-    .p-card {
-      background: var(--white);
-      padding: 2.75rem;
-      display: flex;
-      flex-direction: column;
+    .p-card-single {
+      border: 1px solid var(--border);
+      background: var(--black);
+      color: var(--white);
+      padding: 3rem;
+      margin-bottom: 1.5rem;
     }
-    .p-card.invert { background: var(--black); color: var(--white); }
-
-    .p-tag {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.7rem;
-      display: inline-block;
-      align-self: flex-start;
-      margin-bottom: 1.75rem;
-    }
-    .p-tag-o { background: var(--orange); color: var(--white); }
+    .p-card-single .p-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.3rem 0.7rem; display: inline-block; margin-bottom: 1.75rem; }
     .p-tag-b { border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.45); }
-    .p-tag-g { border: 1px solid var(--border); color: var(--gray); }
-
     .p-name { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin-bottom: 0.25rem; }
-    .p-price { font-family: var(--serif); font-size: 2.2rem; font-weight: 600; color: var(--orange); line-height: 1; margin-bottom: 0.25rem; }
-    .p-note { font-size: 0.78rem; color: var(--gray); font-style: italic; margin-bottom: 1.5rem; }
-    .p-card.invert .p-note { color: rgba(255,255,255,0.3); }
+    .p-tagline { font-size: 0.875rem; color: rgba(255,255,255,0.4); font-style: italic; margin-bottom: 1.5rem; }
 
-    .p-desc { font-size: 0.875rem; line-height: 1.8; color: var(--mid); margin-bottom: 1.75rem; flex-grow: 1; }
-    .p-card.invert .p-desc { color: rgba(255,255,255,0.45); }
-
-    .p-list { list-style: none; margin-bottom: 2rem; }
-    .p-list li {
-      font-size: 0.845rem;
-      padding: 0.55rem 0;
-      border-bottom: 1px solid var(--border);
-      color: var(--mid);
-      display: flex;
-      gap: 0.75rem;
-      align-items: baseline;
-    }
-    .p-card.invert .p-list li { border-bottom-color: rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); }
-    .p-list li::before { content: '—'; color: var(--orange); flex-shrink: 0; font-size: 0.7rem; }
-
-    /* Retainer tabs */
-    .r-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.5rem; }
-    .r-tab {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 0.6rem 1.1rem; cursor: pointer; color: rgba(255,255,255,0.3);
-      border-bottom: 2px solid transparent; transition: all 0.2s; user-select: none;
-    }
+    .r-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.75rem; }
+    .r-tab { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.6rem 1.25rem; cursor: pointer; color: rgba(255,255,255,0.3); border-bottom: 2px solid transparent; transition: all 0.2s; user-select: none; }
     .r-tab.on { color: var(--orange); border-bottom-color: var(--orange); }
-
     .r-panel { display: none; }
     .r-panel.on { display: block; }
-
-    .r-price { font-family: var(--serif); font-size: 2rem; font-weight: 600; color: var(--orange); margin-bottom: 0.25rem; }
-    .r-ideal { font-size: 0.77rem; color: rgba(255,255,255,0.3); font-style: italic; margin-bottom: 1.25rem; line-height: 1.5; }
-    .r-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem 1.25rem; }
+    .r-price { font-family: var(--serif); font-size: 2.2rem; font-weight: 600; color: var(--orange); margin-bottom: 0.25rem; }
+    .r-ideal { font-size: 0.77rem; color: rgba(255,255,255,0.3); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+    .r-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem 1.5rem; margin-bottom: 2rem; }
     .r-list li { font-size: 0.8rem; color: rgba(255,255,255,0.48); padding-left: 1rem; position: relative; line-height: 1.5; }
     .r-list li::before { content: '—'; position: absolute; left: 0; color: var(--orange); font-size: 0.65rem; }
+    @media (max-width: 600px) { .r-list { grid-template-columns: 1fr; } }
 
     /* Enterprise */
-    .ent-card {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 1px solid var(--border);
-    }
+    .ent-card { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); }
     .ent-l { padding: 3rem; }
     .ent-r { padding: 3rem; background: var(--off-white); border-left: 1px solid var(--border); }
     .ent-name { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; color: var(--black); margin-bottom: 0.5rem; }
     .ent-sub { font-size: 0.875rem; font-style: italic; color: var(--gray); margin-bottom: 1.25rem; line-height: 1.6; }
     .ent-p { font-size: 0.9rem; color: var(--mid); line-height: 1.8; margin-bottom: 1.75rem; }
+    .p-tag-g { border: 1px solid var(--border); color: var(--gray); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.3rem 0.7rem; display: inline-block; margin-bottom: 1.5rem; }
     .ent-list { list-style: none; }
     .ent-list li { font-size: 0.85rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border); color: var(--mid); display: flex; gap: 0.75rem; }
     .ent-list li::before { content: '—'; color: var(--orange); flex-shrink: 0; font-size: 0.7rem; }
-
     @media (max-width: 860px) {
-      .p-grid { grid-template-columns: 1fr; }
       .ent-card { grid-template-columns: 1fr; }
       .ent-r { border-left: none; border-top: 1px solid var(--border); }
-      .r-list { grid-template-columns: 1fr; }
     }
 
-    /* ─── CERTIFICATIONS ─── */
-    #certs { background: var(--black); color: var(--white); }
+    /* ── OTHER OFFERINGS ── */
+    #offerings { background: var(--off-white); border-top: 1px solid var(--border); }
+    .offerings-top { max-width: 580px; margin-bottom: 4rem; }
+    .offerings-top h2 { font-size: clamp(2rem, 3.5vw, 2.9rem); color: var(--black); margin-bottom: 1rem; }
+    .offerings-top p { font-size: 0.95rem; color: var(--mid); line-height: 1.8; }
+    .offerings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .offering-card { background: var(--white); border: 1px solid var(--border); padding: 2.25rem; display: flex; flex-direction: column; gap: 1rem; transition: border-color 0.2s; }
+    .offering-card:hover { border-color: var(--orange); }
+    .offering-icon { width: 44px; height: 44px; border: 1px solid rgba(200,90,30,0.3); display: flex; align-items: center; justify-content: center; }
+    .offering-icon svg { width: 18px; height: 18px; stroke: var(--orange); fill: none; stroke-width: 1.5; }
+    .offering-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--black); line-height: 1.3; }
+    .offering-desc { font-size: 0.845rem; color: var(--gray); line-height: 1.75; flex-grow: 1; }
+    .offering-link { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange); text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: gap 0.2s; }
+    .offering-link:hover { gap: 0.7rem; }
+    @media (max-width: 760px) { .offerings-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .offerings-grid { grid-template-columns: 1fr; } }
 
+    /* ── CERTIFICATIONS ── */
+    #certs { background: var(--black); color: var(--white); }
     .certs-top { max-width: 580px; margin-bottom: 4rem; }
     .certs-top h2 { font-size: clamp(2rem, 3.5vw, 2.8rem); color: var(--white); margin-bottom: 0.75rem; }
     .certs-top p { font-size: 0.95rem; color: rgba(255,255,255,0.45); line-height: 1.75; }
-
     .certs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: rgba(255,255,255,0.06); }
-
-    .cert-item {
-      background: var(--black);
-      padding: 2.75rem 2.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-      transition: background 0.2s;
-    }
+    .cert-item { background: var(--black); padding: 2.75rem 2.25rem; display: flex; flex-direction: column; gap: 1.1rem; transition: background 0.2s; }
     .cert-item:hover { background: #171717; }
-
-    .cert-badge {
-      width: 48px;
-      height: 48px;
-      border: 1.5px solid rgba(200,90,30,0.4);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    .cert-badge { width: 48px; height: 48px; border: 1.5px solid rgba(200,90,30,0.35); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .cert-badge svg { width: 20px; height: 20px; stroke: var(--orange); fill: none; stroke-width: 1.5; }
-
     .cert-issuer { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); }
     .cert-name { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--white); line-height: 1.3; }
     .cert-desc { font-size: 0.845rem; color: rgba(255,255,255,0.4); line-height: 1.75; }
-
-    .certs-note {
-      margin-top: 3rem;
-      padding-top: 2.5rem;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
+    .certs-note { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
     .certs-note p { font-size: 0.85rem; color: rgba(255,255,255,0.35); line-height: 1.6; max-width: 560px; }
-
+    /* Cert image row */
+    .certs-images { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px; background: rgba(255,255,255,0.06); margin-top: 3rem; }
+    .cert-img-slot { background: var(--black); aspect-ratio: 3/4; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
+    .cert-img-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cert-img-placeholder { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 2rem; text-align: center; }
+    .cert-img-placeholder svg { width: 28px; height: 28px; stroke: rgba(255,255,255,0.15); fill: none; stroke-width: 1.5; }
+    .cert-img-placeholder span { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.15); }
     @media (max-width: 760px) { .certs-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 480px) { .certs-grid { grid-template-columns: 1fr; } }
 
-    /* ─── LIFT ─── */
+    /* ── LIFT ── */
     #lift { background: var(--off-white); }
-
     .lift-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 6rem; align-items: start; }
-
     .lift-content h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--black); margin-bottom: 1rem; }
     .lift-content p { font-size: 0.95rem; color: var(--mid); line-height: 1.85; margin-bottom: 1rem; }
-
     .lift-list { list-style: none; margin: 2rem 0; }
-    .lift-list li {
-      font-size: 0.875rem; color: var(--mid); padding: 0.7rem 0;
-      border-bottom: 1px solid var(--border);
-      display: flex; gap: 0.75rem; align-items: baseline; line-height: 1.5;
-    }
+    .lift-list li { font-size: 0.875rem; color: var(--mid); padding: 0.7rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem; align-items: baseline; line-height: 1.5; }
     .lift-list li:first-child { border-top: 1px solid var(--border); }
     .lift-list li::before { content: '—'; color: var(--orange); flex-shrink: 0; font-size: 0.7rem; }
-
-    .lift-box {
-      background: var(--white);
-      border: 1px solid var(--border);
-      padding: 2.75rem;
-      position: sticky;
-      top: 86px;
-    }
-
+    .lift-box { background: var(--white); border: 1px solid var(--border); padding: 2.75rem; position: sticky; top: 86px; }
     .lift-price { font-family: var(--serif); font-size: 3rem; font-weight: 600; color: var(--black); line-height: 1; margin-bottom: 0.15rem; }
     .lift-mo { font-size: 0.78rem; color: var(--gray); margin-bottom: 1.75rem; }
+    .lift-who { font-size: 0.875rem; color: var(--mid); line-height: 1.8; padding-top: 1.5rem; border-top: 1px solid var(--border); margin-bottom: 1.75rem; }
+    .lift-quote { font-family: var(--serif); font-style: italic; font-size: 0.95rem; color: var(--charcoal); line-height: 1.7; padding-left: 1.25rem; border-left: 2px solid var(--orange); }
+    @media (max-width: 860px) { .lift-layout { grid-template-columns: 1fr; gap: 3rem; } .lift-box { position: static; } }
 
-    .lift-who {
-      font-size: 0.875rem; color: var(--mid); line-height: 1.8;
-      padding-top: 1.5rem; border-top: 1px solid var(--border); margin-bottom: 1.75rem;
+    /* ── PODCAST ── */
+    #podcast {
+      background: var(--black);
+      color: var(--white);
+      padding: 5rem 0;
     }
 
-    .lift-quote {
-      font-family: var(--serif); font-style: italic; font-size: 0.95rem;
-      color: var(--charcoal); line-height: 1.7;
-      padding-left: 1.25rem; border-left: 2px solid var(--orange);
+    .podcast-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
     }
 
-    @media (max-width: 860px) {
-      .lift-layout { grid-template-columns: 1fr; gap: 3rem; }
-      .lift-box { position: static; }
-    }
-
-    /* ─── PROCESS ─── */
-    #process { background: var(--white); border-top: 1px solid var(--border); }
-
-    .process-head { max-width: 520px; margin-bottom: 4rem; }
-    .process-head h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--black); }
-
-    .steps { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid var(--border); }
-
-    .s-item { padding: 0 2.25rem 0 2rem; border-right: 1px solid var(--border); }
-
-    .s-n { font-family: var(--serif); font-size: 3.5rem; font-weight: 600; color: rgba(200,90,30,0.1); line-height: 1; margin-bottom: 1.25rem; }
-    .s-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--black); margin-bottom: 0.75rem; }
-    .s-body { font-size: 0.845rem; color: var(--gray); line-height: 1.75; }
-
-    @media (max-width: 860px) {
-      .steps { grid-template-columns: 1fr 1fr; border: none; }
-      .s-item { border: none; border-bottom: 1px solid var(--border); padding: 2rem 0; }
-    }
-    @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
-
-    /* ─── ABOUT ─── */
-    #about { background: var(--off-white); }
-
-    .about-layout { display: grid; grid-template-columns: 1fr 1.7fr; gap: 7rem; align-items: center; }
-
-    .about-photo {
-      background: var(--white);
-      border: 1px solid var(--border);
-      aspect-ratio: 3/4;
+    .podcast-visual {
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.06);
+      aspect-ratio: 1/1;
+      max-width: 380px;
       display: flex;
-      align-items: flex-end;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
       position: relative;
       overflow: hidden;
     }
 
-    .about-photo-bg {
+    .podcast-visual::before {
+      content: '';
       position: absolute;
       inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: radial-gradient(circle at 50% 40%, rgba(200,90,30,0.08) 0%, transparent 70%);
+    }
+
+    .podcast-mic {
+      width: 64px; height: 64px;
+      border: 1.5px solid rgba(200,90,30,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .podcast-mic svg { width: 26px; height: 26px; stroke: var(--orange); fill: none; stroke-width: 1.5; }
+
+    .podcast-coming-soon {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .podcast-title-placeholder {
       font-family: var(--serif);
-      font-size: 12rem;
-      font-weight: 700;
-      color: rgba(0,0,0,0.04);
-      user-select: none;
+      font-size: 1.6rem; font-weight: 600;
+      color: rgba(255,255,255,0.12);
+      text-align: center;
+      line-height: 1.3;
+      padding: 0 2rem;
     }
 
-    .about-plate {
-      width: 100%;
+    .podcast-content h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--white); margin-bottom: 1.25rem; }
+    .podcast-content p { font-size: 0.95rem; color: rgba(255,255,255,0.48); line-height: 1.85; margin-bottom: 1rem; }
+
+    .podcast-notify {
+      display: flex;
+      gap: 0;
+      margin-top: 2rem;
+      max-width: 420px;
+    }
+    .podcast-notify input {
+      flex: 1;
+      padding: 0.875rem 1.25rem;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-right: none;
+      color: var(--white);
+      outline: none;
+    }
+    .podcast-notify input::placeholder { color: rgba(255,255,255,0.3); }
+    .podcast-notify input:focus { border-color: rgba(200,90,30,0.5); }
+    .podcast-notify button {
+      padding: 0.875rem 1.5rem;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       background: var(--orange);
-      padding: 1.5rem 2rem;
-      position: relative;
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .podcast-notify button:hover { background: var(--orange-deep); }
+
+    .podcast-details {
+      margin-top: 2rem;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .podcast-detail { }
+    .podcast-detail-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 0.3rem; }
+    .podcast-detail-val { font-family: var(--serif); font-size: 1rem; font-weight: 500; color: rgba(255,255,255,0.6); }
+
+    @media (max-width: 760px) {
+      .podcast-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .podcast-visual { max-width: 100%; aspect-ratio: 16/9; }
     }
 
+    /* ── PROCESS ── */
+    #process { background: var(--white); border-top: 1px solid var(--border); }
+    .process-head { max-width: 520px; margin-bottom: 4rem; }
+    .process-head h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--black); }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid var(--border); }
+    .s-item { padding: 0 2.25rem 0 2rem; border-right: 1px solid var(--border); }
+    .s-n { font-family: var(--serif); font-size: 3.5rem; font-weight: 600; color: rgba(200,90,30,0.1); line-height: 1; margin-bottom: 1.25rem; }
+    .s-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--black); margin-bottom: 0.75rem; }
+    .s-body { font-size: 0.845rem; color: var(--gray); line-height: 1.75; }
+    @media (max-width: 860px) { .steps { grid-template-columns: 1fr 1fr; border: none; } .s-item { border: none; border-bottom: 1px solid var(--border); padding: 2rem 0; } }
+    @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+
+    /* ── ABOUT ── */
+    #about { background: var(--off-white); }
+    .about-layout { display: grid; grid-template-columns: 1fr 1.7fr; gap: 7rem; align-items: center; }
+    .about-photo { aspect-ratio: 3/4; display: flex; align-items: flex-end; position: relative; overflow: hidden; background: #e8e4df; }
+    .about-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+    .about-photo-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 12rem; font-weight: 700; color: rgba(0,0,0,0.04); user-select: none; }
+    .about-plate { width: 100%; background: var(--orange); padding: 1.5rem 2rem; position: relative; z-index: 1; }
     .about-pname { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--white); }
     .about-ptitle { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-top: 0.2rem; }
-
     .about-text h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--black); margin-bottom: 1.5rem; }
     .about-text p { font-size: 0.975rem; color: var(--mid); line-height: 1.875; margin-bottom: 1rem; }
-
-    .about-stats {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-      margin: 2.5rem 0;
-      padding: 2rem 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
+    .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2.5rem 0; padding: 2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .as-n { font-family: var(--serif); font-size: 2rem; font-weight: 600; color: var(--black); line-height: 1; margin-bottom: 0.25rem; }
     .as-l { font-size: 0.77rem; color: var(--gray); }
+    @media (max-width: 860px) { .about-layout { grid-template-columns: 1fr; gap: 3rem; } .about-photo { aspect-ratio: 4/3; max-width: 400px; } }
 
-    @media (max-width: 860px) {
-      .about-layout { grid-template-columns: 1fr; gap: 3rem; }
-      .about-photo { aspect-ratio: 4/3; max-width: 400px; }
-    }
-
-    /* ─── CTA ─── */
-    #cta {
-      background: var(--orange);
-      color: var(--white);
-      padding: 8rem 0;
-      text-align: center;
-    }
-
+    /* ── FINAL CTA ── */
+    #cta { background: var(--orange); color: var(--white); padding: 8rem 0; text-align: center; }
     .cta-wrap { max-width: 640px; margin: 0 auto; padding: 0 2rem; }
-
-    #cta h2 {
-      font-family: var(--serif);
-      font-size: clamp(2.5rem, 5.5vw, 4.2rem);
-      font-weight: 600;
-      color: var(--white);
-      margin-bottom: 1.25rem;
-      line-height: 1.05;
-    }
-
-    #cta p {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.72);
-      line-height: 1.8;
-      margin-bottom: 3rem;
-    }
-
+    #cta h2 { font-family: var(--serif); font-size: clamp(2.5rem, 5.5vw, 4.2rem); font-weight: 600; color: var(--white); margin-bottom: 1.25rem; line-height: 1.05; }
+    #cta p { font-size: 1rem; color: rgba(255,255,255,0.72); line-height: 1.8; margin-bottom: 3rem; }
     .cta-btns { display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex-wrap: wrap; }
-
-    .cta-secondary {
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.5);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+    .cta-secondary { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }
     .cta-secondary:hover { color: var(--white); }
 
-    /* ─── FOOTER ─── */
-    footer {
-      background: var(--black);
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding: 4rem 0 2.5rem;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.8fr 1fr 1fr 1fr;
-      gap: 3rem;
-      padding-bottom: 3rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 2rem;
-    }
-
+    /* ── FOOTER ── */
+    footer { background: var(--black); border-top: 1px solid rgba(255,255,255,0.05); padding: 4rem 0 2.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 2rem; }
     .footer-logo { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; letter-spacing: 0.1em; color: var(--white); margin-bottom: 0.75rem; }
     .footer-logo em { color: var(--orange); font-style: normal; }
     .footer-tag { font-size: 0.82rem; color: rgba(255,255,255,0.25); font-style: italic; }
-
     .footer-col-h { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 1.25rem; }
-
     .footer-links { list-style: none; }
     .footer-links li { margin-bottom: 0.6rem; }
     .footer-links a { font-size: 0.82rem; color: rgba(255,255,255,0.42); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--white); }
-
     .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
     .footer-legal { font-size: 0.74rem; color: rgba(255,255,255,0.18); }
-
     @media (max-width: 860px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
 
-    /* ─── REVEAL ─── */
+    /* ── REVEAL ── */
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.in { opacity: 1; transform: none; }
   </style>
@@ -750,6 +554,7 @@
       <li><a href="#problem">What We Do</a></li>
       <li><a href="#core">CORE System</a></li>
       <li><a href="#engage">Services</a></li>
+      <li><a href="#offerings">Offerings</a></li>
       <li><a href="#certs">Certifications</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#cta">Contact</a></li>
@@ -763,6 +568,7 @@
   <a href="#problem" onclick="closeMobile()">What We Do</a>
   <a href="#core" onclick="closeMobile()">CORE System</a>
   <a href="#engage" onclick="closeMobile()">Services</a>
+  <a href="#offerings" onclick="closeMobile()">Offerings</a>
   <a href="#certs" onclick="closeMobile()">Certifications</a>
   <a href="#about" onclick="closeMobile()">About</a>
   <a href="#cta" onclick="closeMobile()">Contact</a>
@@ -771,8 +577,7 @@
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-accent"></div>
-  <div class="hero-content">
+  <div class="hero-left">
     <div class="hero-tag">Executive Coaching &amp; Organizational Development</div>
     <h1 class="hero-h">
       Elevate Your Leadership.<br>
@@ -784,22 +589,31 @@
       <a href="#problem" class="hero-ghost">See How It Works &nbsp;↓</a>
     </div>
     <div class="stats-row">
-      <div class="stat">
+      <div>
         <div class="stat-n">30,000+</div>
-        <div class="stat-l">Leaders Developed</div>
+        <div class="stat-l">Reached in a single arena</div>
       </div>
-      <div class="stat">
+      <div>
         <div class="stat-n">1.7M</div>
-        <div class="stat-l">People Impacted via DC Water</div>
+        <div class="stat-l">People impacted via DC Water</div>
       </div>
-      <div class="stat">
+      <div>
         <div class="stat-n">20+</div>
-        <div class="stat-l">Years Executive Coaching</div>
+        <div class="stat-l">Years of executive coaching</div>
       </div>
-      <div class="stat">
+      <div>
         <div class="stat-n">90 Days</div>
-        <div class="stat-l">to Measurable Culture Shift</div>
+        <div class="stat-l">To measurable culture shift</div>
       </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <!-- Drop jason-presenting.jpg in the same folder as index.html -->
+    <img src="jason-presenting.jpg" alt="Jason Staten presenting" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+    <div class="hero-right-overlay"></div>
+    <div class="hero-right-fallback" style="display:none;">
+      <span class="fb-text">E</span>
     </div>
   </div>
 </section>
@@ -847,7 +661,6 @@
         </div>
         <p>Elevare exists for this exact problem. Not motivational fluff. Not annual retreats. Embedded, ongoing transformation that changes behavior — and culture — at the root.</p>
       </div>
-
       <div class="problem-list reveal">
         <div class="p-item">
           <span class="p-num">01</span>
@@ -874,10 +687,29 @@
           <span class="p-num">04</span>
           <div>
             <div class="p-title">The One-Time Training Problem</div>
-            <p class="p-body">A motivating workshop. A notebook full of notes. Two weeks later nothing has changed. Leadership development requires consistency and accountability — not events.</p>
+            <p class="p-body">A motivating workshop. A notebook full of notes. Two weeks later nothing has changed. Development requires consistency and accountability — not events.</p>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- IN-SESSION PHOTO BAND -->
+<section id="session-band">
+  <div class="session-band-inner">
+    <div class="session-photo">
+      <!-- Drop session-photo.jpg in the same folder as index.html -->
+      <img src="session-photo.jpg" alt="Elevare leadership session in progress" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="session-photo-fallback" style="display:none;">
+        <span>Session Photo</span>
+      </div>
+    </div>
+    <div class="session-caption">
+      <span class="eyebrow">In Practice</span>
+      <h3>Real sessions. Real organizations. Real change.</h3>
+      <p>Elevare works inside your organization — not from a distance. Our sessions are conducted in your environment, with your leaders, around the actual challenges your culture is facing right now.</p>
+      <a href="https://calendly.com" target="_blank" class="btn btn-black">See How We Work</a>
     </div>
   </div>
 </section>
@@ -935,7 +767,7 @@
         <div class="t-role">Director of Safety, DC Water</div>
       </div>
       <div class="t-card reveal">
-        <p class="t-body">"Working with Elevare has been a transformative experience for both my personal and professional growth. The ability to connect through a compassionate and challenging perspective, ask the right questions, and provide thoughtful guidance has helped me gain clarity, confidence, and direction. A rare combination of empathy, insight, and real-world experience."</p>
+        <p class="t-body">"Working with Elevare has been a transformative experience for both my personal and professional growth. The ability to connect through a compassionate and challenging perspective, ask the right questions, and provide thoughtful guidance has helped me gain clarity, confidence, and direction."</p>
         <div class="t-bar"></div>
         <div class="t-name">Mandi Kuidlan</div>
         <div class="t-role">Vice President, IET Corporation</div>
@@ -944,96 +776,72 @@
   </div>
 </section>
 
-<!-- SERVICES / PRICING -->
+<!-- SERVICES -->
 <section id="engage">
   <div class="container">
     <div class="engage-top reveal">
-      <span class="eyebrow">Three Ways to Engage</span>
+      <span class="eyebrow">Retainer Partnerships</span>
       <h2>Choose the level of partnership your organization needs.</h2>
-      <p>Every engagement begins with a CORE Diagnostic — a structured organizational assessment that maps your exact leadership landscape before we recommend a path forward.</p>
+      <p>Ongoing, embedded leadership development — not one-time events. Every engagement is structured around your organization's specific culture, challenges, and goals.</p>
     </div>
 
-    <div class="p-grid">
-      <!-- CORE Diagnostic -->
-      <div class="p-card invert reveal">
-        <span class="p-tag p-tag-o">Start Here</span>
-        <div class="p-name">CORE Diagnostic</div>
-        <div class="p-price">$15,000</div>
-        <div class="p-note">One-time investment · 30-day engagement</div>
-        <p class="p-desc">In 30 days, we interview key leaders, administer CORE assessments, observe team dynamics, and deliver a written findings report with a precise 12-month transformation roadmap. You will know exactly where your culture is breaking down — and have a documented plan to fix it.</p>
-        <ul class="p-list">
-          <li>Full organizational leadership assessment</li>
-          <li>Individual CORE assessments for up to 20 leaders</li>
-          <li>Stakeholder interviews across departments</li>
-          <li>Written findings report with ranked priority gaps</li>
-          <li>12-month transformation roadmap</li>
-          <li>90-min executive presentation of findings</li>
+    <!-- CORE Retainer -->
+    <div class="p-card-single reveal">
+      <span class="p-tag p-tag-b">CORE Retainer</span>
+      <div class="p-name">Your organization's embedded leadership development partner.</div>
+      <div class="p-tagline">Three tiers — select the level that fits your organization's size and stage.</div>
+
+      <div class="r-tabs" style="margin-top:1.5rem;">
+        <div class="r-tab on" onclick="tab(this,'f')">Foundation &nbsp;·&nbsp; $1,500/mo</div>
+        <div class="r-tab" onclick="tab(this,'g')">Growth &nbsp;·&nbsp; $2,750/mo</div>
+        <div class="r-tab" onclick="tab(this,'a')">Apex &nbsp;·&nbsp; $4,000/mo</div>
+      </div>
+
+      <div class="r-panel on" id="pf">
+        <div class="r-ideal">For organizations with 10–50 employees formalizing their leadership culture for the first time.</div>
+        <ul class="r-list">
+          <li>1 virtual group session/month (90 min, up to 8 leaders)</li>
+          <li>Monthly CORE leadership brief</li>
+          <li>Full CORE resource library access</li>
+          <li>Quarterly pulse check per leader</li>
+          <li>Email advisory support between sessions</li>
+          <li>End-of-quarter progress report</li>
         </ul>
-        <a href="https://calendly.com" target="_blank" class="btn btn-orange" style="align-self:flex-start;">Apply for a Diagnostic</a>
-        <p style="font-size:0.73rem;color:rgba(255,255,255,0.25);font-style:italic;margin-top:1rem;">90% of diagnostic clients continue with a CORE retainer.</p>
+      </div>
+      <div class="r-panel" id="pg">
+        <div class="r-ideal">For scaling organizations (50–200 employees) experiencing culture drift or communication breakdown across teams.</div>
+        <ul class="r-list">
+          <li>2 sessions/month — 1 virtual group + 1 in-person (up to 15 leaders)</li>
+          <li>Custom curriculum built around your organization's gaps</li>
+          <li>30-min coaching calls for up to 3 key leaders monthly</li>
+          <li>CORE health assessment at onboarding + 6-month review</li>
+          <li>Priority advisory — 48hr response</li>
+          <li>Quarterly executive debrief</li>
+        </ul>
+      </div>
+      <div class="r-panel" id="pa">
+        <div class="r-ideal">For established organizations (200+ employees) that need a true leadership infrastructure — a strategic partner embedded in the culture.</div>
+        <ul class="r-list">
+          <li>Weekly virtual + 2 in-person sessions/month (up to 25 leaders)</li>
+          <li>Full leadership audit + custom 12-month roadmap</li>
+          <li>Unlimited 1:1 coaching for top 5 leaders</li>
+          <li>Crisis advisory — same-day response</li>
+          <li>Custom workshop design for all-hands/offsite events</li>
+          <li>Branded internal leadership resources</li>
+          <li>Monthly C-suite strategy session</li>
+          <li>Annual leadership retreat facilitation</li>
+        </ul>
       </div>
 
-      <!-- CORE Retainer -->
-      <div class="p-card invert reveal">
-        <span class="p-tag p-tag-b">Most Popular</span>
-        <div class="p-name">CORE Retainer</div>
-        <div class="p-note" style="margin-bottom:0.75rem;">Your organization's embedded leadership development partner.</div>
-
-        <div class="r-tabs">
-          <div class="r-tab on" onclick="tab(this,'f')">Foundation</div>
-          <div class="r-tab" onclick="tab(this,'g')">Growth</div>
-          <div class="r-tab" onclick="tab(this,'a')">Apex</div>
-        </div>
-
-        <div class="r-panel on" id="pf">
-          <div class="r-price">$1,500<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
-          <div class="r-ideal">For organizations with 10–50 employees formalizing their leadership culture for the first time.</div>
-          <ul class="r-list">
-            <li>1 virtual group session/month (90 min, 8 leaders)</li>
-            <li>Monthly CORE leadership brief</li>
-            <li>Full CORE resource library access</li>
-            <li>Quarterly pulse check per leader</li>
-            <li>Email advisory support</li>
-            <li>End-of-quarter progress report</li>
-          </ul>
-        </div>
-        <div class="r-panel" id="pg">
-          <div class="r-price">$2,750<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
-          <div class="r-ideal">For scaling organizations (50–200 employees) experiencing culture drift or communication breakdown.</div>
-          <ul class="r-list">
-            <li>2 sessions/month (virtual group + in-person, 15 leaders)</li>
-            <li>Custom curriculum for your organization's gaps</li>
-            <li>30-min coaching calls for up to 3 key leaders</li>
-            <li>CORE health assessment + 6-month review</li>
-            <li>Priority advisory — 48hr response</li>
-            <li>Quarterly executive debrief</li>
-          </ul>
-        </div>
-        <div class="r-panel" id="pa">
-          <div class="r-price">$4,000<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
-          <div class="r-ideal">For established organizations (200+) needing a true leadership infrastructure — a strategic partner embedded in the culture.</div>
-          <ul class="r-list">
-            <li>Weekly virtual + 2 in-person sessions/month (25 leaders)</li>
-            <li>Full leadership audit + custom 12-month roadmap</li>
-            <li>Unlimited 1:1 coaching for top 5 leaders</li>
-            <li>Crisis advisory — same-day response</li>
-            <li>Custom workshop design for all-hands/offsite</li>
-            <li>Branded internal leadership resources</li>
-            <li>Monthly C-suite strategy session</li>
-            <li>Annual retreat facilitation</li>
-          </ul>
-        </div>
-
-        <a href="https://calendly.com" target="_blank" class="btn btn-orange" style="align-self:flex-start;margin-top:2rem;">Book a Discovery Call</a>
-      </div>
+      <a href="https://calendly.com" target="_blank" class="btn btn-orange" style="margin-top:2rem;">Book a Discovery Call</a>
     </div>
 
     <!-- Enterprise -->
     <div class="ent-card reveal">
       <div class="ent-l">
-        <span class="p-tag p-tag-g" style="margin-bottom:1.5rem;">Custom</span>
+        <span class="p-tag-g">Custom</span>
         <div class="ent-name">Enterprise Partnership</div>
-        <div class="ent-sub">For organizations that need a fully custom engagement — multi-site, multi-division, or enterprise-wide culture transformation.</div>
+        <div class="ent-sub">For organizations that need a fully custom engagement — multi-site, multi-division, or enterprise-wide transformation.</div>
         <p class="ent-p">Multi-location companies, divisions undergoing restructuring, organizations navigating executive-level transitions — these engagements are scoped individually, designed specifically for your structure, culture, and goals.</p>
         <a href="https://calendly.com" target="_blank" class="btn btn-black">Request Enterprise Pricing</a>
       </div>
@@ -1053,15 +861,75 @@
   </div>
 </section>
 
+<!-- OTHER OFFERINGS -->
+<section id="offerings">
+  <div class="container">
+    <div class="offerings-top reveal">
+      <span class="eyebrow">All Offerings</span>
+      <h2>More ways to work with Elevare.</h2>
+      <p>Beyond retainer partnerships, Elevare offers a full range of coaching, speaking, and development engagements tailored to where you are right now.</p>
+    </div>
+    <div class="offerings-grid">
+      <div class="offering-card reveal">
+        <div class="offering-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="offering-name">1-on-1 Executive Coaching</div>
+        <p class="offering-desc">Personalized coaching engagements for C-suite leaders and senior managers navigating complex leadership challenges, transitions, or growth opportunities.</p>
+        <a href="https://calendly.com" target="_blank" class="offering-link">Inquire &nbsp;→</a>
+      </div>
+      <div class="offering-card reveal">
+        <div class="offering-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="offering-name">Leadership Workshops</div>
+        <p class="offering-desc">Half-day and full-day workshop experiences designed around your team's specific culture gaps — built for self-reflection, practical application, and lasting behavior change.</p>
+        <a href="https://calendly.com" target="_blank" class="offering-link">Inquire &nbsp;→</a>
+      </div>
+      <div class="offering-card reveal">
+        <div class="offering-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div class="offering-name">Leadership Consulting</div>
+        <p class="offering-desc">Strategic advisory for organizations designing or overhauling their leadership culture — from onboarding structures to performance frameworks and succession planning.</p>
+        <a href="https://calendly.com" target="_blank" class="offering-link">Inquire &nbsp;→</a>
+      </div>
+      <div class="offering-card reveal">
+        <div class="offering-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="offering-name">Keynote Speaking</div>
+        <p class="offering-desc">High-impact keynotes for conferences, leadership summits, all-hands events, and organizational off-sites — built to move audiences from inspiration to action.</p>
+        <a href="https://calendly.com" target="_blank" class="offering-link">Book Jason &nbsp;→</a>
+      </div>
+      <div class="offering-card reveal">
+        <div class="offering-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div class="offering-name">Leadership Assessment</div>
+        <p class="offering-desc">Structured assessments — including the 5 Voices Discovery — that give leaders a clear picture of how they lead, how they're perceived, and where their greatest leverage points are.</p>
+        <a href="https://calendly.com" target="_blank" class="offering-link">Get Assessed &nbsp;→</a>
+      </div>
+      <div class="offering-card reveal">
+        <div class="offering-icon">
+          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="offering-name">Raising the Bar Course</div>
+        <p class="offering-desc">A structured leadership development course that equips emerging and established leaders with the mindset, tools, and accountability systems to operate at the next level — available inside LIFT.</p>
+        <a href="#lift" class="offering-link">Available in LIFT &nbsp;→</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CERTIFICATIONS -->
 <section id="certs">
   <div class="container">
     <div class="certs-top reveal">
       <span class="eyebrow" style="color:rgba(200,90,30,0.8);">Credentials</span>
       <h2>John Maxwell Certified</h2>
-      <p>Elevare's methodology is grounded in the John Maxwell Leadership Certification — one of the most widely recognized leadership credentialing programs in the world, with over 40,000 certified practitioners globally.</p>
+      <p>Elevare's methodology is grounded in the John Maxwell Leadership Certification — one of the most widely recognized leadership credentialing programs in the world, with over 40,000 certified practitioners across 180+ countries.</p>
     </div>
-
     <div class="certs-grid">
       <div class="cert-item reveal">
         <div class="cert-badge">
@@ -1088,10 +956,41 @@
         <p class="cert-desc">Credentialed to facilitate Maxwell curriculum inside organizations — equipping internal teams with leadership frameworks that produce measurable behavioral change over time.</p>
       </div>
     </div>
+    <!-- Certification images — drop cert-1.jpg, cert-2.jpg, cert-3.jpg, cert-4.jpg in the same folder -->
+    <div class="certs-images reveal">
+      <div class="cert-img-slot">
+        <img src="cert-1.jpg" alt="Maxwell Coach Certification" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="cert-img-placeholder" style="display:none;">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span>cert-1.jpg</span>
+        </div>
+      </div>
+      <div class="cert-img-slot">
+        <img src="cert-2.jpg" alt="Maxwell Speaker Certification" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="cert-img-placeholder" style="display:none;">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span>cert-2.jpg</span>
+        </div>
+      </div>
+      <div class="cert-img-slot">
+        <img src="cert-3.jpg" alt="Maxwell Trainer Certification" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="cert-img-placeholder" style="display:none;">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span>cert-3.jpg</span>
+        </div>
+      </div>
+      <div class="cert-img-slot">
+        <img src="cert-4.jpg" alt="Additional Certification" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="cert-img-placeholder" style="display:none;">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span>cert-4.jpg</span>
+        </div>
+      </div>
+    </div>
 
     <div class="certs-note reveal">
-      <p>The Maxwell Leadership Certification is issued through the Maxwell Leadership Certified Team (MLCT) Online Learning Platform and is recognized by organizations across more than 180 countries.</p>
-      <a href="https://calendly.com" target="_blank" class="btn btn-outline-white">Learn More About Our Approach</a>
+      <p>The Maxwell Leadership Certification is issued through the Maxwell Leadership Certified Team (MLCT) Online Learning Platform and is recognized globally across more than 180 countries.</p>
+      <a href="https://calendly.com" target="_blank" class="btn btn-outline-white">Learn More</a>
     </div>
   </div>
 </section>
@@ -1104,12 +1003,13 @@
         <span class="eyebrow">Community</span>
         <h2>LIFT — The leadership community built for leaders doing the work.</h2>
         <p>Most leadership communities are passive. Watch a video. Read an article. Feel inspired for 48 hours and return to the same patterns.</p>
-        <p>LIFT is live, active, and built for accountability — with weekly sessions, a full CORE curriculum library, AI-personalized development briefs, and a network of non-competing peers who hold each other to a higher standard.</p>
+        <p>LIFT is live, active, and built for accountability — with weekly sessions, a full CORE curriculum library, and a network of non-competing peers who hold each other to a higher standard.</p>
         <ul class="lift-list">
           <li>Weekly live sessions — recorded and available on demand</li>
           <li>Full access to the CORE curriculum in digital format</li>
-          <li>Monthly leadership challenges with peer accountability</li>
-          <li>AI-personalized leadership brief — tailored to your role and industry</li>
+          <li>Access to the <strong>Raising the Bar</strong> leadership course</li>
+          <li>Monthly leadership challenges with peer accountability structures</li>
+          <li>Personalized leadership brief — tailored to your role and industry</li>
           <li>Private community across industries — collaboration without competition</li>
           <li>Direct access for questions, feedback, and guidance</li>
           <li>Quarterly virtual workshops and hot seats</li>
@@ -1130,6 +1030,45 @@
   </div>
 </section>
 
+<!-- PODCAST -->
+<section id="podcast">
+  <div class="container">
+    <div class="podcast-inner">
+      <div class="podcast-visual reveal">
+        <div class="podcast-mic">
+          <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </div>
+        <div class="podcast-coming-soon">Coming Soon</div>
+        <div class="podcast-title-placeholder">The Elevare<br>Podcast</div>
+      </div>
+      <div class="podcast-content reveal">
+        <span class="eyebrow" style="color:rgba(200,90,30,0.8);">Podcast</span>
+        <h2>The Elevare Podcast — leadership conversations worth having.</h2>
+        <p>Real conversations with leaders, executives, and practitioners about what it actually takes to build high-performing cultures — the breakthroughs, the failures, and everything in between.</p>
+        <p>Episodes launching soon. Subscribe below to be notified when we go live.</p>
+        <div class="podcast-details">
+          <div class="podcast-detail">
+            <div class="podcast-detail-label">Format</div>
+            <div class="podcast-detail-val">Long-form interviews</div>
+          </div>
+          <div class="podcast-detail">
+            <div class="podcast-detail-label">Topics</div>
+            <div class="podcast-detail-val">Culture, leadership, organizational change</div>
+          </div>
+          <div class="podcast-detail">
+            <div class="podcast-detail-label">Status</div>
+            <div class="podcast-detail-val">Coming soon</div>
+          </div>
+        </div>
+        <form class="podcast-notify" onsubmit="return false;">
+          <input type="email" placeholder="Enter your email" />
+          <button type="submit">Notify Me</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- PROCESS -->
 <section id="process">
   <div class="container">
@@ -1145,8 +1084,8 @@
       </div>
       <div class="s-item reveal">
         <div class="s-n">02</div>
-        <div class="s-title">CORE Diagnostic</div>
-        <p class="s-body">A 30-day organizational assessment that maps your exact leadership gaps and delivers a written transformation roadmap before any retainer begins.</p>
+        <div class="s-title">Organizational Assessment</div>
+        <p class="s-body">A structured 30-day assessment that maps your exact leadership gaps and delivers a written transformation roadmap before any retainer begins.</p>
       </div>
       <div class="s-item reveal">
         <div class="s-n">03</div>
@@ -1169,6 +1108,8 @@
       <div class="reveal">
         <div class="about-photo">
           <div class="about-photo-bg">JS</div>
+          <!-- Drop jason-headshot.png in the same folder as index.html -->
+          <img src="jason-headshot.png" alt="Jason Staten" onerror="this.style.display='none';" />
           <div class="about-plate">
             <div class="about-pname">Jason Staten</div>
             <div class="about-ptitle">Founder &amp; Lead Executive Coach</div>
@@ -1178,12 +1119,12 @@
       <div class="about-text reveal">
         <span class="eyebrow">Leadership</span>
         <h2>20 years inside rooms where culture was broken.</h2>
-        <p style="margin-top:1.25rem;">The Elevare methodology was built by Jason Staten over two decades of watching what actually changes organizations — and what doesn't. His background spans executive coaching, leadership consulting, and speaking — including addressing 30,000 people in a single venue and coaching leaders at DC Water, one of the largest water utilities in the United States.</p>
+        <p style="margin-top:1.25rem;">The Elevare methodology was built over two decades of watching what actually changes organizations — and what doesn't. That background spans executive coaching, leadership consulting, and speaking — including addressing 30,000 people in a single arena and coaching leaders at DC Water, one of the largest water utilities in the United States.</p>
         <p>The approach doesn't borrow from business school frameworks. It connects leadership to purpose and identity at a level that produces lasting behavioral change, not temporary inspiration. When leaders become different, their teams become different. When teams become different, the organization follows.</p>
         <div class="about-stats">
           <div>
             <div class="as-n">30,000+</div>
-            <div class="as-l">People reached in a single venue</div>
+            <div class="as-l">Reached in a single arena</div>
           </div>
           <div>
             <div class="as-n">20+</div>
@@ -1228,10 +1169,10 @@
       <div>
         <div class="footer-col-h">Services</div>
         <ul class="footer-links">
-          <li><a href="#engage">CORE Diagnostic</a></li>
           <li><a href="#engage">CORE Retainer</a></li>
           <li><a href="#engage">Enterprise Partnership</a></li>
           <li><a href="#lift">LIFT Community</a></li>
+          <li><a href="#offerings">All Offerings</a></li>
         </ul>
       </div>
       <div>
@@ -1240,7 +1181,7 @@
           <li><a href="#about">About</a></li>
           <li><a href="#certs">Certifications</a></li>
           <li><a href="#process">How It Works</a></li>
-          <li><a href="#proof">Testimonials</a></li>
+          <li><a href="#podcast">Podcast</a></li>
         </ul>
       </div>
       <div>
