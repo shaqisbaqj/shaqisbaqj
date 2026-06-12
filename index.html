@@ -3,118 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Elevare Leadership Solutions</title>
+  <title>Elevare Leadership Solutions | Organizational Development & Executive Coaching</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy: #0D1B2A;
-      --navy-mid: #152436;
-      --navy-light: #1E3448;
-      --gold: #B8973A;
-      --gold-light: #D4AF55;
-      --gold-pale: #f0e4b8;
-      --white: #FFFFFF;
-      --off-white: #F5F2EC;
-      --gray: #8A9BAA;
-      --text-light: #C8D4DC;
-      --serif: 'Playfair Display', Georgia, serif;
-      --sans: 'Inter', system-ui, sans-serif;
+      --orange:      #C85A1E;
+      --orange-deep: #A34716;
+      --orange-pale: #FBF0EA;
+      --black:       #111111;
+      --dark:        #1C1C1C;
+      --charcoal:    #2E2E2E;
+      --mid:         #4B4B4B;
+      --gray:        #767676;
+      --light-gray:  #ADADAD;
+      --border:      #E0E0E0;
+      --off-white:   #F8F6F3;
+      --white:       #FFFFFF;
+      --serif:       'Cormorant Garamond', Georgia, serif;
+      --sans:        'Inter', system-ui, sans-serif;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--sans);
-      background: var(--navy);
-      color: var(--white);
+      background: var(--white);
+      color: var(--black);
       line-height: 1.6;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── UTILITIES ─── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
+
+    section { padding: 6rem 0; }
+
+    h1, h2, h3 {
+      font-family: var(--serif);
+      font-weight: 600;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+    }
+
     .eyebrow {
       font-family: var(--sans);
-      font-size: 0.75rem;
+      font-size: 0.68rem;
       font-weight: 600;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.25rem;
-    }
-
-    .gold-line {
+      color: var(--orange);
       display: block;
-      width: 48px;
-      height: 2px;
-      background: var(--gold);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .btn {
       display: inline-block;
-      padding: 0.9rem 2.25rem;
+      padding: 0.875rem 2.1rem;
       font-family: var(--sans);
-      font-size: 0.875rem;
+      font-size: 0.78rem;
       font-weight: 600;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       text-decoration: none;
       cursor: pointer;
       border: none;
-      transition: all 0.25s ease;
+      transition: all 0.2s;
     }
 
-    .btn-gold {
-      background: var(--gold);
-      color: var(--navy);
-    }
-    .btn-gold:hover { background: var(--gold-light); }
+    .btn-black  { background: var(--black); color: var(--white); }
+    .btn-black:hover { background: var(--charcoal); }
 
-    .btn-outline-gold {
-      background: transparent;
-      color: var(--gold);
-      border: 1.5px solid var(--gold);
-    }
-    .btn-outline-gold:hover { background: var(--gold); color: var(--navy); }
+    .btn-orange { background: var(--orange); color: var(--white); }
+    .btn-orange:hover { background: var(--orange-deep); }
 
-    .btn-outline-white {
-      background: transparent;
-      color: var(--white);
-      border: 1.5px solid rgba(255,255,255,0.4);
-    }
+    .btn-outline { background: transparent; color: var(--black); border: 1px solid var(--black); }
+    .btn-outline:hover { background: var(--black); color: var(--white); }
+
+    .btn-outline-white { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.4); }
     .btn-outline-white:hover { border-color: var(--white); }
-
-    .section-dark { background: var(--navy); color: var(--white); }
-    .section-mid  { background: var(--navy-mid); color: var(--white); }
-    .section-light { background: var(--off-white); color: var(--navy); }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    section { padding: 6rem 0; }
 
     /* ─── NAV ─── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
       z-index: 1000;
-      background: rgba(13,27,42,0.97);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(184,151,58,0.15);
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
     }
 
     .nav-inner {
-      max-width: 1200px;
+      max-width: 1160px;
       margin: 0 auto;
       padding: 0 2rem;
-      height: 72px;
+      height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -124,1496 +108,1125 @@
       font-family: var(--serif);
       font-size: 1.5rem;
       font-weight: 700;
-      letter-spacing: 0.15em;
-      color: var(--white);
-      text-decoration: none;
-    }
-    .nav-logo span { color: var(--gold); }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 0.8rem;
-      font-weight: 500;
       letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-light);
+      color: var(--black);
       text-decoration: none;
-      transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--gold); }
+    .nav-logo em { color: var(--orange); font-style: normal; }
 
-    .nav-cta { margin-left: 1rem; }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--black); }
 
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 4px;
-    }
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background: var(--white);
-      transition: all 0.3s;
-    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--black); }
 
     .mobile-menu {
       display: none;
-      position: fixed;
-      top: 72px; left: 0; right: 0;
-      background: var(--navy);
-      border-bottom: 1px solid rgba(184,151,58,0.2);
-      padding: 2rem;
+      position: fixed; top: 68px; left: 0; right: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem 2rem;
       z-index: 999;
     }
     .mobile-menu.open { display: block; }
     .mobile-menu a {
       display: block;
-      padding: 0.75rem 0;
-      font-size: 0.9rem;
+      padding: 0.8rem 0;
+      font-size: 0.82rem;
       font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--text-light);
+      color: var(--mid);
       text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid var(--border);
     }
-    .mobile-menu a:hover { color: var(--gold); }
     .mobile-menu .btn { display: block; text-align: center; margin-top: 1.5rem; }
 
-    @media (max-width: 900px) {
-      .nav-links, .nav-cta { display: none; }
+    @media (max-width: 860px) {
+      .nav-links, nav > .nav-inner > .btn { display: none; }
       .hamburger { display: flex; }
     }
 
     /* ─── HERO ─── */
     #hero {
       min-height: 100vh;
+      padding-top: 68px;
+      background: var(--black);
+      color: var(--white);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding-top: 72px;
-      background: var(--navy);
       position: relative;
       overflow: hidden;
     }
 
-    #hero::before {
-      content: '';
+    .hero-accent {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 80% 50%, rgba(184,151,58,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(184,151,58,0.04) 0%, transparent 60%);
+      top: 0; right: 0;
+      width: 38%;
+      height: 100%;
+      background: var(--orange);
+      clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
+      opacity: 0.06;
       pointer-events: none;
     }
 
-    .hero-inner {
-      max-width: 1200px;
+    .hero-content {
+      max-width: 1160px;
       margin: 0 auto;
-      padding: 4rem 2rem 0;
+      padding: 4rem 2rem 3rem;
     }
 
-    .hero-headline {
-      font-family: var(--serif);
-      font-size: clamp(2.6rem, 6vw, 5rem);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-      max-width: 780px;
-      margin-bottom: 1.75rem;
+    .hero-tag {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+    .hero-tag::before { content: ''; display: block; width: 3rem; height: 1px; background: var(--orange); }
+
+    h1.hero-h {
+      font-size: clamp(3rem, 7vw, 5.8rem);
+      font-weight: 600;
+      line-height: 1.03;
+      letter-spacing: -0.02em;
+      max-width: 850px;
+      margin-bottom: 2rem;
+      color: var(--white);
     }
 
-    .hero-headline em {
-      font-style: italic;
-      color: var(--gold);
-    }
+    h1.hero-h em { font-style: italic; color: var(--orange); }
 
     .hero-sub {
-      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-size: 1rem;
       font-weight: 300;
-      color: var(--text-light);
-      max-width: 620px;
-      line-height: 1.75;
-      margin-bottom: 2.5rem;
+      color: rgba(255,255,255,0.5);
+      max-width: 520px;
+      line-height: 1.85;
+      margin-bottom: 3rem;
     }
 
-    .hero-ctas {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 5rem;
-    }
+    .hero-btns { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 5rem; }
 
-    .hero-secondary {
-      font-size: 0.875rem;
-      color: var(--gray);
+    .hero-ghost {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      color: rgba(255,255,255,0.35);
       text-decoration: none;
-      letter-spacing: 0.05em;
       transition: color 0.2s;
     }
-    .hero-secondary:hover { color: var(--gold); }
+    .hero-ghost:hover { color: rgba(255,255,255,0.65); }
 
-    .stats-bar {
-      border-top: 1px solid rgba(184,151,58,0.2);
-      padding: 2.5rem 2rem;
+    .stats-row {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 3rem;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
     }
 
-    .stat-item {
-      padding: 0 2rem;
-      border-right: 1px solid rgba(184,151,58,0.15);
-    }
-    .stat-item:last-child { border-right: none; }
+    .stat { padding-right: 2.5rem; border-right: 1px solid rgba(255,255,255,0.07); }
+    .stat:last-child { border-right: none; }
+    .stat:not(:first-child) { padding-left: 2.5rem; }
 
-    .stat-number {
+    .stat-n {
       font-family: var(--serif);
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 1.1;
-      margin-bottom: 0.35rem;
-    }
-
-    .stat-label {
-      font-size: 0.8rem;
-      font-weight: 400;
-      color: var(--gray);
-      line-height: 1.4;
-    }
-
-    @media (max-width: 768px) {
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-      .stat-item { border-right: none; border-bottom: 1px solid rgba(184,151,58,0.15); padding: 1.5rem 0; }
-      .stat-item:nth-child(2n) { padding-left: 1.5rem; border-left: 1px solid rgba(184,151,58,0.15); }
-    }
-
-    /* ─── PROBLEM ─── */
-    #problem { background: var(--navy-mid); }
-
-    .problem-intro {
-      max-width: 760px;
-      margin: 0 auto 4rem;
-      text-align: center;
-    }
-
-    .section-headline {
-      font-family: var(--serif);
-      font-size: clamp(1.9rem, 4vw, 3rem);
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 1.5rem;
-    }
-
-    .section-body {
-      font-size: 1.05rem;
-      color: var(--text-light);
-      line-height: 1.8;
-    }
-
-    .section-body p { margin-bottom: 1.2rem; }
-    .section-body p:last-child { margin-bottom: 0; }
-
-    .cost-callout {
-      display: inline-block;
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      font-style: italic;
-      color: var(--gold);
-      border-left: 3px solid var(--gold);
-      padding: 0.5rem 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .problem-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5px;
-      background: rgba(184,151,58,0.12);
-      border: 1.5px solid rgba(184,151,58,0.12);
-    }
-
-    .problem-card {
-      background: var(--navy);
-      padding: 2.5rem 2rem;
-      position: relative;
-    }
-    .problem-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--gold);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .problem-card:hover::before { opacity: 1; }
-
-    .card-number {
-      font-family: var(--serif);
-      font-size: 3rem;
-      font-weight: 900;
-      color: rgba(184,151,58,0.12);
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 600;
+      color: var(--orange);
       line-height: 1;
-      margin-bottom: 1rem;
-    }
-
-    .card-title {
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      color: var(--white);
-    }
-
-    .card-body {
-      font-size: 0.9rem;
-      color: var(--gray);
-      line-height: 1.7;
-    }
-
-    @media (max-width: 900px) {
-      .problem-cards { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 500px) {
-      .problem-cards { grid-template-columns: 1fr; }
-    }
-
-    /* ─── CORE SYSTEM ─── */
-    #core { background: var(--navy); }
-
-    .core-intro {
-      max-width: 760px;
-      margin: 0 auto 4rem;
-      text-align: center;
-    }
-
-    .core-sub {
-      font-size: 1.05rem;
-      color: var(--text-light);
-      margin-top: 1rem;
-      line-height: 1.7;
-    }
-
-    .core-pillars {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      border: 1px solid rgba(184,151,58,0.2);
-    }
-
-    .pillar {
-      padding: 3rem 2rem;
-      border-right: 1px solid rgba(184,151,58,0.2);
-      position: relative;
-      transition: background 0.3s;
-    }
-    .pillar:last-child { border-right: none; }
-    .pillar:hover { background: rgba(184,151,58,0.04); }
-
-    .pillar-letter {
-      font-family: var(--serif);
-      font-size: 4.5rem;
-      font-weight: 900;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      opacity: 0.9;
-    }
-
-    .pillar-name {
-      font-family: var(--serif);
-      font-size: 1.1rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gold-pale);
-      margin-bottom: 1rem;
-    }
-
-    .pillar-body {
-      font-size: 0.875rem;
-      color: var(--gray);
-      line-height: 1.75;
-    }
-
-    .core-cta-wrap {
-      text-align: center;
-      margin-top: 3.5rem;
-    }
-
-    @media (max-width: 900px) {
-      .core-pillars { grid-template-columns: repeat(2, 1fr); }
-      .pillar:nth-child(2) { border-right: none; }
-      .pillar:nth-child(3) { border-right: 1px solid rgba(184,151,58,0.2); }
-      .pillar { border-bottom: 1px solid rgba(184,151,58,0.2); }
-      .pillar:last-child { border-right: none; }
-    }
-    @media (max-width: 500px) {
-      .core-pillars { grid-template-columns: 1fr; }
-      .pillar { border-right: none !important; }
-    }
-
-    /* ─── SOCIAL PROOF ─── */
-    #proof { background: var(--navy-mid); }
-
-    .logos-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 3rem;
-      flex-wrap: wrap;
-      margin-bottom: 4rem;
-      padding-bottom: 3rem;
-      border-bottom: 1px solid rgba(184,151,58,0.15);
-    }
-
-    .logo-pill {
-      font-family: var(--sans);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gray);
-      padding: 0.6rem 1.4rem;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .testimonials {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      background: rgba(184,151,58,0.1);
-    }
-
-    .testimonial {
-      background: var(--navy);
-      padding: 3.5rem;
-    }
-
-    .quote-mark {
-      font-family: var(--serif);
-      font-size: 5rem;
-      line-height: 0.6;
-      color: var(--gold);
-      opacity: 0.25;
-      margin-bottom: 1.5rem;
-      display: block;
-    }
-
-    .quote-text {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      font-style: italic;
-      line-height: 1.8;
-      color: var(--text-light);
-      margin-bottom: 2rem;
-    }
-
-    .quote-attr {
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    @media (max-width: 768px) {
-      .testimonials { grid-template-columns: 1fr; }
-      .testimonial { padding: 2.5rem 2rem; }
-    }
-
-    /* ─── ENGAGEMENT / PRICING ─── */
-    #engage { background: var(--off-white); color: var(--navy); }
-
-    #engage .eyebrow { color: var(--gold); }
-    #engage .section-headline { color: var(--navy); }
-    #engage .core-sub { color: #4a5a6a; }
-
-    .engage-intro {
-      max-width: 700px;
-      margin: 0 auto 4rem;
-      text-align: center;
-    }
-
-    .engage-sub {
-      font-size: 1rem;
-      color: #5a6e80;
-      margin-top: 1rem;
-      line-height: 1.7;
-    }
-
-    /* Top row: 2 products */
-    .pricing-top {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      margin-bottom: 2px;
-    }
-
-    .pricing-bottom {
-      /* single full-width card */
-    }
-
-    .pricing-card {
-      background: var(--navy);
-      color: var(--white);
-      padding: 3rem;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .pricing-card.light {
-      background: var(--white);
-      color: var(--navy);
-      border: 1px solid rgba(13,27,42,0.1);
-    }
-
-    .card-badge {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.35rem 0.85rem;
-      margin-bottom: 1.5rem;
-      align-self: flex-start;
-    }
-
-    .badge-gold { background: var(--gold); color: var(--navy); }
-    .badge-outline { border: 1px solid var(--gold); color: var(--gold); }
-    .badge-navy { background: var(--navy); color: var(--gold); border: 1px solid var(--gold); }
-
-    .pricing-name {
-      font-family: var(--serif);
-      font-size: 1.6rem;
-      font-weight: 700;
       margin-bottom: 0.4rem;
     }
 
-    .pricing-price {
-      font-family: var(--serif);
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--gold);
-      margin-bottom: 0.25rem;
+    .stat-l { font-size: 0.75rem; color: rgba(255,255,255,0.35); line-height: 1.4; }
+
+    @media (max-width: 700px) {
+      .stats-row { grid-template-columns: 1fr 1fr; gap: 2rem 0; padding-top: 2rem; }
+      .stat { border-right: none !important; padding: 0 !important; }
     }
 
-    .pricing-tagline {
-      font-size: 0.9rem;
-      color: var(--gray);
-      margin-bottom: 1.5rem;
-      font-style: italic;
+    /* ─── TAGLINE BAND ─── */
+    #tagline {
+      padding: 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    .pricing-desc {
-      font-size: 0.9rem;
-      line-height: 1.75;
-      color: var(--text-light);
-      margin-bottom: 1.75rem;
-      flex-grow: 1;
-    }
-    .pricing-card.light .pricing-desc { color: #4a5a6a; }
-
-    .pricing-list {
-      list-style: none;
-      margin-bottom: 2rem;
-    }
-    .pricing-list li {
-      font-size: 0.875rem;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      color: var(--text-light);
-      padding-left: 1.4rem;
-      position: relative;
-    }
-    .pricing-card.light .pricing-list li {
-      border-bottom-color: rgba(13,27,42,0.08);
-      color: #3a4f60;
-    }
-    .pricing-list li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: var(--gold);
-      font-size: 0.75rem;
+    .tagline-inner {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      min-height: 280px;
     }
 
-    .pricing-note {
-      font-size: 0.78rem;
-      color: var(--gray);
-      font-style: italic;
-      margin-top: 1rem;
-      line-height: 1.6;
-    }
-
-    /* Retainer tiers */
-    .retainer-tiers {
-      margin-top: 1.5rem;
-    }
-
-    .tier {
-      border: 1px solid rgba(184,151,58,0.2);
-      padding: 1.75rem;
-      margin-bottom: 1px;
-      background: rgba(255,255,255,0.02);
-    }
-    .tier.featured-tier {
-      background: rgba(184,151,58,0.07);
-      border-color: rgba(184,151,58,0.35);
-    }
-
-    .tier-header {
+    .tagline-left {
+      background: var(--orange);
+      padding: 3.5rem;
       display: flex;
-      align-items: baseline;
-      gap: 1rem;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
+      align-items: center;
     }
 
-    .tier-name {
+    .tagline-left-text {
       font-family: var(--serif);
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .tier-price {
-      font-family: var(--serif);
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--gold);
-    }
-
-    .tier-ideal {
-      font-size: 0.78rem;
-      color: var(--gray);
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 600;
       font-style: italic;
+      color: var(--white);
+      line-height: 1.4;
+    }
+
+    .tagline-right {
+      background: var(--off-white);
+      padding: 3.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .tagline-right p {
+      font-size: 1rem;
+      color: var(--mid);
+      line-height: 1.85;
       margin-bottom: 1rem;
     }
 
-    .tier-list {
-      list-style: none;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.3rem 1rem;
+    @media (max-width: 700px) {
+      .tagline-inner { grid-template-columns: 1fr; }
+      .tagline-left { padding: 2.5rem 2rem; }
+      .tagline-right { padding: 2.5rem 2rem; }
     }
 
-    .tier-list li {
-      font-size: 0.8rem;
-      color: var(--text-light);
-      padding-left: 1.2rem;
-      position: relative;
-      line-height: 1.5;
+    /* ─── CLIENTS ─── */
+    #clients {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
     }
-    .tier-list li::before {
-      content: '·';
-      position: absolute;
-      left: 0;
-      color: var(--gold);
+
+    .clients-row { display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; }
+    .clients-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-gray); flex-shrink: 0; }
+    .client-name { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-gray); }
+
+    /* ─── PROBLEM ─── */
+    #problem { background: var(--white); }
+
+    .problem-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+
+    .problem-left h2 { font-size: clamp(2rem, 3.5vw, 2.9rem); color: var(--black); margin-bottom: 1.75rem; }
+    .problem-left p { font-size: 0.975rem; color: var(--mid); line-height: 1.85; margin-bottom: 1rem; }
+
+    .cost-block {
+      margin: 2rem 0;
+      padding: 1.75rem;
+      background: var(--orange-pale);
+      border-left: 3px solid var(--orange);
+    }
+
+    .cost-n { font-family: var(--serif); font-size: 3rem; font-weight: 600; color: var(--orange); line-height: 1; }
+    .cost-l { font-size: 0.82rem; color: var(--mid); margin-top: 0.35rem; line-height: 1.5; }
+
+    .problem-list { display: flex; flex-direction: column; }
+
+    .p-item {
+      padding: 1.75rem 0;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 1.25rem;
+    }
+    .p-item:first-child { border-top: 1px solid var(--border); }
+
+    .p-num { font-family: var(--serif); font-size: 0.85rem; font-weight: 600; color: var(--orange); padding-top: 0.1rem; }
+
+    .p-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--black); margin-bottom: 0.5rem; }
+    .p-body { font-size: 0.875rem; color: var(--gray); line-height: 1.75; }
+
+    @media (max-width: 860px) { .problem-layout { grid-template-columns: 1fr; gap: 3rem; } }
+
+    /* ─── CORE ─── */
+    #core { background: var(--black); color: var(--white); }
+
+    .core-top { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem; }
+    .core-top h2 { font-size: clamp(2rem, 3.5vw, 2.9rem); color: var(--white); max-width: 600px; }
+    .core-top p { font-size: 0.9rem; color: rgba(255,255,255,0.45); max-width: 360px; line-height: 1.8; }
+
+    .core-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.07); }
+
+    .c-pillar {
+      background: var(--black);
+      padding: 2.75rem 2rem;
+      transition: background 0.2s;
+    }
+    .c-pillar:hover { background: #181818; }
+
+    .c-letter { font-family: var(--serif); font-size: 4rem; font-weight: 600; color: var(--orange); line-height: 1; margin-bottom: 0.75rem; opacity: 0.85; }
+    .c-word { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 1.25rem; }
+    .c-body { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.8; }
+
+    @media (max-width: 860px) { .core-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .core-grid { grid-template-columns: 1fr; } }
+
+    /* ─── PROOF ─── */
+    #proof { background: var(--off-white); }
+
+    .proof-head { margin-bottom: 3.5rem; }
+    .proof-head h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); color: var(--black); }
+
+    .t-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+    .t-card { background: var(--white); border: 1px solid var(--border); padding: 3rem; }
+
+    .t-body {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-style: italic;
+      line-height: 1.75;
+      color: var(--charcoal);
+      margin-bottom: 2rem;
+    }
+
+    .t-bar { width: 2rem; height: 2px; background: var(--orange); margin-bottom: 1.25rem; }
+    .t-name { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); margin-bottom: 0.2rem; }
+    .t-role { font-size: 0.78rem; color: var(--gray); }
+
+    @media (max-width: 700px) { .t-grid { grid-template-columns: 1fr; } }
+
+    /* ─── SERVICES ─── */
+    #engage { background: var(--white); }
+
+    .engage-top { max-width: 580px; margin-bottom: 4rem; }
+    .engage-top h2 { font-size: clamp(2rem, 3.5vw, 2.9rem); color: var(--black); margin-bottom: 1rem; }
+    .engage-top p { font-size: 0.95rem; color: var(--mid); line-height: 1.8; }
+
+    .p-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 1.5px; background: var(--border); margin-bottom: 1.5px; }
+
+    .p-card {
+      background: var(--white);
+      padding: 2.75rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .p-card.invert { background: var(--black); color: var(--white); }
+
+    .p-tag {
+      font-size: 0.62rem;
       font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      display: inline-block;
+      align-self: flex-start;
+      margin-bottom: 1.75rem;
     }
+    .p-tag-o { background: var(--orange); color: var(--white); }
+    .p-tag-b { border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.45); }
+    .p-tag-g { border: 1px solid var(--border); color: var(--gray); }
 
-    .enterprise-row {
-      background: var(--navy-light);
-      padding: 3.5rem;
+    .p-name { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .p-price { font-family: var(--serif); font-size: 2.2rem; font-weight: 600; color: var(--orange); line-height: 1; margin-bottom: 0.25rem; }
+    .p-note { font-size: 0.78rem; color: var(--gray); font-style: italic; margin-bottom: 1.5rem; }
+    .p-card.invert .p-note { color: rgba(255,255,255,0.3); }
+
+    .p-desc { font-size: 0.875rem; line-height: 1.8; color: var(--mid); margin-bottom: 1.75rem; flex-grow: 1; }
+    .p-card.invert .p-desc { color: rgba(255,255,255,0.45); }
+
+    .p-list { list-style: none; margin-bottom: 2rem; }
+    .p-list li {
+      font-size: 0.845rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--mid);
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+    .p-card.invert .p-list li { border-bottom-color: rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); }
+    .p-list li::before { content: '—'; color: var(--orange); flex-shrink: 0; font-size: 0.7rem; }
+
+    /* Retainer tabs */
+    .r-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.5rem; }
+    .r-tab {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.6rem 1.1rem; cursor: pointer; color: rgba(255,255,255,0.3);
+      border-bottom: 2px solid transparent; transition: all 0.2s; user-select: none;
+    }
+    .r-tab.on { color: var(--orange); border-bottom-color: var(--orange); }
+
+    .r-panel { display: none; }
+    .r-panel.on { display: block; }
+
+    .r-price { font-family: var(--serif); font-size: 2rem; font-weight: 600; color: var(--orange); margin-bottom: 0.25rem; }
+    .r-ideal { font-size: 0.77rem; color: rgba(255,255,255,0.3); font-style: italic; margin-bottom: 1.25rem; line-height: 1.5; }
+    .r-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem 1.25rem; }
+    .r-list li { font-size: 0.8rem; color: rgba(255,255,255,0.48); padding-left: 1rem; position: relative; line-height: 1.5; }
+    .r-list li::before { content: '—'; position: absolute; left: 0; color: var(--orange); font-size: 0.65rem; }
+
+    /* Enterprise */
+    .ent-card {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: start;
+      border: 1px solid var(--border);
+    }
+    .ent-l { padding: 3rem; }
+    .ent-r { padding: 3rem; background: var(--off-white); border-left: 1px solid var(--border); }
+    .ent-name { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; color: var(--black); margin-bottom: 0.5rem; }
+    .ent-sub { font-size: 0.875rem; font-style: italic; color: var(--gray); margin-bottom: 1.25rem; line-height: 1.6; }
+    .ent-p { font-size: 0.9rem; color: var(--mid); line-height: 1.8; margin-bottom: 1.75rem; }
+    .ent-list { list-style: none; }
+    .ent-list li { font-size: 0.85rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border); color: var(--mid); display: flex; gap: 0.75rem; }
+    .ent-list li::before { content: '—'; color: var(--orange); flex-shrink: 0; font-size: 0.7rem; }
+
+    @media (max-width: 860px) {
+      .p-grid { grid-template-columns: 1fr; }
+      .ent-card { grid-template-columns: 1fr; }
+      .ent-r { border-left: none; border-top: 1px solid var(--border); }
+      .r-list { grid-template-columns: 1fr; }
     }
 
-    .enterprise-list {
-      list-style: none;
+    /* ─── CERTIFICATIONS ─── */
+    #certs { background: var(--black); color: var(--white); }
+
+    .certs-top { max-width: 580px; margin-bottom: 4rem; }
+    .certs-top h2 { font-size: clamp(2rem, 3.5vw, 2.8rem); color: var(--white); margin-bottom: 0.75rem; }
+    .certs-top p { font-size: 0.95rem; color: rgba(255,255,255,0.45); line-height: 1.75; }
+
+    .certs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: rgba(255,255,255,0.06); }
+
+    .cert-item {
+      background: var(--black);
+      padding: 2.75rem 2.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      transition: background 0.2s;
     }
-    .enterprise-list li {
-      font-size: 0.9rem;
-      color: var(--text-light);
-      padding: 0.6rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding-left: 1.5rem;
-      position: relative;
-    }
-    .enterprise-list li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: var(--gold);
-      font-size: 0.75rem;
+    .cert-item:hover { background: #171717; }
+
+    .cert-badge {
+      width: 48px;
+      height: 48px;
+      border: 1.5px solid rgba(200,90,30,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    @media (max-width: 900px) {
-      .pricing-top { grid-template-columns: 1fr; }
-      .enterprise-row { grid-template-columns: 1fr; }
-      .tier-list { grid-template-columns: 1fr; }
+    .cert-badge svg { width: 20px; height: 20px; stroke: var(--orange); fill: none; stroke-width: 1.5; }
+
+    .cert-issuer { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); }
+    .cert-name { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--white); line-height: 1.3; }
+    .cert-desc { font-size: 0.845rem; color: rgba(255,255,255,0.4); line-height: 1.75; }
+
+    .certs-note {
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
     }
+    .certs-note p { font-size: 0.85rem; color: rgba(255,255,255,0.35); line-height: 1.6; max-width: 560px; }
+
+    @media (max-width: 760px) { .certs-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .certs-grid { grid-template-columns: 1fr; } }
 
     /* ─── LIFT ─── */
-    #lift { background: var(--navy); }
+    #lift { background: var(--off-white); }
 
-    .lift-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      align-items: start;
-    }
+    .lift-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 6rem; align-items: start; }
 
-    .lift-features {
-      list-style: none;
-      margin: 2rem 0;
-    }
-    .lift-features li {
-      padding: 0.9rem 0;
-      border-bottom: 1px solid rgba(184,151,58,0.12);
-      font-size: 0.95rem;
-      color: var(--text-light);
-      padding-left: 1.6rem;
-      position: relative;
-      line-height: 1.5;
-    }
-    .lift-features li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: var(--gold);
-      font-size: 0.8rem;
-      top: 0.95rem;
-    }
+    .lift-content h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--black); margin-bottom: 1rem; }
+    .lift-content p { font-size: 0.95rem; color: var(--mid); line-height: 1.85; margin-bottom: 1rem; }
 
-    .lift-price-block {
-      background: var(--navy-light);
-      border: 1px solid rgba(184,151,58,0.2);
-      padding: 3rem;
+    .lift-list { list-style: none; margin: 2rem 0; }
+    .lift-list li {
+      font-size: 0.875rem; color: var(--mid); padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 0.75rem; align-items: baseline; line-height: 1.5;
+    }
+    .lift-list li:first-child { border-top: 1px solid var(--border); }
+    .lift-list li::before { content: '—'; color: var(--orange); flex-shrink: 0; font-size: 0.7rem; }
+
+    .lift-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 2.75rem;
       position: sticky;
-      top: 90px;
+      top: 86px;
     }
 
-    .lift-price {
-      font-family: var(--serif);
-      font-size: 3rem;
-      font-weight: 900;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 0.25rem;
-    }
-
-    .lift-price-period {
-      font-size: 0.875rem;
-      color: var(--gray);
-      margin-bottom: 2rem;
-    }
+    .lift-price { font-family: var(--serif); font-size: 3rem; font-weight: 600; color: var(--black); line-height: 1; margin-bottom: 0.15rem; }
+    .lift-mo { font-size: 0.78rem; color: var(--gray); margin-bottom: 1.75rem; }
 
     .lift-who {
-      font-size: 0.9rem;
-      color: var(--text-light);
-      line-height: 1.75;
-      margin-bottom: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(184,151,58,0.15);
+      font-size: 0.875rem; color: var(--mid); line-height: 1.8;
+      padding-top: 1.5rem; border-top: 1px solid var(--border); margin-bottom: 1.75rem;
     }
 
     .lift-quote {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 0.95rem;
-      color: var(--text-light);
-      border-left: 3px solid var(--gold);
-      padding-left: 1.25rem;
-      margin-top: 2rem;
-      line-height: 1.7;
+      font-family: var(--serif); font-style: italic; font-size: 0.95rem;
+      color: var(--charcoal); line-height: 1.7;
+      padding-left: 1.25rem; border-left: 2px solid var(--orange);
     }
 
-    .lift-secondary {
-      display: block;
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: var(--gold);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-    }
-    .lift-secondary:hover { text-decoration: underline; }
-
-    @media (max-width: 900px) {
-      .lift-inner { grid-template-columns: 1fr; gap: 3rem; }
-      .lift-price-block { position: static; }
+    @media (max-width: 860px) {
+      .lift-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .lift-box { position: static; }
     }
 
     /* ─── PROCESS ─── */
-    #process { background: var(--navy-mid); }
+    #process { background: var(--white); border-top: 1px solid var(--border); }
 
-    .process-intro {
-      max-width: 620px;
-      margin: 0 auto 4rem;
-      text-align: center;
-    }
+    .process-head { max-width: 520px; margin-bottom: 4rem; }
+    .process-head h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--black); }
 
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      position: relative;
-    }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid var(--border); }
 
-    .steps::before {
-      content: '';
-      position: absolute;
-      top: 2.5rem;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(184,151,58,0.3) 20%, rgba(184,151,58,0.3) 80%, transparent);
-    }
+    .s-item { padding: 0 2.25rem 0 2rem; border-right: 1px solid var(--border); }
 
-    .step {
-      padding: 0 2rem;
-      text-align: center;
-    }
+    .s-n { font-family: var(--serif); font-size: 3.5rem; font-weight: 600; color: rgba(200,90,30,0.1); line-height: 1; margin-bottom: 1.25rem; }
+    .s-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--black); margin-bottom: 0.75rem; }
+    .s-body { font-size: 0.845rem; color: var(--gray); line-height: 1.75; }
 
-    .step-number {
-      width: 5rem;
-      height: 5rem;
-      border-radius: 50%;
-      background: var(--navy);
-      border: 2px solid var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.5rem;
-      font-family: var(--serif);
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--gold);
-      position: relative;
-      z-index: 1;
+    @media (max-width: 860px) {
+      .steps { grid-template-columns: 1fr 1fr; border: none; }
+      .s-item { border: none; border-bottom: 1px solid var(--border); padding: 2rem 0; }
     }
-
-    .step-title {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      color: var(--white);
-    }
-
-    .step-body {
-      font-size: 0.85rem;
-      color: var(--gray);
-      line-height: 1.7;
-    }
-
-    @media (max-width: 768px) {
-      .steps { grid-template-columns: 1fr 1fr; gap: 3rem 2rem; }
-      .steps::before { display: none; }
-    }
-    @media (max-width: 480px) {
-      .steps { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
 
     /* ─── ABOUT ─── */
-    #about { background: var(--navy); }
+    #about { background: var(--off-white); }
 
-    .about-inner {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 6rem;
-      align-items: center;
-    }
+    .about-layout { display: grid; grid-template-columns: 1fr 1.7fr; gap: 7rem; align-items: center; }
 
-    .about-visual {
-      background: var(--navy-light);
-      border: 1px solid rgba(184,151,58,0.2);
+    .about-photo {
+      background: var(--white);
+      border: 1px solid var(--border);
       aspect-ratio: 3/4;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-end;
       position: relative;
       overflow: hidden;
     }
 
-    .about-visual::before {
-      content: '';
+    .about-photo-bg {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(184,151,58,0.08) 0%, transparent 60%);
-    }
-
-    .about-initials {
-      font-family: var(--serif);
-      font-size: 6rem;
-      font-weight: 900;
-      color: rgba(184,151,58,0.15);
-      letter-spacing: 0.1em;
-    }
-
-    .about-name-plate {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: var(--gold);
-      padding: 1.25rem 1.75rem;
-    }
-
-    .about-name {
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--navy);
-    }
-
-    .about-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(13,27,42,0.65);
-      margin-top: 0.2rem;
-    }
-
-    .about-text {
-      font-size: 1rem;
-      color: var(--text-light);
-      line-height: 1.85;
-      margin-bottom: 1.25rem;
-    }
-
-    .about-stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-      margin: 2.5rem 0;
-    }
-
-    .about-stat {
-      border-left: 2px solid var(--gold);
-      padding-left: 1rem;
-    }
-
-    .about-stat-num {
-      font-family: var(--serif);
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 1.1;
-    }
-
-    .about-stat-label {
-      font-size: 0.78rem;
-      color: var(--gray);
-      margin-top: 0.2rem;
-    }
-
-    @media (max-width: 900px) {
-      .about-inner { grid-template-columns: 1fr; gap: 3rem; }
-      .about-visual { aspect-ratio: 4/3; max-width: 480px; }
-    }
-
-    /* ─── FINAL CTA ─── */
-    #cta {
-      background: var(--navy-mid);
-      text-align: center;
-      padding: 8rem 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(184,151,58,0.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .cta-headline {
-      font-family: var(--serif);
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
-      position: relative;
-    }
-
-    .cta-sub {
-      font-size: 1.1rem;
-      color: var(--text-light);
-      max-width: 600px;
-      margin: 0 auto 3rem;
-      line-height: 1.75;
-      position: relative;
-    }
-
-    .cta-buttons {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
+      font-family: var(--serif);
+      font-size: 12rem;
+      font-weight: 700;
+      color: rgba(0,0,0,0.04);
+      user-select: none;
+    }
+
+    .about-plate {
+      width: 100%;
+      background: var(--orange);
+      padding: 1.5rem 2rem;
       position: relative;
     }
 
-    .cta-secondary-link {
-      font-size: 0.875rem;
-      color: var(--gray);
+    .about-pname { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--white); }
+    .about-ptitle { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-top: 0.2rem; }
+
+    .about-text h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--black); margin-bottom: 1.5rem; }
+    .about-text p { font-size: 0.975rem; color: var(--mid); line-height: 1.875; margin-bottom: 1rem; }
+
+    .about-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+      margin: 2.5rem 0;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .as-n { font-family: var(--serif); font-size: 2rem; font-weight: 600; color: var(--black); line-height: 1; margin-bottom: 0.25rem; }
+    .as-l { font-size: 0.77rem; color: var(--gray); }
+
+    @media (max-width: 860px) {
+      .about-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .about-photo { aspect-ratio: 4/3; max-width: 400px; }
+    }
+
+    /* ─── CTA ─── */
+    #cta {
+      background: var(--orange);
+      color: var(--white);
+      padding: 8rem 0;
+      text-align: center;
+    }
+
+    .cta-wrap { max-width: 640px; margin: 0 auto; padding: 0 2rem; }
+
+    #cta h2 {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+      line-height: 1.05;
+    }
+
+    #cta p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.8;
+      margin-bottom: 3rem;
+    }
+
+    .cta-btns { display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex-wrap: wrap; }
+
+    .cta-secondary {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.5);
       text-decoration: none;
       transition: color 0.2s;
     }
-    .cta-secondary-link:hover { color: var(--gold); }
+    .cta-secondary:hover { color: var(--white); }
 
     /* ─── FOOTER ─── */
     footer {
-      background: #07111C;
-      padding: 4rem 2rem 2rem;
-      border-top: 1px solid rgba(184,151,58,0.12);
+      background: var(--black);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 4rem 0 2.5rem;
     }
 
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .footer-top {
+    .footer-grid {
       display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      grid-template-columns: 1.8fr 1fr 1fr 1fr;
       gap: 3rem;
       padding-bottom: 3rem;
       border-bottom: 1px solid rgba(255,255,255,0.06);
       margin-bottom: 2rem;
     }
 
-    .footer-brand-logo {
-      font-family: var(--serif);
-      font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      color: var(--white);
-      margin-bottom: 0.75rem;
-    }
-    .footer-brand-logo span { color: var(--gold); }
+    .footer-logo { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; letter-spacing: 0.1em; color: var(--white); margin-bottom: 0.75rem; }
+    .footer-logo em { color: var(--orange); font-style: normal; }
+    .footer-tag { font-size: 0.82rem; color: rgba(255,255,255,0.25); font-style: italic; }
 
-    .footer-tagline {
-      font-size: 0.875rem;
-      color: var(--gray);
-      font-style: italic;
-    }
+    .footer-col-h { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 1.25rem; }
 
-    .footer-col-title {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.25rem;
-    }
-
-    .footer-links {
-      list-style: none;
-    }
+    .footer-links { list-style: none; }
     .footer-links li { margin-bottom: 0.6rem; }
-    .footer-links a {
-      font-size: 0.875rem;
-      color: var(--gray);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+    .footer-links a { font-size: 0.82rem; color: rgba(255,255,255,0.42); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--white); }
 
-    .footer-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-legal { font-size: 0.74rem; color: rgba(255,255,255,0.18); }
 
-    .footer-legal {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.25);
-    }
+    @media (max-width: 860px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
 
-    @media (max-width: 900px) {
-      .footer-top { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 480px) {
-      .footer-top { grid-template-columns: 1fr; }
-    }
-
-    /* ─── ANIMATIONS ─── */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-up.visible {
-      opacity: 1;
-      transform: none;
-    }
+    /* ─── REVEAL ─── */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════ NAV ═══════════════ -->
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a href="#hero" class="nav-logo">ELEV<span>A</span>RE</a>
+    <a href="#hero" class="nav-logo">ELEV<em>A</em>RE</a>
     <ul class="nav-links">
       <li><a href="#problem">What We Do</a></li>
       <li><a href="#core">CORE System</a></li>
-      <li><a href="#lift">LIFT Community</a></li>
+      <li><a href="#engage">Services</a></li>
+      <li><a href="#certs">Certifications</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#cta">Contact</a></li>
     </ul>
-    <a href="https://calendly.com" target="_blank" class="btn btn-gold nav-cta">Book a Discovery Call</a>
-    <div class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </div>
+    <a href="https://calendly.com" target="_blank" class="btn btn-black">Book a Call</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
   </div>
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
   <a href="#problem" onclick="closeMobile()">What We Do</a>
   <a href="#core" onclick="closeMobile()">CORE System</a>
-  <a href="#lift" onclick="closeMobile()">LIFT Community</a>
+  <a href="#engage" onclick="closeMobile()">Services</a>
+  <a href="#certs" onclick="closeMobile()">Certifications</a>
   <a href="#about" onclick="closeMobile()">About</a>
   <a href="#cta" onclick="closeMobile()">Contact</a>
-  <a href="https://calendly.com" target="_blank" class="btn btn-gold">Book a Discovery Call</a>
+  <a href="https://calendly.com" target="_blank" class="btn btn-black">Book a Call</a>
 </div>
 
-<!-- ═══════════════ HERO ═══════════════ -->
+<!-- HERO -->
 <section id="hero">
-  <div class="hero-inner">
-    <div class="eyebrow">Enterprise Leadership Transformation</div>
-    <h1 class="hero-headline">
-      Your organization has a culture problem.<br>
-      <em>You already know who's causing it.</em>
+  <div class="hero-accent"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Executive Coaching &amp; Organizational Development</div>
+    <h1 class="hero-h">
+      Elevate Your Leadership.<br>
+      <em>Transform Your Organization.</em>
     </h1>
-    <p class="hero-sub">
-      Elevare partners with enterprise organizations to identify, confront, and transform the leadership patterns quietly destroying team trust, communication, and performance — before your best people walk out the door.
-    </p>
-    <div class="hero-ctas">
-      <a href="https://calendly.com" target="_blank" class="btn btn-gold">Book a Free Discovery Call</a>
-      <a href="#problem" class="hero-secondary">See How It Works &nbsp;↓</a>
+    <p class="hero-sub">The solution for organizational stability and scalability is people development. We help leaders close the gap between where they are and where they're capable of going.</p>
+    <div class="hero-btns">
+      <a href="https://calendly.com" target="_blank" class="btn btn-orange">Book a Discovery Call</a>
+      <a href="#problem" class="hero-ghost">See How It Works &nbsp;↓</a>
     </div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stat-item fade-up">
-      <div class="stat-number">30,000+</div>
-      <div class="stat-label">Leaders Developed</div>
-    </div>
-    <div class="stat-item fade-up" style="transition-delay:0.1s">
-      <div class="stat-number">1.7M</div>
-      <div class="stat-label">People Impacted via DC Water</div>
-    </div>
-    <div class="stat-item fade-up" style="transition-delay:0.2s">
-      <div class="stat-number">20+</div>
-      <div class="stat-label">Years of Organizational Transformation</div>
-    </div>
-    <div class="stat-item fade-up" style="transition-delay:0.3s">
-      <div class="stat-number">90 Days</div>
-      <div class="stat-label">to Measurable Culture Shift</div>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-n">30,000+</div>
+        <div class="stat-l">Leaders Developed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">1.7M</div>
+        <div class="stat-l">People Impacted via DC Water</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">20+</div>
+        <div class="stat-l">Years Executive Coaching</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">90 Days</div>
+        <div class="stat-l">to Measurable Culture Shift</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ PROBLEM ═══════════════ -->
-<section id="problem" class="section-mid">
+<!-- TAGLINE BAND -->
+<section id="tagline">
+  <div class="tagline-inner">
+    <div class="tagline-left">
+      <p class="tagline-left-text">"Consider this your invitation to lead at a higher level."</p>
+    </div>
+    <div class="tagline-right">
+      <p>Elevare was built on a simple belief: the health of any organization begins and ends with its leaders. When leaders grow, teams grow. When teams grow, organizations transform.</p>
+      <p>This is what it looks like when leadership development is treated as infrastructure — not an afterthought.</p>
+      <a href="https://calendly.com" target="_blank" class="btn btn-black" style="margin-top:1.5rem;align-self:flex-start;">Schedule a Conversation</a>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section id="clients">
   <div class="container">
-    <div class="problem-intro fade-up">
-      <div class="eyebrow">The Cost of Inaction</div>
-      <span class="gold-line" style="margin:0 auto 1.5rem;"></span>
-      <h2 class="section-headline">The leader nobody will confront is costing you more than you think.</h2>
-      <div class="section-body">
-        <p>Every organization has them. The high performer whose team has 40% higher turnover. The manager everyone walks on eggshells around. The executive whose communication style silently shuts down collaboration across entire departments.</p>
+    <div class="clients-row">
+      <span class="clients-label">Trusted By</span>
+      <span class="client-name">DC Water</span>
+      <span class="client-name">IET Corporation</span>
+      <span class="client-name">Freyssinet</span>
+      <span class="client-name">Mercy House</span>
+      <span class="client-name">UPCI</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="problem-layout">
+      <div class="reveal">
+        <span class="eyebrow">The Cost of Inaction</span>
+        <h2>The leader nobody will confront is costing you more than you think.</h2>
+        <p style="margin-top:1.5rem;">Every organization has them. The high performer whose team has 40% higher turnover. The manager everyone walks on eggshells around. The executive whose communication style silently shuts down entire departments.</p>
         <p>HR knows. The CEO suspects. Nobody acts.</p>
-        <div class="cost-callout">The average cost of one toxic leader: $144,000/year in turnover alone.</div>
-        <p>Before you count lost productivity, disengagement, and the talent you never knew you lost because they never felt safe enough to speak up.</p>
-        <p>Elevare exists for this exact problem. Not motivational fluff. Not annual retreats. Embedded, ongoing leadership transformation that changes behavior — and culture — at the root.</p>
+        <div class="cost-block">
+          <div class="cost-n">$144,000</div>
+          <div class="cost-l">Average annual cost of one toxic leader in turnover alone — before lost productivity and disengagement.</div>
+        </div>
+        <p>Elevare exists for this exact problem. Not motivational fluff. Not annual retreats. Embedded, ongoing transformation that changes behavior — and culture — at the root.</p>
       </div>
-    </div>
 
-    <div class="problem-cards">
-      <div class="problem-card fade-up">
-        <div class="card-number">01</div>
-        <div class="card-title">The Turnover Spiral</div>
-        <div class="card-body">Your best people don't leave companies. They leave managers. And they rarely tell you why on the way out.</div>
-      </div>
-      <div class="problem-card fade-up" style="transition-delay:0.1s">
-        <div class="card-number">02</div>
-        <div class="card-title">The Communication Breakdown</div>
-        <div class="card-body">When trust erodes between departments, execution slows. Decisions stall. Projects die in email threads. The culture becomes political instead of productive.</div>
-      </div>
-      <div class="problem-card fade-up" style="transition-delay:0.2s">
-        <div class="card-number">03</div>
-        <div class="card-title">The Promotion Trap</div>
-        <div class="card-body">Most managers were promoted because they were exceptional individual contributors — not because they knew how to lead people. The skills that got them promoted are different from the ones they need now.</div>
-      </div>
-      <div class="problem-card fade-up" style="transition-delay:0.3s">
-        <div class="card-number">04</div>
-        <div class="card-title">The One-Time Training Problem</div>
-        <div class="card-body">A motivating workshop. A notebook full of notes. Two weeks later nothing has changed. Leadership development requires consistency and accountability — not events.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════ CORE SYSTEM ═══════════════ -->
-<section id="core" class="section-dark">
-  <div class="container">
-    <div class="core-intro fade-up">
-      <div class="eyebrow">Our Methodology</div>
-      <span class="gold-line" style="margin:0 auto 1.5rem;"></span>
-      <h2 class="section-headline">Introducing the CORE System — the framework built to transform culture from the inside out.</h2>
-      <p class="core-sub">CORE is not a curriculum. It's an operating system for leadership — built around the four pillars every high-performing culture requires.</p>
-    </div>
-
-    <div class="core-pillars">
-      <div class="pillar fade-up">
-        <div class="pillar-letter">C</div>
-        <div class="pillar-name">Culture</div>
-        <p class="pillar-body">Every organization has a culture. The question is whether it was designed or inherited. CORE begins by mapping your current culture honestly — the gaps, the patterns, and the specific leaders shaping it — before building toward the one your organization needs.</p>
-      </div>
-      <div class="pillar fade-up" style="transition-delay:0.1s">
-        <div class="pillar-letter">O</div>
-        <div class="pillar-name">Ownership</div>
-        <p class="pillar-body">The most dangerous leader is one who has authority without accountability. CORE installs ownership frameworks that shift leaders from managing tasks to taking genuine responsibility for their people, their results, and their impact.</p>
-      </div>
-      <div class="pillar fade-up" style="transition-delay:0.2s">
-        <div class="pillar-letter">R</div>
-        <div class="pillar-name">Results</div>
-        <p class="pillar-body">Leadership development without measurable outcomes is decoration. Every CORE engagement is tied to specific organizational metrics — retention rates, communication quality, decision velocity, and employee engagement scores.</p>
-      </div>
-      <div class="pillar fade-up" style="transition-delay:0.3s">
-        <div class="pillar-letter">E</div>
-        <div class="pillar-name">Evolution</div>
-        <p class="pillar-body">Culture doesn't maintain itself. CORE builds the accountability structures, ongoing development rhythms, and leadership habits that ensure transformation compounds over time rather than fading after the first quarter.</p>
-      </div>
-    </div>
-
-    <div class="core-cta-wrap fade-up">
-      <a href="https://calendly.com" target="_blank" class="btn btn-outline-gold">Learn How CORE Works &nbsp;→</a>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════ SOCIAL PROOF ═══════════════ -->
-<section id="proof" class="section-mid">
-  <div class="container">
-    <div class="fade-up" style="text-align:center;margin-bottom:3rem;">
-      <div class="eyebrow">Trusted By</div>
-    </div>
-
-    <div class="logos-row fade-up">
-      <div class="logo-pill">DC Water</div>
-      <div class="logo-pill">IET Corporation</div>
-      <div class="logo-pill">Freyssinet</div>
-      <div class="logo-pill">Mercy House</div>
-      <div class="logo-pill">UPCI</div>
-    </div>
-
-    <div class="testimonials">
-      <div class="testimonial fade-up">
-        <span class="quote-mark">"</span>
-        <p class="quote-text">The leadership workshop provided the space for genuine self-reflection, and qualities were discovered that had been forgotten. The biggest outcome was developing a new level of self-awareness that has helped refine my leadership style and approach to work. Now, there are tools not only to motivate and inspire others — but also to stay motivated and inspired.</p>
-        <div class="quote-attr">Ecudemio Gutierrez &nbsp;·&nbsp; Director of Safety, DC Water</div>
-      </div>
-      <div class="testimonial fade-up" style="transition-delay:0.15s">
-        <span class="quote-mark">"</span>
-        <p class="quote-text">Working with Jason has been a transformative experience for both my personal and professional growth. His ability to connect through a compassionate and challenging perspective, ask the right questions, and provide thoughtful guidance has helped me gain clarity, confidence, and direction. What sets Jason apart is his rare combination of empathy, insight, and real-world experience.</p>
-        <div class="quote-attr">Mandi Kuidlan &nbsp;·&nbsp; VP, IET Corporation</div>
+      <div class="problem-list reveal">
+        <div class="p-item">
+          <span class="p-num">01</span>
+          <div>
+            <div class="p-title">The Turnover Spiral</div>
+            <p class="p-body">Your best people don't leave companies. They leave managers. And they rarely tell you why on the way out.</p>
+          </div>
+        </div>
+        <div class="p-item">
+          <span class="p-num">02</span>
+          <div>
+            <div class="p-title">The Communication Breakdown</div>
+            <p class="p-body">When trust erodes between departments, execution slows. Decisions stall. Projects die in email threads. The culture becomes political instead of productive.</p>
+          </div>
+        </div>
+        <div class="p-item">
+          <span class="p-num">03</span>
+          <div>
+            <div class="p-title">The Promotion Trap</div>
+            <p class="p-body">Most managers were promoted because they were exceptional individual contributors — not because they knew how to lead people.</p>
+          </div>
+        </div>
+        <div class="p-item">
+          <span class="p-num">04</span>
+          <div>
+            <div class="p-title">The One-Time Training Problem</div>
+            <p class="p-body">A motivating workshop. A notebook full of notes. Two weeks later nothing has changed. Leadership development requires consistency and accountability — not events.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ ENGAGEMENT / PRICING ═══════════════ -->
-<section id="engage" class="section-light">
+<!-- CORE SYSTEM -->
+<section id="core">
   <div class="container">
-    <div class="engage-intro fade-up">
-      <div class="eyebrow">Three Ways to Engage</div>
-      <span class="gold-line" style="margin:0 auto 1.5rem;"></span>
-      <h2 class="section-headline">Choose the level of partnership your organization needs.</h2>
-      <p class="engage-sub">Every engagement begins with a CORE Diagnostic — a paid organizational assessment that maps your exact leadership landscape before we recommend a path forward.</p>
+    <div class="core-top reveal">
+      <div>
+        <span class="eyebrow" style="color:rgba(200,90,30,0.8);">Our Methodology</span>
+        <h2>The CORE System — an operating system for leadership culture.</h2>
+      </div>
+      <p>CORE is not a curriculum. It's built around the four pillars every high-performing organization requires — and tied to measurable outcomes.</p>
+    </div>
+    <div class="core-grid">
+      <div class="c-pillar reveal">
+        <div class="c-letter">C</div>
+        <div class="c-word">Culture</div>
+        <p class="c-body">Every organization has a culture. The question is whether it was designed or inherited. CORE begins by mapping your current culture honestly — the gaps, the patterns, the specific leaders shaping it.</p>
+      </div>
+      <div class="c-pillar reveal">
+        <div class="c-letter">O</div>
+        <div class="c-word">Ownership</div>
+        <p class="c-body">The most dangerous leader is one with authority and no accountability. CORE installs ownership frameworks that shift leaders from managing tasks to genuine responsibility for their people and results.</p>
+      </div>
+      <div class="c-pillar reveal">
+        <div class="c-letter">R</div>
+        <div class="c-word">Results</div>
+        <p class="c-body">Leadership development without measurable outcomes is decoration. Every CORE engagement is tied to specific metrics — retention, communication quality, decision velocity, and engagement scores.</p>
+      </div>
+      <div class="c-pillar reveal">
+        <div class="c-letter">E</div>
+        <div class="c-word">Evolution</div>
+        <p class="c-body">Culture doesn't maintain itself. CORE builds the accountability structures and leadership habits that ensure transformation compounds over time rather than fading after the first quarter.</p>
+      </div>
+    </div>
+    <div style="margin-top:3rem;" class="reveal">
+      <a href="https://calendly.com" target="_blank" class="btn btn-outline-white">Learn How CORE Works &nbsp;→</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="proof">
+  <div class="container">
+    <div class="proof-head reveal">
+      <span class="eyebrow">Client Results</span>
+      <h2>What leaders say about working with Elevare.</h2>
+    </div>
+    <div class="t-grid">
+      <div class="t-card reveal">
+        <p class="t-body">"The leadership workshop provided the space for genuine self-reflection, and qualities were discovered that had been forgotten. The biggest outcome was developing a new level of self-awareness that has helped refine my leadership style and approach to work. Now, there are tools not only to motivate and inspire others — but also to stay motivated and inspired."</p>
+        <div class="t-bar"></div>
+        <div class="t-name">Ecudemio Gutierrez</div>
+        <div class="t-role">Director of Safety, DC Water</div>
+      </div>
+      <div class="t-card reveal">
+        <p class="t-body">"Working with Elevare has been a transformative experience for both my personal and professional growth. The ability to connect through a compassionate and challenging perspective, ask the right questions, and provide thoughtful guidance has helped me gain clarity, confidence, and direction. A rare combination of empathy, insight, and real-world experience."</p>
+        <div class="t-bar"></div>
+        <div class="t-name">Mandi Kuidlan</div>
+        <div class="t-role">Vice President, IET Corporation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES / PRICING -->
+<section id="engage">
+  <div class="container">
+    <div class="engage-top reveal">
+      <span class="eyebrow">Three Ways to Engage</span>
+      <h2>Choose the level of partnership your organization needs.</h2>
+      <p>Every engagement begins with a CORE Diagnostic — a structured organizational assessment that maps your exact leadership landscape before we recommend a path forward.</p>
     </div>
 
-    <!-- Row 1: Diagnostic + Retainer -->
-    <div class="pricing-top fade-up">
-
+    <div class="p-grid">
       <!-- CORE Diagnostic -->
-      <div class="pricing-card">
-        <span class="card-badge badge-gold">Start Here</span>
-        <div class="pricing-name">CORE Diagnostic</div>
-        <div class="pricing-price">$15,000</div>
-        <div class="pricing-tagline">One-time investment</div>
-        <p class="pricing-desc">The most important investment your organization will make before any leadership development begins. In 30 days, Elevare interviews key leaders, administers CORE assessments, observes team dynamics, and delivers a written findings report with a precise 12-month transformation roadmap.<br><br>You will know exactly where your culture is breaking down. You will know which leaders are driving it. And you will have a documented plan to fix it.</p>
-        <ul class="pricing-list">
+      <div class="p-card invert reveal">
+        <span class="p-tag p-tag-o">Start Here</span>
+        <div class="p-name">CORE Diagnostic</div>
+        <div class="p-price">$15,000</div>
+        <div class="p-note">One-time investment · 30-day engagement</div>
+        <p class="p-desc">In 30 days, we interview key leaders, administer CORE assessments, observe team dynamics, and deliver a written findings report with a precise 12-month transformation roadmap. You will know exactly where your culture is breaking down — and have a documented plan to fix it.</p>
+        <ul class="p-list">
           <li>Full organizational leadership assessment</li>
           <li>Individual CORE assessments for up to 20 leaders</li>
           <li>Stakeholder interviews across departments</li>
           <li>Written findings report with ranked priority gaps</li>
           <li>12-month transformation roadmap</li>
-          <li>90-minute findings presentation to executive team</li>
+          <li>90-min executive presentation of findings</li>
         </ul>
-        <a href="https://calendly.com" target="_blank" class="btn btn-gold" style="align-self:flex-start;">Apply for a Diagnostic</a>
-        <p class="pricing-note">Diagnostic clients receive priority consideration for retainer engagements. 90% of diagnostic clients choose to continue with a CORE retainer.</p>
+        <a href="https://calendly.com" target="_blank" class="btn btn-orange" style="align-self:flex-start;">Apply for a Diagnostic</a>
+        <p style="font-size:0.73rem;color:rgba(255,255,255,0.25);font-style:italic;margin-top:1rem;">90% of diagnostic clients continue with a CORE retainer.</p>
       </div>
 
       <!-- CORE Retainer -->
-      <div class="pricing-card">
-        <span class="card-badge badge-outline">Most Popular</span>
-        <div class="pricing-name">CORE Retainer</div>
-        <div class="pricing-tagline" style="margin-bottom:0.5rem;">Your organization's embedded leadership development partner.</div>
+      <div class="p-card invert reveal">
+        <span class="p-tag p-tag-b">Most Popular</span>
+        <div class="p-name">CORE Retainer</div>
+        <div class="p-note" style="margin-bottom:0.75rem;">Your organization's embedded leadership development partner.</div>
 
-        <div class="retainer-tiers">
-          <div class="tier">
-            <div class="tier-header">
-              <span class="tier-name">CORE Foundation</span>
-              <span class="tier-price">$1,500<span style="font-size:0.875rem;font-weight:400;color:var(--gray)">/mo</span></span>
-            </div>
-            <div class="tier-ideal">Ideal for: Organizations with 10–50 employees formalizing their leadership culture for the first time.</div>
-            <ul class="tier-list">
-              <li>1 virtual group session/month (90 min, up to 8 leaders)</li>
-              <li>Monthly CORE leadership brief</li>
-              <li>Full CORE resource library access</li>
-              <li>Quarterly pulse check per leader</li>
-              <li>Email advisory support</li>
-              <li>End-of-quarter progress report</li>
-            </ul>
-          </div>
-
-          <div class="tier featured-tier">
-            <div class="tier-header">
-              <span class="tier-name">CORE Growth</span>
-              <span class="tier-price">$2,750<span style="font-size:0.875rem;font-weight:400;color:var(--gray)">/mo</span></span>
-            </div>
-            <div class="tier-ideal">Ideal for: Scaling organizations (50–200 employees) experiencing culture drift, internal promotions gone wrong, or communication breakdown.</div>
-            <ul class="tier-list">
-              <li>2 sessions/month (virtual + in-person, up to 15)</li>
-              <li>Custom curriculum for your organization's gaps</li>
-              <li>30-min coaching calls for up to 3 key leaders</li>
-              <li>CORE health assessment + 6-month review</li>
-              <li>Priority advisory — 48hr response</li>
-              <li>Quarterly executive debrief</li>
-            </ul>
-          </div>
-
-          <div class="tier">
-            <div class="tier-header">
-              <span class="tier-name">CORE Apex</span>
-              <span class="tier-price">$4,000<span style="font-size:0.875rem;font-weight:400;color:var(--gray)">/mo</span></span>
-            </div>
-            <div class="tier-ideal">Ideal for: Established organizations (200+ employees) that need a true leadership infrastructure — not a vendor, but a strategic partner.</div>
-            <ul class="tier-list">
-              <li>Weekly virtual + 2 in-person sessions/month (up to 25)</li>
-              <li>Full leadership audit + custom 12-month roadmap</li>
-              <li>Unlimited 1:1 coaching for top 5 leaders</li>
-              <li>Crisis advisory — same-day response</li>
-              <li>Custom workshop design for all-hands/offsite</li>
-              <li>Monthly C-suite strategy session</li>
-              <li>Annual leadership retreat facilitation</li>
-              <li>Branded internal leadership resources</li>
-            </ul>
-          </div>
+        <div class="r-tabs">
+          <div class="r-tab on" onclick="tab(this,'f')">Foundation</div>
+          <div class="r-tab" onclick="tab(this,'g')">Growth</div>
+          <div class="r-tab" onclick="tab(this,'a')">Apex</div>
         </div>
 
-        <a href="https://calendly.com" target="_blank" class="btn btn-gold" style="margin-top:2rem;align-self:flex-start;">Book a Discovery Call</a>
+        <div class="r-panel on" id="pf">
+          <div class="r-price">$1,500<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
+          <div class="r-ideal">For organizations with 10–50 employees formalizing their leadership culture for the first time.</div>
+          <ul class="r-list">
+            <li>1 virtual group session/month (90 min, 8 leaders)</li>
+            <li>Monthly CORE leadership brief</li>
+            <li>Full CORE resource library access</li>
+            <li>Quarterly pulse check per leader</li>
+            <li>Email advisory support</li>
+            <li>End-of-quarter progress report</li>
+          </ul>
+        </div>
+        <div class="r-panel" id="pg">
+          <div class="r-price">$2,750<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
+          <div class="r-ideal">For scaling organizations (50–200 employees) experiencing culture drift or communication breakdown.</div>
+          <ul class="r-list">
+            <li>2 sessions/month (virtual group + in-person, 15 leaders)</li>
+            <li>Custom curriculum for your organization's gaps</li>
+            <li>30-min coaching calls for up to 3 key leaders</li>
+            <li>CORE health assessment + 6-month review</li>
+            <li>Priority advisory — 48hr response</li>
+            <li>Quarterly executive debrief</li>
+          </ul>
+        </div>
+        <div class="r-panel" id="pa">
+          <div class="r-price">$4,000<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
+          <div class="r-ideal">For established organizations (200+) needing a true leadership infrastructure — a strategic partner embedded in the culture.</div>
+          <ul class="r-list">
+            <li>Weekly virtual + 2 in-person sessions/month (25 leaders)</li>
+            <li>Full leadership audit + custom 12-month roadmap</li>
+            <li>Unlimited 1:1 coaching for top 5 leaders</li>
+            <li>Crisis advisory — same-day response</li>
+            <li>Custom workshop design for all-hands/offsite</li>
+            <li>Branded internal leadership resources</li>
+            <li>Monthly C-suite strategy session</li>
+            <li>Annual retreat facilitation</li>
+          </ul>
+        </div>
+
+        <a href="https://calendly.com" target="_blank" class="btn btn-orange" style="align-self:flex-start;margin-top:2rem;">Book a Discovery Call</a>
       </div>
     </div>
 
-    <!-- Row 2: Enterprise -->
-    <div class="enterprise-row fade-up">
-      <div>
-        <span class="card-badge badge-navy">Custom</span>
-        <div class="pricing-name" style="color:var(--white);font-family:var(--serif);font-size:1.8rem;font-weight:700;margin-bottom:0.5rem;">Enterprise Partnership</div>
-        <p style="font-size:0.95rem;color:var(--gray);font-style:italic;margin-bottom:1.5rem;">For organizations that need a fully custom engagement — multi-site, multi-division, or enterprise-wide culture transformation.</p>
-        <p style="font-size:0.95rem;color:var(--text-light);line-height:1.8;margin-bottom:1.5rem;">Some organizations are beyond a standard retainer. Multi-location companies, divisions undergoing restructuring, organizations navigating leadership transitions at the executive level — these engagements require a custom architecture.</p>
-        <p style="font-size:0.95rem;color:var(--text-light);line-height:1.8;">Elevare's enterprise partnerships are scoped individually. We assess your organization's full leadership landscape and build a program designed specifically for your structure, your culture, and your goals.</p>
-        <a href="https://calendly.com" target="_blank" class="btn btn-gold" style="margin-top:2rem;">Request Enterprise Pricing</a>
+    <!-- Enterprise -->
+    <div class="ent-card reveal">
+      <div class="ent-l">
+        <span class="p-tag p-tag-g" style="margin-bottom:1.5rem;">Custom</span>
+        <div class="ent-name">Enterprise Partnership</div>
+        <div class="ent-sub">For organizations that need a fully custom engagement — multi-site, multi-division, or enterprise-wide culture transformation.</div>
+        <p class="ent-p">Multi-location companies, divisions undergoing restructuring, organizations navigating executive-level transitions — these engagements are scoped individually, designed specifically for your structure, culture, and goals.</p>
+        <a href="https://calendly.com" target="_blank" class="btn btn-black">Request Enterprise Pricing</a>
       </div>
-      <div>
-        <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;">What's Included</p>
-        <ul class="enterprise-list">
+      <div class="ent-r">
+        <p style="font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--orange);margin-bottom:1.25rem;">What's Included</p>
+        <ul class="ent-list">
           <li>Custom scoping and organizational assessment</li>
           <li>Multi-site or multi-division CORE implementation</li>
           <li>Certified CORE facilitators placed inside your organization</li>
-          <li>Custom leadership development curriculum under your brand</li>
+          <li>Custom leadership curriculum under your brand</li>
           <li>Executive team coaching and C-suite advisory</li>
           <li>Quarterly board-level culture and performance reporting</li>
           <li>Annual leadership transformation summit</li>
         </ul>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ═══════════════ LIFT ═══════════════ -->
-<section id="lift" class="section-dark">
+<!-- CERTIFICATIONS -->
+<section id="certs">
   <div class="container">
-    <div class="fade-up">
-      <div class="eyebrow">Personal Development</div>
-      <span class="gold-line"></span>
+    <div class="certs-top reveal">
+      <span class="eyebrow" style="color:rgba(200,90,30,0.8);">Credentials</span>
+      <h2>John Maxwell Certified</h2>
+      <p>Elevare's methodology is grounded in the John Maxwell Leadership Certification — one of the most widely recognized leadership credentialing programs in the world, with over 40,000 certified practitioners globally.</p>
     </div>
-    <div class="lift-inner">
-      <div class="fade-up">
-        <h2 class="section-headline" style="max-width:520px;">LIFT — The leadership community built for the leaders doing the work.</h2>
-        <p class="section-body" style="margin-top:1rem;">Most leadership communities are passive. Watch a video. Read an article. Feel inspired for 48 hours and go back to the same patterns.</p>
-        <p class="section-body" style="margin-top:0.75rem;">LIFT is different. It's a live, active, peer-accountability community for leaders who are serious about their growth — with weekly sessions from Jason, a full CORE curriculum library, AI-personalized leadership development, and a network of non-competing peers who hold each other accountable.</p>
 
-        <ul class="lift-features">
-          <li>Weekly live sessions with Jason Staten — recorded and available on demand</li>
+    <div class="certs-grid">
+      <div class="cert-item reveal">
+        <div class="cert-badge">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="cert-issuer">John Maxwell · MLCT</div>
+        <div class="cert-name">Certified Maxwell Coach</div>
+        <p class="cert-desc">Credentialed to deliver transformational one-on-one and group coaching rooted in Maxwell's proven leadership principles — applied to real organizational challenges, not abstract theory.</p>
+      </div>
+      <div class="cert-item reveal">
+        <div class="cert-badge">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="cert-issuer">John Maxwell · MLCT</div>
+        <div class="cert-name">Certified Maxwell Speaker</div>
+        <p class="cert-desc">Certified to deliver keynotes and leadership workshops that move audiences from inspiration to practical application — across organizations of every size, sector, and industry.</p>
+      </div>
+      <div class="cert-item reveal">
+        <div class="cert-badge">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        </div>
+        <div class="cert-issuer">John Maxwell · MLCT</div>
+        <div class="cert-name">Certified Maxwell Trainer</div>
+        <p class="cert-desc">Credentialed to facilitate Maxwell curriculum inside organizations — equipping internal teams with leadership frameworks that produce measurable behavioral change over time.</p>
+      </div>
+    </div>
+
+    <div class="certs-note reveal">
+      <p>The Maxwell Leadership Certification is issued through the Maxwell Leadership Certified Team (MLCT) Online Learning Platform and is recognized by organizations across more than 180 countries.</p>
+      <a href="https://calendly.com" target="_blank" class="btn btn-outline-white">Learn More About Our Approach</a>
+    </div>
+  </div>
+</section>
+
+<!-- LIFT -->
+<section id="lift">
+  <div class="container">
+    <div class="lift-layout">
+      <div class="lift-content reveal">
+        <span class="eyebrow">Community</span>
+        <h2>LIFT — The leadership community built for leaders doing the work.</h2>
+        <p>Most leadership communities are passive. Watch a video. Read an article. Feel inspired for 48 hours and return to the same patterns.</p>
+        <p>LIFT is live, active, and built for accountability — with weekly sessions, a full CORE curriculum library, AI-personalized development briefs, and a network of non-competing peers who hold each other to a higher standard.</p>
+        <ul class="lift-list">
+          <li>Weekly live sessions — recorded and available on demand</li>
           <li>Full access to the CORE curriculum in digital format</li>
-          <li>Monthly leadership challenges with peer accountability structures</li>
-          <li>AI-personalized leadership brief — based on your specific role, industry, and challenges</li>
-          <li>Private community of leaders across industries — collaboration without competition</li>
-          <li>Direct access to Jason for questions, feedback, and guidance</li>
+          <li>Monthly leadership challenges with peer accountability</li>
+          <li>AI-personalized leadership brief — tailored to your role and industry</li>
+          <li>Private community across industries — collaboration without competition</li>
+          <li>Direct access for questions, feedback, and guidance</li>
           <li>Quarterly virtual workshops and hot seats</li>
         </ul>
       </div>
-
-      <div class="fade-up" style="transition-delay:0.15s">
-        <div class="lift-price-block">
-          <div class="eyebrow" style="margin-bottom:0.5rem;">Join LIFT</div>
+      <div class="reveal">
+        <div class="lift-box">
+          <span class="eyebrow" style="margin-bottom:0.5rem;">Join LIFT</span>
           <div class="lift-price">$497</div>
-          <div class="lift-price-period">per month, per organization</div>
-
-          <a href="https://calendly.com" target="_blank" class="btn btn-gold" style="width:100%;text-align:center;display:block;">Join LIFT Today</a>
-          <a href="#lift" class="lift-secondary">Learn more about LIFT →</a>
-
-          <div class="lift-who">
-            Organizations that want ongoing leadership development between retainer sessions — or leaders who want access to the CORE system at a more accessible price point before committing to a full retainer engagement.
-          </div>
-
-          <blockquote class="lift-quote">
-            "LIFT is where the real work happens between sessions. The peer accountability alone is worth the investment."
-          </blockquote>
+          <div class="lift-mo">per month, per organization</div>
+          <a href="https://calendly.com" target="_blank" class="btn btn-black" style="display:block;text-align:center;width:100%;margin-bottom:0.75rem;">Join LIFT Today</a>
+          <a href="#lift" style="display:block;text-align:center;font-size:0.77rem;color:var(--gray);text-decoration:none;margin-bottom:0.5rem;">Learn more about LIFT →</a>
+          <div class="lift-who">For organizations wanting ongoing development between retainer sessions — or leaders who want access to the CORE system at a more accessible price point.</div>
+          <blockquote class="lift-quote">"LIFT is where the real work happens between sessions. The peer accountability alone is worth the investment."</blockquote>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ PROCESS ═══════════════ -->
-<section id="process" class="section-mid">
+<!-- PROCESS -->
+<section id="process">
   <div class="container">
-    <div class="process-intro fade-up">
-      <div class="eyebrow">How It Works</div>
-      <span class="gold-line" style="margin:0 auto 1.5rem;"></span>
-      <h2 class="section-headline">From first conversation to embedded partner in 30 days.</h2>
+    <div class="process-head reveal">
+      <span class="eyebrow">How It Works</span>
+      <h2>From first conversation to embedded partner in 30 days.</h2>
     </div>
-
     <div class="steps">
-      <div class="step fade-up">
-        <div class="step-number">1</div>
-        <div class="step-title">Discovery Call</div>
-        <p class="step-body">A 30-minute conversation to understand your organization's current leadership landscape, your top challenges, and whether Elevare is the right fit. No pitch. Just an honest conversation.</p>
+      <div class="s-item reveal">
+        <div class="s-n">01</div>
+        <div class="s-title">Discovery Call</div>
+        <p class="s-body">A 30-minute conversation to understand your organization's current leadership landscape and whether Elevare is the right fit. No pitch. Just an honest conversation.</p>
       </div>
-      <div class="step fade-up" style="transition-delay:0.1s">
-        <div class="step-number">2</div>
-        <div class="step-title">CORE Diagnostic</div>
-        <p class="step-body">If there's mutual fit, we begin with the CORE Diagnostic — a 30-day organizational assessment that maps your exact leadership gaps and delivers a written transformation roadmap.</p>
+      <div class="s-item reveal">
+        <div class="s-n">02</div>
+        <div class="s-title">CORE Diagnostic</div>
+        <p class="s-body">A 30-day organizational assessment that maps your exact leadership gaps and delivers a written transformation roadmap before any retainer begins.</p>
       </div>
-      <div class="step fade-up" style="transition-delay:0.2s">
-        <div class="step-number">3</div>
-        <div class="step-title">Roadmap Presentation</div>
-        <p class="step-body">We present your findings and recommended path forward to your executive team. You approve the engagement structure before anything begins.</p>
+      <div class="s-item reveal">
+        <div class="s-n">03</div>
+        <div class="s-title">Roadmap Presentation</div>
+        <p class="s-body">We present findings to your executive team. You approve the engagement structure before anything begins — no surprises, no locked-in commitments.</p>
       </div>
-      <div class="step fade-up" style="transition-delay:0.3s">
-        <div class="step-number">4</div>
-        <div class="step-title">Embedded Partnership</div>
-        <p class="step-body">Elevare becomes your organization's leadership development partner. Sessions, check-ins, accountability, and ongoing culture measurement — month after month, we show up.</p>
+      <div class="s-item reveal">
+        <div class="s-n">04</div>
+        <div class="s-title">Embedded Partnership</div>
+        <p class="s-body">Elevare becomes your organization's leadership development partner. Sessions, check-ins, accountability, culture measurement — month after month, we show up.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ ABOUT ═══════════════ -->
-<section id="about" class="section-dark">
+<!-- ABOUT -->
+<section id="about">
   <div class="container">
-    <div class="about-inner">
-      <div class="fade-up">
-        <div class="about-visual">
-          <div class="about-initials">JS</div>
-          <div class="about-name-plate">
-            <div class="about-name">Jason Staten</div>
-            <div class="about-title">Founder &amp; Executive Coach · Elevare Leadership Solutions</div>
+    <div class="about-layout">
+      <div class="reveal">
+        <div class="about-photo">
+          <div class="about-photo-bg">JS</div>
+          <div class="about-plate">
+            <div class="about-pname">Jason Staten</div>
+            <div class="about-ptitle">Founder &amp; Lead Executive Coach</div>
           </div>
         </div>
       </div>
-
-      <div class="fade-up" style="transition-delay:0.15s">
-        <div class="eyebrow">Leadership</div>
-        <span class="gold-line"></span>
-        <h2 class="section-headline">Jason Staten has spent 20 years in rooms where culture was broken — and he knows how to fix it.</h2>
-
-        <p class="about-text" style="margin-top:1.5rem;">As an executive coach and leadership consultant, Jason has spoken to 30,000 people in a single venue and coached leaders at organizations serving 1.7 million people — including DC Water, one of the largest water utilities in the United States.</p>
-        <p class="about-text">Jason's approach isn't built on frameworks borrowed from business school. It's built on two decades of watching what actually changes people — and what doesn't. His methodology connects leadership to purpose and identity at a level that produces lasting behavioral change, not temporary inspiration.</p>
-        <p class="about-text">The leaders Jason works with don't just perform better. They become different. And when a leader becomes different, their team becomes different. And when a team becomes different, the organization follows.</p>
-        <p class="about-text">That's what Elevare exists to do.</p>
-
+      <div class="about-text reveal">
+        <span class="eyebrow">Leadership</span>
+        <h2>20 years inside rooms where culture was broken.</h2>
+        <p style="margin-top:1.25rem;">The Elevare methodology was built by Jason Staten over two decades of watching what actually changes organizations — and what doesn't. His background spans executive coaching, leadership consulting, and speaking — including addressing 30,000 people in a single venue and coaching leaders at DC Water, one of the largest water utilities in the United States.</p>
+        <p>The approach doesn't borrow from business school frameworks. It connects leadership to purpose and identity at a level that produces lasting behavioral change, not temporary inspiration. When leaders become different, their teams become different. When teams become different, the organization follows.</p>
         <div class="about-stats">
-          <div class="about-stat">
-            <div class="about-stat-num">30,000+</div>
-            <div class="about-stat-label">People in a Single Venue</div>
+          <div>
+            <div class="as-n">30,000+</div>
+            <div class="as-l">People reached in a single venue</div>
           </div>
-          <div class="about-stat">
-            <div class="about-stat-num">20+</div>
-            <div class="about-stat-label">Years Executive Coaching</div>
+          <div>
+            <div class="as-n">20+</div>
+            <div class="as-l">Years executive coaching</div>
           </div>
-          <div class="about-stat">
-            <div class="about-stat-num">1.7M</div>
-            <div class="about-stat-label">People Impacted via DC Water</div>
+          <div>
+            <div class="as-n">1.7M</div>
+            <div class="as-l">People impacted via DC Water</div>
           </div>
-          <div class="about-stat">
-            <div class="about-stat-num">3+</div>
-            <div class="about-stat-label">Industries Transformed</div>
+          <div>
+            <div class="as-n">3+</div>
+            <div class="as-l">Industries transformed</div>
           </div>
         </div>
-
-        <a href="https://calendly.com" target="_blank" class="btn btn-gold">Work With Jason &nbsp;→</a>
+        <a href="https://calendly.com" target="_blank" class="btn btn-black">Work With Elevare &nbsp;→</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ FINAL CTA ═══════════════ -->
+<!-- FINAL CTA -->
 <section id="cta">
-  <div class="container" style="text-align:center;">
-    <div class="fade-up">
-      <div class="eyebrow" style="justify-content:center;display:block;">Ready to Begin</div>
-      <h2 class="cta-headline">Your culture won't fix itself.</h2>
-      <p class="cta-sub">But it can be fixed. It starts with an honest 30-minute conversation about what's actually happening inside your organization — and whether Elevare is the right partner to change it.</p>
-      <div class="cta-buttons">
-        <a href="https://calendly.com" target="_blank" class="btn btn-gold">Book a Free Discovery Call</a>
-        <a href="#lift" class="cta-secondary-link">Or start with LIFT for $497/month &nbsp;→</a>
-      </div>
+  <div class="cta-wrap reveal">
+    <span class="eyebrow" style="display:block;text-align:center;color:rgba(255,255,255,0.6);">Ready to Begin</span>
+    <h2>Your culture won't fix itself.</h2>
+    <p>But it can be fixed. It starts with an honest 30-minute conversation about what's actually happening inside your organization — and whether Elevare is the right partner to change it.</p>
+    <div class="cta-btns">
+      <a href="https://calendly.com" target="_blank" class="btn btn-black">Book a Free Discovery Call</a>
+      <a href="#lift" class="cta-secondary">Or start with LIFT for $497/month →</a>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
+<!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-top">
+  <div class="container">
+    <div class="footer-grid">
       <div>
-        <div class="footer-brand-logo">ELEV<span>A</span>RE</div>
-        <div class="footer-tagline">Culture doesn't fix itself.</div>
+        <div class="footer-logo">ELEV<em>A</em>RE</div>
+        <div class="footer-tag">Culture doesn't fix itself.</div>
       </div>
-
       <div>
-        <div class="footer-col-title">Services</div>
+        <div class="footer-col-h">Services</div>
         <ul class="footer-links">
           <li><a href="#engage">CORE Diagnostic</a></li>
           <li><a href="#engage">CORE Retainer</a></li>
@@ -1621,28 +1234,25 @@
           <li><a href="#lift">LIFT Community</a></li>
         </ul>
       </div>
-
       <div>
-        <div class="footer-col-title">Company</div>
+        <div class="footer-col-h">Company</div>
         <ul class="footer-links">
-          <li><a href="#about">About Jason</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#certs">Certifications</a></li>
           <li><a href="#process">How It Works</a></li>
           <li><a href="#proof">Testimonials</a></li>
-          <li><a href="#cta">Contact</a></li>
         </ul>
       </div>
-
       <div>
-        <div class="footer-col-title">Connect</div>
+        <div class="footer-col-h">Connect</div>
         <ul class="footer-links">
           <li><a href="https://linkedin.com/in/jasonrstaten" target="_blank">LinkedIn</a></li>
           <li><a href="https://instagram.com/jasonrstaten" target="_blank">@jasonrstaten</a></li>
           <li><a href="mailto:jason@elevaresolutions.org">jason@elevaresolutions.org</a></li>
-          <li><span style="color:var(--gray);">Hollywood, MD</span></li>
+          <li><span style="color:rgba(255,255,255,0.2);">Hollywood, MD</span></li>
         </ul>
       </div>
     </div>
-
     <div class="footer-bottom">
       <div class="footer-legal">© 2026 Elevare Leadership Solutions. All rights reserved.</div>
     </div>
@@ -1650,22 +1260,22 @@
 </footer>
 
 <script>
-  // Mobile menu
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
   hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
   function closeMobile() { mobileMenu.classList.remove('open'); }
 
-  // Scroll animations
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  function tab(el, id) {
+    document.querySelectorAll('.r-tab').forEach(t => t.classList.remove('on'));
+    document.querySelectorAll('.r-panel').forEach(p => p.classList.remove('on'));
+    el.classList.add('on');
+    document.getElementById('p' + id).classList.add('on');
+  }
 
-  // Trigger hero stats on load
-  setTimeout(() => {
-    document.querySelectorAll('#hero .fade-up').forEach(el => el.classList.add('visible'));
-  }, 400);
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
 </body>
 </html>
