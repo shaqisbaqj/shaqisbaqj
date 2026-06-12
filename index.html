@@ -578,6 +578,9 @@
     .ticker-row:hover { animation-play-state: paused; }
     .ticker-track { display: flex; align-items: center; gap: 0; }
     @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .client-logo-slot { display: inline-flex; align-items: center; padding: 0 3rem; }
+    .client-logo-img { height: 32px; width: auto; max-width: 120px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.45; transition: opacity 0.2s; }
+    .client-logo-img:hover { opacity: 0.75; }
 
     /* ── ORANGE UNDERLINE SWEEP on headings ── */
     .sweep-underline { position: relative; display: inline; }
@@ -962,6 +965,7 @@
       <div>
         <div class="stat-n" data-target="1.7" data-suffix="M">1.7M</div>
         <div class="stat-l">People reached through client organizations</div>
+        <div style="font-size:0.62rem;color:rgba(255,255,255,0.2);margin-top:0.25rem;line-height:1.4;">Based on combined organizational reach of clients served</div>
       </div>
       <div>
         <div class="stat-n" data-target="20" data-suffix="+">20+</div>
@@ -1002,25 +1006,35 @@
   <div class="ticker-wrap">
     <div class="ticker-row">
       <div class="ticker-track">
-        <span class="client-name">DC Water</span>
+        <!-- Drop logo-dc-water.png in the same folder to replace text -->
+        <span class="client-logo-slot">
+          <img src="logo-dc-water.png" alt="DC Water" class="client-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" />
+          <span class="client-name" style="display:none;">DC Water</span>
+        </span>
         <span class="client-sep">·</span>
-        <span class="client-name">IET Corporation</span>
+        <!-- Drop logo-iet.png in the same folder to replace text -->
+        <span class="client-logo-slot">
+          <img src="logo-iet.png" alt="IET Corporation" class="client-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" />
+          <span class="client-name" style="display:none;">IET Corporation</span>
+        </span>
         <span class="client-sep">·</span>
-        <span class="client-name">Freyssinet</span>
+        <!-- Drop logo-freyssinet.png in the same folder to replace text -->
+        <span class="client-logo-slot">
+          <img src="logo-freyssinet.png" alt="Freyssinet" class="client-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" />
+          <span class="client-name" style="display:none;">Freyssinet</span>
+        </span>
         <span class="client-sep">·</span>
-        <span class="client-name">Mercy House</span>
+        <!-- Drop logo-mercy-house.png in the same folder to replace text -->
+        <span class="client-logo-slot">
+          <img src="logo-mercy-house.png" alt="Mercy House" class="client-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" />
+          <span class="client-name" style="display:none;">Mercy House</span>
+        </span>
         <span class="client-sep">·</span>
-        <span class="client-name">UPCI</span>
-        <span class="client-sep">·</span>
-        <span class="client-name">DC Water</span>
-        <span class="client-sep">·</span>
-        <span class="client-name">IET Corporation</span>
-        <span class="client-sep">·</span>
-        <span class="client-name">Freyssinet</span>
-        <span class="client-sep">·</span>
-        <span class="client-name">Mercy House</span>
-        <span class="client-sep">·</span>
-        <span class="client-name">UPCI</span>
+        <!-- Drop logo-upci.png in the same folder to replace text -->
+        <span class="client-logo-slot">
+          <img src="logo-upci.png" alt="UPCI" class="client-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" />
+          <span class="client-name" style="display:none;">UPCI</span>
+        </span>
         <span class="client-sep">·</span>
       </div>
     </div>
