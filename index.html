@@ -184,10 +184,11 @@
     }
 
     /* ── CLIENTS ── */
-    #clients { padding: 3rem 0; border-bottom: 1px solid var(--border); }
-    .clients-row { display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; }
-    .clients-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-gray); flex-shrink: 0; }
-    .client-name { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-gray); }
+    #clients { padding: 3rem 0 3.5rem; background: var(--black); }
+    .clients-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.28); display: block; text-align: center; margin-bottom: 1.75rem; }
+    .client-name { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5); padding: 0 3rem; white-space: nowrap; transition: color 0.2s; }
+    .client-name:hover { color: var(--white); }
+    .client-sep { color: var(--orange); font-size: 1.2rem; opacity: 0.5; align-self: center; }
 
     /* ── PROBLEM ── */
     #problem { background: var(--white); }
@@ -542,6 +543,57 @@
     /* ── REVEAL ── */
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.in { opacity: 1; transform: none; }
+
+    /* ── TYPEWRITER CURSOR ── */
+    #hero-line2 { opacity: 0; }
+    #hero-line2::after { content: '|'; color: var(--orange); animation: blink 0.75s step-end infinite; margin-left: 2px; }
+    #hero-line2.cursor-done::after { animation: none; opacity: 0; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── PILLAR LETTER ANIMATION ── */
+    .c-letter { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .c-letter.letter-in { opacity: 0.85; transform: none; }
+
+    /* ── STAT COUNTER GLOW ── */
+    .stat-n { transition: color 0.3s; }
+
+    /* ── CTA PULSE ── */
+    .btn-orange {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-orange::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.12);
+      transform: translateX(-100%);
+      transition: transform 0.4s ease;
+    }
+    .btn-orange:hover::after { transform: translateX(0); }
+
+    /* ── CLIENTS TICKER ── */
+    .ticker-wrap { overflow: hidden; width: 100%; }
+    .ticker-row { display: flex; width: max-content; animation: ticker 22s linear infinite; }
+    .ticker-row:hover { animation-play-state: paused; }
+    .ticker-track { display: flex; align-items: center; gap: 0; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── ORANGE UNDERLINE SWEEP on headings ── */
+    .sweep-underline { position: relative; display: inline; }
+    .sweep-underline::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--orange);
+      transition: width 0.7s ease 0.3s;
+    }
+    .reveal.in .sweep-underline::after { width: 100%; }
+
+    /* ── COST COUNTER ── */
+    #cost-counter { display: inline; }
   </style>
 </head>
 <body>
@@ -581,7 +633,7 @@
     <div class="hero-tag">Executive Coaching &amp; Organizational Development</div>
     <h1 class="hero-h">
       Elevate Your Leadership.<br>
-      <em>Transform Your Organization.</em>
+      <em id="hero-line2" data-text="Transform Your Organization."></em>
     </h1>
     <p class="hero-sub">The solution for organizational stability and scalability is people development. We help leaders close the gap between where they are and where they're capable of going.</p>
     <div class="hero-btns">
@@ -590,15 +642,15 @@
     </div>
     <div class="stats-row">
       <div>
-        <div class="stat-n">30,000+</div>
+        <div class="stat-n" data-target="30000" data-suffix="+">30,000+</div>
         <div class="stat-l">Reached in a single arena</div>
       </div>
       <div>
-        <div class="stat-n">1.7M</div>
+        <div class="stat-n" data-target="1.7" data-suffix="M">1.7M</div>
         <div class="stat-l">People impacted via DC Water</div>
       </div>
       <div>
-        <div class="stat-n">20+</div>
+        <div class="stat-n" data-target="20" data-suffix="+">20+</div>
         <div class="stat-l">Years of executive coaching</div>
       </div>
       <div>
@@ -634,14 +686,33 @@
 
 <!-- CLIENTS -->
 <section id="clients">
-  <div class="container">
-    <div class="clients-row">
-      <span class="clients-label">Trusted By</span>
-      <span class="client-name">DC Water</span>
-      <span class="client-name">IET Corporation</span>
-      <span class="client-name">Freyssinet</span>
-      <span class="client-name">Mercy House</span>
-      <span class="client-name">UPCI</span>
+  <div style="text-align:center;padding-bottom:1.5rem;">
+    <span class="clients-label">Trusted By Organizations Across Industries</span>
+  </div>
+  <div class="ticker-wrap">
+    <div class="ticker-row">
+      <div class="ticker-track">
+        <span class="client-name">DC Water</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">IET Corporation</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">Freyssinet</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">Mercy House</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">UPCI</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">DC Water</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">IET Corporation</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">Freyssinet</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">Mercy House</span>
+        <span class="client-sep">·</span>
+        <span class="client-name">UPCI</span>
+        <span class="client-sep">·</span>
+      </div>
     </div>
   </div>
 </section>
@@ -656,7 +727,7 @@
         <p style="margin-top:1.5rem;">Every organization has them. The high performer whose team has 40% higher turnover. The manager everyone walks on eggshells around. The executive whose communication style silently shuts down entire departments.</p>
         <p>HR knows. The CEO suspects. Nobody acts.</p>
         <div class="cost-block">
-          <div class="cost-n">$144,000</div>
+          <div class="cost-n"><span id="cost-counter">$144,000</span></div>
           <div class="cost-l">Average annual cost of one toxic leader in turnover alone — before lost productivity and disengagement.</div>
         </div>
         <p>Elevare exists for this exact problem. Not motivational fluff. Not annual retreats. Embedded, ongoing transformation that changes behavior — and culture — at the root.</p>
@@ -794,10 +865,11 @@
       <div class="r-tabs" style="margin-top:1.5rem;">
         <div class="r-tab on" onclick="tab(this,'f')">Foundation &nbsp;·&nbsp; $1,500/mo</div>
         <div class="r-tab" onclick="tab(this,'g')">Growth &nbsp;·&nbsp; $2,750/mo</div>
-        <div class="r-tab" onclick="tab(this,'a')">Apex &nbsp;·&nbsp; $4,000/mo</div>
+        <div class="r-tab" onclick="tab(this,'a')">Apex &nbsp;·&nbsp; $8,000/mo</div>
       </div>
 
       <div class="r-panel on" id="pf">
+        <div class="r-price">$1,500<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
         <div class="r-ideal">For organizations with 10–50 employees formalizing their leadership culture for the first time.</div>
         <ul class="r-list">
           <li>1 virtual group session/month (90 min, up to 8 leaders)</li>
@@ -809,6 +881,7 @@
         </ul>
       </div>
       <div class="r-panel" id="pg">
+        <div class="r-price">$2,750<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
         <div class="r-ideal">For scaling organizations (50–200 employees) experiencing culture drift or communication breakdown across teams.</div>
         <ul class="r-list">
           <li>2 sessions/month — 1 virtual group + 1 in-person (up to 15 leaders)</li>
@@ -820,6 +893,7 @@
         </ul>
       </div>
       <div class="r-panel" id="pa">
+        <div class="r-price">$8,000<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.25)">/mo</span></div>
         <div class="r-ideal">For established organizations (200+ employees) that need a true leadership infrastructure — a strategic partner embedded in the culture.</div>
         <ul class="r-list">
           <li>Weekly virtual + 2 in-person sessions/month (up to 25 leaders)</li>
@@ -1123,19 +1197,19 @@
         <p>The approach doesn't borrow from business school frameworks. It connects leadership to purpose and identity at a level that produces lasting behavioral change, not temporary inspiration. When leaders become different, their teams become different. When teams become different, the organization follows.</p>
         <div class="about-stats">
           <div>
-            <div class="as-n">30,000+</div>
+            <div class="as-n" data-target="30000" data-suffix="+">30,000+</div>
             <div class="as-l">Reached in a single arena</div>
           </div>
           <div>
-            <div class="as-n">20+</div>
+            <div class="as-n" data-target="20" data-suffix="+">20+</div>
             <div class="as-l">Years executive coaching</div>
           </div>
           <div>
-            <div class="as-n">1.7M</div>
+            <div class="as-n" data-target="1.7" data-suffix="M">1.7M</div>
             <div class="as-l">People impacted via DC Water</div>
           </div>
           <div>
-            <div class="as-n">3+</div>
+            <div class="as-n" data-target="3" data-suffix="+">3+</div>
             <div class="as-l">Industries transformed</div>
           </div>
         </div>
@@ -1201,11 +1275,13 @@
 </footer>
 
 <script>
+  /* ── MOBILE MENU ── */
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
   hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
   function closeMobile() { mobileMenu.classList.remove('open'); }
 
+  /* ── RETAINER TABS ── */
   function tab(el, id) {
     document.querySelectorAll('.r-tab').forEach(t => t.classList.remove('on'));
     document.querySelectorAll('.r-panel').forEach(p => p.classList.remove('on'));
@@ -1213,10 +1289,112 @@
     document.getElementById('p' + id).classList.add('on');
   }
 
+  /* ── SCROLL REVEAL ── */
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  /* ── ANIMATED COUNTERS ── */
+  function animateCounter(el) {
+    const target = el.dataset.target;
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    const isDecimal = target.includes('.');
+    const end = parseFloat(target);
+    const duration = 2000;
+    const startTime = performance.now();
+
+    function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+
+    function update(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutQuart(progress);
+      const current = end * eased;
+      el.textContent = prefix + (isDecimal ? current.toFixed(1) : Math.floor(current).toLocaleString()) + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+      else el.textContent = prefix + (isDecimal ? end.toFixed(1) : end.toLocaleString()) + suffix;
+    }
+    requestAnimationFrame(update);
+  }
+
+  const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !e.target.dataset.counted) {
+        e.target.dataset.counted = '1';
+        animateCounter(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
+
+  /* ── HERO TYPEWRITER ── */
+  (function() {
+    const line2 = document.getElementById('hero-line2');
+    if (!line2) return;
+    const text = line2.dataset.text;
+    line2.textContent = '';
+    line2.style.opacity = '1';
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        line2.textContent += text[i++];
+        setTimeout(type, 42);
+      } else {
+        line2.classList.add('cursor-done');
+      }
+    }
+    setTimeout(type, 900);
+  })();
+
+  /* ── COST COUNTER ── */
+  (function() {
+    const el = document.getElementById('cost-counter');
+    if (!el) return;
+    const counterO = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.done) {
+          e.target.dataset.done = '1';
+          const duration = 2200;
+          const end = 144000;
+          const start = performance.now();
+          function easeOut(t) { return 1 - Math.pow(1-t, 3); }
+          function tick(now) {
+            const p = Math.min((now - start) / duration, 1);
+            el.textContent = '$' + Math.floor(easeOut(p) * end).toLocaleString();
+            if (p < 1) requestAnimationFrame(tick);
+            else el.textContent = '$144,000';
+          }
+          requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.6 });
+    counterO.observe(el);
+  })();
+
+  /* ── PILLAR LETTER STAGGER ANIMATION ── */
+  const pillarObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const letters = e.target.querySelectorAll('.c-letter');
+        letters.forEach((l, i) => {
+          setTimeout(() => l.classList.add('letter-in'), i * 120);
+        });
+        pillarObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  const coreGrid = document.querySelector('.core-grid');
+  if (coreGrid) pillarObs.observe(coreGrid);
+
+  /* ── CLIENTS TICKER — clone for seamless loop ── */
+  (function() {
+    const track = document.querySelector('.ticker-track');
+    if (!track) return;
+    const clone = track.cloneNode(true);
+    track.parentElement.appendChild(clone);
+  })();
 </script>
 </body>
 </html>
