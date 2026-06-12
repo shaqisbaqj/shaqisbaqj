@@ -184,10 +184,13 @@
     }
 
     /* ── CLIENTS ── */
-    #clients { padding: 3rem 0; border-bottom: 1px solid var(--border); }
-    .clients-row { display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; }
-    .clients-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-gray); flex-shrink: 0; }
-    .client-name { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-gray); }
+    #clients { padding: 4rem 0; background: var(--black); border-top: none; border-bottom: none; }
+    .clients-inner-wrap { display: flex; flex-direction: column; align-items: center; gap: 2.25rem; }
+    .clients-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    .clients-row { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; width: 100%; border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .client-name { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.55); padding: 1.5rem 2.5rem; border-right: 1px solid rgba(255,255,255,0.07); transition: color 0.2s; white-space: nowrap; }
+    .client-name:last-child { border-right: none; }
+    .client-name:hover { color: var(--white); }
 
     /* ── PROBLEM ── */
     #problem { background: var(--white); }
@@ -635,13 +638,15 @@
 <!-- CLIENTS -->
 <section id="clients">
   <div class="container">
-    <div class="clients-row">
-      <span class="clients-label">Trusted By</span>
-      <span class="client-name">DC Water</span>
-      <span class="client-name">IET Corporation</span>
-      <span class="client-name">Freyssinet</span>
-      <span class="client-name">Mercy House</span>
-      <span class="client-name">UPCI</span>
+    <div class="clients-inner-wrap">
+      <span class="clients-label">Trusted By Organizations Across Industries</span>
+      <div class="clients-row">
+        <span class="client-name">DC Water</span>
+        <span class="client-name">IET Corporation</span>
+        <span class="client-name">Freyssinet</span>
+        <span class="client-name">Mercy House</span>
+        <span class="client-name">UPCI</span>
+      </div>
     </div>
   </div>
 </section>
