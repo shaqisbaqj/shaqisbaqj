@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-ink-950 text-paper-100 antialiased;
+  font-feature-settings: "cv11", "ss01";
+}
+
+* {
+  @apply border-ink-700;
+}
+
+::selection {
+  @apply bg-emerald-700/50 text-paper-50;
+}
+
+/* Thin, quiet scrollbars — the app should feel engineered, not decorated. */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-ink-700 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-ink-600;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
