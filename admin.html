@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Elevare</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; --pale: #FBF0EA; --bg: #f9fafb; }
+  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); -webkit-font-smoothing: antialiased; }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar { width: 260px; background: var(--black); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto; }
+  .sidebar-logo { padding: 1.75rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .sidebar-logo a { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--white); display: block; }
+  .sidebar-logo em { color: var(--orange); font-style: normal; }
+  .sidebar-logo-sub { font-size: 0.62rem; color: rgba(255,255,255,0.25); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.3rem; }
+  .sidebar-section { padding: 1.25rem 1.5rem 0.5rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+  .client-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
+  .client-link:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .client-link.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.07); }
+  .client-avatar { width: 26px; height: 26px; background: rgba(200,90,30,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--orange); flex-shrink: 0; }
+  .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.45); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
+  .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .nav-item.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.07); }
+  .nav-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+  .sidebar-footer { padding: 1.25rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.07); margin-top: auto; }
+  .logout-btn { font-size: 0.72rem; color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; font-family: 'Inter',sans-serif; transition: color 0.15s; }
+  .logout-btn:hover { color: var(--orange); }
+  .add-client-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.5rem; font-size: 0.72rem; font-weight: 600; color: var(--orange); cursor: pointer; letter-spacing: 0.06em; background: none; border: none; font-family: 'Inter',sans-serif; width: 100%; text-align: left; transition: background 0.15s; }
+  .add-client-btn:hover { background: rgba(200,90,30,0.07); }
+
+  /* Main */
+  .main { margin-left: 260px; flex: 1; }
+  .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .page-title { font-size: 1.05rem; font-weight: 600; }
+  .topbar-right { display: flex; gap: 0.75rem; align-items: center; }
+  .content { padding: 2rem; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Stats row */
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--white); border: 1px solid var(--border); padding: 1.25rem; border-top: 2px solid var(--border); }
+  .stat-card.accent { border-top-color: var(--orange); }
+  .stat-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.4rem; }
+  .stat-val { font-family: 'Cormorant Garamond',serif; font-size: 2rem; font-weight: 600; color: var(--black); }
+  .stat-val.orange { color: var(--orange); }
+
+  /* Tables */
+  .table-card { background: var(--white); border: 1px solid var(--border); }
+  .table-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .table-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); padding: 0.75rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); background: #fafafa; }
+  td { padding: 0.875rem 1.5rem; font-size: 0.85rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; cursor: pointer; }
+  .badge { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; }
+  .badge-active { background: #dcfce7; color: #166534; }
+  .badge-done { background: #eff6ff; color: #1e40af; }
+  .badge-open { background: #fef9c3; color: #854d0e; }
+
+  /* Client detail */
+  .client-header { background: var(--white); border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; }
+  .client-name-lg { font-family: 'Cormorant Garamond',serif; font-size: 1.8rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .client-meta { font-size: 0.8rem; color: var(--gray); }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .detail-section { background: var(--white); border: 1px solid var(--border); }
+  .detail-section-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .detail-section-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
+  .detail-items { padding: 0; }
+  .detail-item { padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; }
+  .detail-item:last-child { border-bottom: none; }
+  .detail-item-title { font-weight: 500; }
+  .detail-item-meta { font-size: 0.72rem; color: var(--gray); margin-top: 0.2rem; }
+
+  /* Buttons */
+  .btn-sm { padding: 0.45rem 0.9rem; background: var(--orange); color: var(--white); border: none; font-family: 'Inter',sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+  .btn-sm:hover { background: #a34716; }
+  .btn-outline { background: transparent; color: var(--orange); border: 1px solid var(--orange); }
+  .btn-outline:hover { background: var(--orange); color: var(--white); }
+  .btn-danger { background: #dc2626; }
+  .btn-danger:hover { background: #b91c1c; }
+
+  /* Modals */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--white); width: 100%; max-width: 500px; padding: 2rem; max-height: 90vh; overflow-y: auto; }
+  .modal-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .field-group { margin-bottom: 1.25rem; }
+  .field-label { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 0.4rem; }
+  input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"], textarea, select {
+    width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); font-family: 'Inter',sans-serif;
+    font-size: 0.875rem; color: var(--black); background: #fafafa; outline: none; transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--orange); background: var(--white); }
+  textarea { resize: vertical; min-height: 80px; }
+  .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+  .btn-cancel { padding: 0.7rem 1.25rem; background: none; border: 1px solid var(--border); font-family: 'Inter',sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; color: var(--gray); }
+  .empty-state { padding: 2.5rem 1.5rem; text-align: center; color: var(--gray); font-size: 0.85rem; }
+  .empty-state strong { display: block; font-size: 0.95rem; color: var(--black); margin-bottom: 0.35rem; }
+
+  .progress-bar { background: var(--border); height: 5px; border-radius: 3px; margin-top: 0.5rem; }
+  .progress-fill { height: 100%; background: var(--orange); border-radius: 3px; }
+  .search-input { padding: 0.55rem 1rem; border: 1px solid var(--border); font-family: 'Inter',sans-serif; font-size: 0.82rem; outline: none; width: 200px; }
+  .search-input:focus { border-color: var(--orange); }
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--black); color: var(--white); padding: 0.875rem 1.5rem; font-size: 0.82rem; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 900px) { .detail-grid { grid-template-columns: 1fr; } .stats-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <a href="index.html"><em>E</em>LEVARE</a>
+      <div class="sidebar-logo-sub">Admin Panel</div>
+    </div>
+
+    <nav style="padding:0.75rem 0;">
+      <div class="nav-item active" data-view="overview">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-view="resources">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Resources
+      </div>
+    </nav>
+
+    <div class="sidebar-section">Clients</div>
+    <button class="add-client-btn" id="addClientBtn">+ Add New Client</button>
+    <div id="clientNav"></div>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="page-title" id="pageTitle">Dashboard</span>
+      <div class="topbar-right">
+        <span style="font-size:0.75rem;color:var(--gray);" id="adminName"></span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <div class="panel active" id="view-overview">
+        <div class="stats-row">
+          <div class="stat-card accent">
+            <div class="stat-label">Total Clients</div>
+            <div class="stat-val orange" id="statClients">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Sessions Logged</div>
+            <div class="stat-val" id="statSessions">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Open Action Items</div>
+            <div class="stat-val" id="statTasks">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Resources Uploaded</div>
+            <div class="stat-val" id="statResources">0</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-head">
+            <span class="table-title">All Clients</span>
+            <input class="search-input" placeholder="Search clients..." id="clientSearch">
+          </div>
+          <table id="clientTable">
+            <thead><tr><th>Name</th><th>Email</th><th>Program</th><th>Sessions</th><th>Open Tasks</th></tr></thead>
+            <tbody id="clientTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CLIENT DETAIL -->
+      <div class="panel" id="view-client">
+        <div class="client-header">
+          <div>
+            <div class="client-name-lg" id="detailName">—</div>
+            <div class="client-meta" id="detailMeta">—</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;">
+            <button class="btn-sm btn-outline" id="addSessionBtn">+ Session</button>
+            <button class="btn-sm btn-outline" id="addTaskBtn">+ Task</button>
+            <button class="btn-sm btn-outline" id="addResourceBtn">+ Resource</button>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-section">
+            <div class="detail-section-head">
+              <span class="detail-section-title">Sessions</span>
+              <span id="sessionProgress" style="font-size:0.72rem;color:var(--gray);"></span>
+            </div>
+            <div class="detail-items" id="detailSessions"><div class="empty-state"><strong>No sessions yet</strong></div></div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-section-head">
+              <span class="detail-section-title">Action Items</span>
+            </div>
+            <div class="detail-items" id="detailTasks"><div class="empty-state"><strong>No action items yet</strong></div></div>
+          </div>
+          <div class="detail-section" style="grid-column:1/-1;">
+            <div class="detail-section-head">
+              <span class="detail-section-title">Resources Assigned</span>
+              <button class="btn-sm" style="font-size:0.62rem;" id="addResourceClientBtn">+ Add Resource</button>
+            </div>
+            <div class="detail-items" id="detailResources"><div class="empty-state"><strong>No resources yet</strong></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESOURCES -->
+      <div class="panel" id="view-resources">
+        <div class="table-card">
+          <div class="table-head">
+            <span class="table-title">All Resources</span>
+            <button class="btn-sm" id="newResourceBtn">+ New Resource</button>
+          </div>
+          <table>
+            <thead><tr><th>Title</th><th>Type</th><th>Assigned To</th><th>Date Added</th><th></th></tr></thead>
+            <tbody id="resourceTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ADD CLIENT MODAL -->
+<div class="modal-overlay" id="modalClient">
+  <div class="modal">
+    <div class="modal-title">Add New Client</div>
+    <div class="field-group"><label class="field-label">Full Name</label><input type="text" id="cName" placeholder="Jane Smith"></div>
+    <div class="field-group"><label class="field-label">Email Address</label><input type="email" id="cEmail" placeholder="jane@company.com"></div>
+    <div class="field-group"><label class="field-label">Temporary Password</label><input type="password" id="cPass" placeholder="They can change this after login"></div>
+    <div class="field-group"><label class="field-label">Program / Cohort</label><input type="text" id="cProgram" placeholder="e.g. Executive Coaching Q3 2026"></div>
+    <div class="modal-actions">
+      <button class="btn-sm" id="saveClient">Create Client Account</button>
+      <button class="btn-cancel" onclick="closeModal('modalClient')">Cancel</button>
+    </div>
+    <div style="font-size:0.72rem;color:var(--gray);margin-top:1rem;">The client will receive a confirmation email and can log in with these credentials.</div>
+  </div>
+</div>
+
+<!-- ADD SESSION MODAL -->
+<div class="modal-overlay" id="modalSession">
+  <div class="modal">
+    <div class="modal-title">Add Session</div>
+    <div class="field-group"><label class="field-label">Session Title</label><input type="text" id="sTitle" placeholder="e.g. Communicating with Clarity"></div>
+    <div class="field-group"><label class="field-label">Session Number</label><input type="number" id="sNum" min="1" placeholder="1"></div>
+    <div class="field-group"><label class="field-label">Total Sessions in Program</label><input type="number" id="sTot" min="1" value="12"></div>
+    <div class="field-group"><label class="field-label">Date</label><input type="date" id="sDate"></div>
+    <div class="field-group">
+      <label class="field-label">Status</label>
+      <select id="sCompleted"><option value="false">Scheduled / Upcoming</option><option value="true">Completed</option></select>
+    </div>
+    <div class="field-group"><label class="field-label">Notes (optional)</label><textarea id="sNotes" placeholder="Session notes, key takeaways..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-sm" id="saveSession">Save Session</button>
+      <button class="btn-cancel" onclick="closeModal('modalSession')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="modalTask">
+  <div class="modal">
+    <div class="modal-title">Add Action Item</div>
+    <div class="field-group"><label class="field-label">Task Title</label><input type="text" id="tTitle" placeholder="e.g. Complete delegation exercise"></div>
+    <div class="field-group"><label class="field-label">Description (optional)</label><textarea id="tDesc" placeholder="Additional context or instructions..."></textarea></div>
+    <div class="field-group"><label class="field-label">Due Date (optional)</label><input type="date" id="tDue"></div>
+    <div class="modal-actions">
+      <button class="btn-sm" id="saveTask">Assign Task</button>
+      <button class="btn-cancel" onclick="closeModal('modalTask')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD RESOURCE MODAL -->
+<div class="modal-overlay" id="modalResource">
+  <div class="modal">
+    <div class="modal-title">Add Resource</div>
+    <div class="field-group"><label class="field-label">Title</label><input type="text" id="rTitle" placeholder="e.g. Leadership Workbook"></div>
+    <div class="field-group"><label class="field-label">Description (optional)</label><input type="text" id="rDesc" placeholder="Brief description"></div>
+    <div class="field-group"><label class="field-label">URL / Link</label><input type="text" id="rUrl" placeholder="https://..."></div>
+    <div class="field-group">
+      <label class="field-label">Assign To</label>
+      <select id="rAssign"><option value="all">All Clients</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-sm" id="saveResource">Save Resource</button>
+      <button class="btn-cancel" onclick="closeModal('modalResource')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const { createClient } = supabase
+const db = createClient('https://djjtgsdnorxgxzkfbxbj.supabase.co', 'sb_publishable_F5RpcjB3xhZjY8j_AHzODQ_8K7Nw719')
+
+let adminUser = null, clients = [], selectedClient = null
+
+// Auth guard + admin check
+db.auth.getSession().then(async ({ data: { session } }) => {
+  if (!session) { window.location.href = 'portal.html'; return }
+  adminUser = session.user
+  const { data: profile } = await db.from('profiles').select('*').eq('id', adminUser.id).single()
+  if (profile?.role !== 'admin') { window.location.href = 'dashboard.html'; return }
+  document.getElementById('adminName').textContent = profile.full_name || adminUser.email
+  loadAll()
+})
+
+async function loadAll() {
+  await loadClients()
+  loadOverviewStats()
+  loadResourceTable()
+}
+
+async function loadClients() {
+  const { data } = await db.from('profiles').select('*').eq('role', 'client').order('full_name')
+  clients = data || []
+  renderClientNav()
+  renderClientTable(clients)
+  document.getElementById('statClients').textContent = clients.length
+
+  // Populate resource assign dropdown
+  const sel = document.getElementById('rAssign')
+  sel.innerHTML = '<option value="all">All Clients</option>' + clients.map(c => `<option value="${c.id}">${c.full_name || c.email}</option>`).join('')
+}
+
+function renderClientNav() {
+  document.getElementById('clientNav').innerHTML = clients.map(c => `
+    <div class="client-link" data-id="${c.id}" onclick="selectClient('${c.id}')">
+      <div class="client-avatar">${(c.full_name || c.email || '?')[0].toUpperCase()}</div>
+      <span>${c.full_name || c.email}</span>
+    </div>`).join('')
+}
+
+function renderClientTable(list) {
+  const tbody = document.getElementById('clientTableBody')
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem;">No clients yet. Add your first client above.</td></tr>'; return }
+  tbody.innerHTML = list.map(c => `
+    <tr onclick="selectClient('${c.id}')">
+      <td><strong>${c.full_name || '—'}</strong></td>
+      <td>${c.email || '—'}</td>
+      <td>${c.program || '—'}</td>
+      <td id="sess-${c.id}">—</td>
+      <td id="task-${c.id}">—</td>
+    </tr>`).join('')
+  // Load per-client stats async
+  list.forEach(async c => {
+    const [{ data: sess }, { data: tasks }] = await Promise.all([
+      db.from('sessions').select('id,completed').eq('client_id', c.id),
+      db.from('action_items').select('id,completed').eq('client_id', c.id)
+    ])
+    const el1 = document.getElementById(`sess-${c.id}`)
+    const el2 = document.getElementById(`task-${c.id}`)
+    if (el1) el1.textContent = `${sess?.filter(s=>s.completed).length||0} / ${sess?.length||0}`
+    if (el2) el2.textContent = tasks?.filter(t=>!t.completed).length || 0
+  })
+}
+
+async function loadOverviewStats() {
+  const [{ count: sc }, { data: tasks }, { count: rc }] = await Promise.all([
+    db.from('sessions').select('*', { count:'exact', head:true }),
+    db.from('action_items').select('completed'),
+    db.from('resources').select('*', { count:'exact', head:true })
+  ])
+  document.getElementById('statSessions').textContent = sc || 0
+  document.getElementById('statTasks').textContent = tasks?.filter(t=>!t.completed).length || 0
+  document.getElementById('statResources').textContent = rc || 0
+}
+
+async function selectClient(id) {
+  selectedClient = clients.find(c => c.id === id)
+  if (!selectedClient) return
+
+  // Update sidebar
+  document.querySelectorAll('.client-link').forEach(el => el.classList.remove('active'))
+  document.querySelector(`.client-link[data-id="${id}"]`)?.classList.add('active')
+
+  showView('client')
+  document.getElementById('detailName').textContent = selectedClient.full_name || selectedClient.email
+  document.getElementById('detailMeta').textContent = `${selectedClient.email}${selectedClient.program ? ' · ' + selectedClient.program : ''}`
+  document.getElementById('pageTitle').textContent = selectedClient.full_name || 'Client'
+
+  loadDetailSessions()
+  loadDetailTasks()
+  loadDetailResources()
+}
+
+async function loadDetailSessions() {
+  const { data } = await db.from('sessions').select('*').eq('client_id', selectedClient.id).order('session_number')
+  const comp = data?.filter(s=>s.completed).length||0
+  const tot = data?.length||0
+  document.getElementById('sessionProgress').textContent = `${comp} / ${tot} completed`
+  const el = document.getElementById('detailSessions')
+  if (!data?.length) { el.innerHTML = '<div class="empty-state"><strong>No sessions yet</strong></div>'; return }
+  el.innerHTML = data.map(s => `
+    <div class="detail-item">
+      <div>
+        <div class="detail-item-title">Session ${s.session_number||'—'}: ${s.title}</div>
+        <div class="detail-item-meta">${s.session_date ? new Date(s.session_date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'No date set'}</div>
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="badge ${s.completed?'badge-done':'badge-open'}">${s.completed?'Done':'Scheduled'}</span>
+        <button class="btn-sm ${s.completed?'btn-danger':''}" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="toggleSession('${s.id}',${s.completed})">${s.completed?'Unmark':'✓ Mark Done'}</button>
+        <button class="btn-sm btn-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="deleteRow('sessions','${s.id}',loadDetailSessions)">✕</button>
+      </div>
+    </div>`).join('')
+}
+
+async function loadDetailTasks() {
+  const { data } = await db.from('action_items').select('*').eq('client_id', selectedClient.id).order('created_at',{ascending:false})
+  const el = document.getElementById('detailTasks')
+  if (!data?.length) { el.innerHTML = '<div class="empty-state"><strong>No action items yet</strong></div>'; return }
+  el.innerHTML = data.map(t => `
+    <div class="detail-item">
+      <div>
+        <div class="detail-item-title" style="${t.completed?'text-decoration:line-through;color:var(--gray);':''}">${t.title}</div>
+        ${t.description?`<div class="detail-item-meta">${t.description}</div>`:''}
+        ${t.due_date?`<div class="detail-item-meta">Due: ${new Date(t.due_date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>`:''}
+      </div>
+      <div style="display:flex;gap:0.5rem;">
+        <span class="badge ${t.completed?'badge-done':'badge-open'}">${t.completed?'Done':'Open'}</span>
+        <button class="btn-sm btn-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="deleteRow('action_items','${t.id}',loadDetailTasks)">✕</button>
+      </div>
+    </div>`).join('')
+}
+
+async function loadDetailResources() {
+  const { data } = await db.from('resources').select('*').eq('client_id', selectedClient.id)
+  const el = document.getElementById('detailResources')
+  if (!data?.length) { el.innerHTML = '<div class="empty-state"><strong>No resources assigned to this client yet</strong></div>'; return }
+  el.innerHTML = data.map(r => `
+    <div class="detail-item">
+      <div><div class="detail-item-title">${r.title}</div><div class="detail-item-meta">${r.url||''}</div></div>
+      <button class="btn-sm btn-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="deleteRow('resources','${r.id}',loadDetailResources)">✕</button>
+    </div>`).join('')
+}
+
+async function loadResourceTable() {
+  const { data } = await db.from('resources').select('*, profiles(full_name)').order('created_at',{ascending:false})
+  const tbody = document.getElementById('resourceTableBody')
+  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem;">No resources yet.</td></tr>'; return }
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td><strong>${r.title}</strong>${r.description?`<div style="font-size:0.72rem;color:var(--gray);">${r.description}</div>`:''}</td>
+      <td>${r.file_type||'link'}</td>
+      <td>${r.profiles?.full_name || (r.client_id ? '—' : 'All Clients')}</td>
+      <td>${new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td>
+      <td><button class="btn-sm btn-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="deleteRow('resources','${r.id}',loadResourceTable)">Remove</button></td>
+    </tr>`).join('')
+}
+
+// Toggle session done
+window.toggleSession = async (id, current) => {
+  await db.from('sessions').update({ completed: !current }).eq('id', id)
+  loadDetailSessions()
+}
+
+// Delete row
+window.deleteRow = async (table, id, reload) => {
+  if (!confirm('Remove this item?')) return
+  await db.from(table).delete().eq('id', id)
+  reload()
+  toast('Removed')
+}
+
+// Add client
+document.getElementById('addClientBtn').addEventListener('click', () => openModal('modalClient'))
+document.getElementById('saveClient').addEventListener('click', async () => {
+  const name = document.getElementById('cName').value
+  const email = document.getElementById('cEmail').value
+  const pass = document.getElementById('cPass').value
+  const program = document.getElementById('cProgram').value
+  if (!email || !pass) return toast('Email and password required')
+
+  const { data, error } = await db.auth.signUp({ email, password: pass, options: { data: { full_name: name, role: 'client' } } })
+  if (error) { toast('Error: ' + error.message); return }
+
+  // Update program in profile (trigger creates the row)
+  if (data.user) {
+    setTimeout(async () => {
+      await db.from('profiles').update({ program, full_name: name }).eq('id', data.user.id)
+      loadAll()
+      closeModal('modalClient')
+      toast('Client account created')
+    }, 1000)
+  }
+})
+
+// Add session
+document.getElementById('addSessionBtn').addEventListener('click', () => openModal('modalSession'))
+document.getElementById('addResourceClientBtn').addEventListener('click', () => {
+  if (selectedClient) {
+    document.getElementById('rAssign').value = selectedClient.id
+  }
+  openModal('modalResource')
+})
+document.getElementById('saveSession').addEventListener('click', async () => {
+  const title = document.getElementById('sTitle').value
+  if (!title || !selectedClient) return
+  await db.from('sessions').insert({
+    client_id: selectedClient.id, title,
+    session_number: parseInt(document.getElementById('sNum').value)||null,
+    total_sessions: parseInt(document.getElementById('sTot').value)||12,
+    session_date: document.getElementById('sDate').value||null,
+    completed: document.getElementById('sCompleted').value === 'true',
+    notes: document.getElementById('sNotes').value||null
+  })
+  closeModal('modalSession')
+  loadDetailSessions()
+  toast('Session added')
+})
+
+// Add task
+document.getElementById('addTaskBtn').addEventListener('click', () => openModal('modalTask'))
+document.getElementById('saveTask').addEventListener('click', async () => {
+  const title = document.getElementById('tTitle').value
+  if (!title || !selectedClient) return
+  await db.from('action_items').insert({
+    client_id: selectedClient.id, title,
+    description: document.getElementById('tDesc').value||null,
+    due_date: document.getElementById('tDue').value||null
+  })
+  closeModal('modalTask')
+  loadDetailTasks()
+  toast('Action item assigned')
+})
+
+// Add resource
+document.getElementById('addResourceBtn').addEventListener('click', () => openModal('modalResource'))
+document.getElementById('newResourceBtn').addEventListener('click', () => openModal('modalResource'))
+document.getElementById('saveResource').addEventListener('click', async () => {
+  const title = document.getElementById('rTitle').value
+  if (!title) return
+  const assignVal = document.getElementById('rAssign').value
+  await db.from('resources').insert({
+    title, description: document.getElementById('rDesc').value||null,
+    url: document.getElementById('rUrl').value||null,
+    client_id: assignVal === 'all' ? null : assignVal
+  })
+  closeModal('modalResource')
+  loadResourceTable()
+  if (selectedClient) loadDetailResources()
+  loadOverviewStats()
+  toast('Resource added')
+})
+
+// Search
+document.getElementById('clientSearch').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase()
+  renderClientTable(clients.filter(c => (c.full_name||'').toLowerCase().includes(q) || (c.email||'').toLowerCase().includes(q)))
+})
+
+// View switching
+document.querySelectorAll('[data-view]').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('[data-view]').forEach(x => x.classList.remove('active'))
+    el.classList.add('active')
+    document.querySelectorAll('.client-link').forEach(x => x.classList.remove('active'))
+    showView(el.dataset.view)
+    document.getElementById('pageTitle').textContent = el.textContent.trim()
+  })
+})
+
+function showView(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'))
+  document.getElementById('view-' + name)?.classList.add('active')
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open') }
+function closeModal(id) { document.getElementById(id).classList.remove('open') }
+window.closeModal = closeModal
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open') })
+})
+
+function toast(msg) {
+  const el = document.getElementById('toast')
+  el.textContent = msg; el.classList.add('show')
+  setTimeout(() => el.classList.remove('show'), 2500)
+}
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await db.auth.signOut()
+  window.location.href = 'portal.html'
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Client Portal — Elevare</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; --pale: #FBF0EA; }
+  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--black); }
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+
+  .card {
+    background: var(--white);
+    width: 100%; max-width: 420px;
+    padding: 3rem;
+    border-top: 3px solid var(--orange);
+  }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--black); display: block; margin-bottom: 0.35rem; }
+  .logo em { color: var(--orange); font-style: normal; }
+  .portal-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); display: block; }
+  label { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 0.45rem; }
+  input[type="email"], input[type="password"] {
+    width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 1px;
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--black);
+    background: #fafafa; outline: none; transition: border-color 0.15s; margin-bottom: 1.25rem;
+  }
+  input:focus { border-color: var(--orange); background: var(--white); }
+  .btn {
+    width: 100%; padding: 0.9rem; background: var(--orange); color: var(--white); border: none;
+    font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-top: 0.25rem;
+  }
+  .btn:hover { background: #a34716; }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .err { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 0.75rem 1rem; font-size: 0.82rem; margin-bottom: 1rem; display: none; }
+  .back { display: block; text-align: center; margin-top: 1.75rem; font-size: 0.75rem; color: var(--gray); text-decoration: none; }
+  .back:hover { color: var(--orange); }
+  .forgot { text-align: right; margin-top: -0.75rem; margin-bottom: 1.25rem; }
+  .forgot a { font-size: 0.72rem; color: var(--gray); text-decoration: none; }
+  .forgot a:hover { color: var(--orange); }
+
+  /* Reset view */
+  #resetView { display: none; }
+  .success-msg { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 0.75rem 1rem; font-size: 0.82rem; margin-bottom: 1rem; display: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <a href="index.html" class="logo"><em>E</em>LEVARE</a>
+  <span class="portal-label">Client Portal</span>
+
+  <!-- Login view -->
+  <div id="loginView">
+    <div class="err" id="errMsg"></div>
+    <form id="loginForm">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="you@company.com" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••" required>
+      <div class="forgot"><a href="#" id="forgotLink">Forgot password?</a></div>
+      <button type="submit" class="btn" id="loginBtn">Sign In →</button>
+    </form>
+  </div>
+
+  <!-- Reset view -->
+  <div id="resetView">
+    <div class="success-msg" id="successMsg"></div>
+    <div class="err" id="resetErr"></div>
+    <form id="resetForm">
+      <label for="resetEmail">Email Address</label>
+      <input type="email" id="resetEmail" placeholder="you@company.com" required>
+      <button type="submit" class="btn" id="resetBtn">Send Reset Link →</button>
+    </form>
+    <a href="#" id="backToLogin" class="back">← Back to login</a>
+  </div>
+
+  <a href="index.html" class="back" id="siteBack">← Back to Elevare Website</a>
+</div>
+
+<script>
+const { createClient } = supabase
+const db = createClient('https://djjtgsdnorxgxzkfbxbj.supabase.co', 'sb_publishable_F5RpcjB3xhZjY8j_AHzODQ_8K7Nw719')
+
+// Already logged in?
+db.auth.getSession().then(({ data: { session } }) => {
+  if (session) redirectByRole(session.user.id)
+})
+
+// Login
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault()
+  const btn = document.getElementById('loginBtn')
+  const err = document.getElementById('errMsg')
+  btn.disabled = true; btn.textContent = 'Signing in...'
+  err.style.display = 'none'
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email: document.getElementById('email').value,
+    password: document.getElementById('password').value
+  })
+
+  if (error) {
+    err.textContent = 'Invalid email or password. Please try again.'
+    err.style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Sign In →'
+    return
+  }
+  redirectByRole(data.user.id)
+})
+
+// Forgot password toggle
+document.getElementById('forgotLink').addEventListener('click', e => {
+  e.preventDefault()
+  document.getElementById('loginView').style.display = 'none'
+  document.getElementById('resetView').style.display = 'block'
+  document.getElementById('siteBack').style.display = 'none'
+})
+document.getElementById('backToLogin').addEventListener('click', e => {
+  e.preventDefault()
+  document.getElementById('loginView').style.display = 'block'
+  document.getElementById('resetView').style.display = 'none'
+  document.getElementById('siteBack').style.display = 'block'
+})
+
+// Password reset
+document.getElementById('resetForm').addEventListener('submit', async e => {
+  e.preventDefault()
+  const btn = document.getElementById('resetBtn')
+  btn.disabled = true; btn.textContent = 'Sending...'
+  const { error } = await db.auth.resetPasswordForEmail(
+    document.getElementById('resetEmail').value,
+    { redirectTo: window.location.origin + '/portal.html' }
+  )
+  if (error) {
+    document.getElementById('resetErr').textContent = error.message
+    document.getElementById('resetErr').style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Send Reset Link →'
+  } else {
+    document.getElementById('successMsg').textContent = 'Check your email for a reset link.'
+    document.getElementById('successMsg').style.display = 'block'
+    document.getElementById('resetForm').style.display = 'none'
+  }
+})
+
+async function redirectByRole(userId) {
+  const { data } = await db.from('profiles').select('role').eq('id', userId).single()
+  window.location.href = data?.role === 'admin' ? 'admin.html' : 'dashboard.html'
+}
+</script>
+</body>
+</html>

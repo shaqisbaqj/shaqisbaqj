@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Dashboard — Elevare</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; --pale: #FBF0EA; --bg: #f9fafb; }
+  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); -webkit-font-smoothing: antialiased; }
+
+  /* ── SIDEBAR ── */
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 240px; background: var(--black); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
+  .sidebar-logo { padding: 1.75rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .sidebar-logo a { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--white); display: block; }
+  .sidebar-logo em { color: var(--orange); font-style: normal; }
+  .sidebar-user { padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .sidebar-name { font-size: 0.85rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
+  .sidebar-program { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+  nav { flex: 1; padding: 1rem 0; }
+  .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.45); text-decoration: none; cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
+  .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .nav-item.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.07); }
+  .nav-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+  .sidebar-footer { padding: 1.25rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.07); }
+  .logout-btn { font-size: 0.72rem; color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.06em; padding: 0; transition: color 0.15s; }
+  .logout-btn:hover { color: var(--orange); }
+
+  /* ── MAIN ── */
+  .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+  .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .page-title { font-size: 1.05rem; font-weight: 600; color: var(--black); }
+  .topbar-date { font-size: 0.75rem; color: var(--gray); }
+  .content { padding: 2rem; }
+
+  /* ── PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── CARDS ── */
+  .cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--white); border: 1px solid var(--border); padding: 1.5rem; border-top: 2px solid var(--border); }
+  .stat-card.accent { border-top-color: var(--orange); }
+  .stat-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.5rem; }
+  .stat-val { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 600; color: var(--black); line-height: 1; margin-bottom: 0.35rem; }
+  .stat-val span { color: var(--orange); }
+  .stat-sub { font-size: 0.75rem; color: var(--gray); }
+
+  /* Progress bar */
+  .prog-bar { background: var(--border); height: 6px; border-radius: 3px; margin-top: 0.75rem; overflow: hidden; }
+  .prog-fill { height: 100%; background: var(--orange); border-radius: 3px; transition: width 0.6s ease; }
+
+  /* Section headers */
+  .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+  .section-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); }
+  .btn-sm { padding: 0.45rem 1rem; background: var(--orange); color: var(--white); border: none; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; border-radius: 1px; }
+  .btn-sm:hover { background: #a34716; }
+  .btn-outline { background: transparent; color: var(--orange); border: 1px solid var(--orange); }
+  .btn-outline:hover { background: var(--orange); color: var(--white); }
+
+  /* Lists */
+  .item-list { background: var(--white); border: 1px solid var(--border); }
+  .list-item { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 0.875rem; }
+  .list-item:last-child { border-bottom: none; }
+  .item-check { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 50%; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; margin-top: 1px; }
+  .item-check.done { background: var(--orange); border-color: var(--orange); }
+  .item-check.done::after { content: '✓'; color: white; font-size: 10px; }
+  .item-title { font-size: 0.875rem; font-weight: 500; color: var(--black); margin-bottom: 0.2rem; }
+  .item-title.done-text { text-decoration: line-through; color: var(--gray); }
+  .item-meta { font-size: 0.72rem; color: var(--gray); }
+  .item-badge { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 999px; }
+  .badge-done { background: #dcfce7; color: #166534; }
+  .badge-pending { background: #fef9c3; color: #854d0e; }
+  .badge-upcoming { background: #eff6ff; color: #1e40af; }
+
+  /* Session list */
+  .session-item { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .session-item:last-child { border-bottom: none; }
+  .session-num { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.25rem; }
+  .session-title { font-size: 0.88rem; font-weight: 500; }
+  .session-date { font-size: 0.72rem; color: var(--gray); margin-top: 0.2rem; }
+
+  /* Resources */
+  .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .resource-card { background: var(--white); border: 1px solid var(--border); padding: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; text-decoration: none; transition: border-color 0.15s; }
+  .resource-card:hover { border-color: var(--orange); }
+  .resource-icon { width: 38px; height: 38px; background: var(--pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .resource-icon svg { width: 18px; height: 18px; stroke: var(--orange); fill: none; stroke-width: 1.8; }
+  .resource-name { font-size: 0.85rem; font-weight: 600; color: var(--black); margin-bottom: 0.25rem; }
+  .resource-desc { font-size: 0.72rem; color: var(--gray); }
+
+  /* Journal */
+  .journal-entry { background: var(--white); border: 1px solid var(--border); padding: 1.25rem; margin-bottom: 1rem; }
+  .journal-entry-title { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.35rem; }
+  .journal-entry-date { font-size: 0.68rem; color: var(--gray); margin-bottom: 0.75rem; }
+  .journal-entry-body { font-size: 0.85rem; color: var(--gray); line-height: 1.7; white-space: pre-wrap; }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--white); width: 100%; max-width: 480px; padding: 2rem; }
+  .modal-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; }
+  .field-group { margin-bottom: 1.25rem; }
+  .field-label { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 0.4rem; }
+  input[type="text"], input[type="date"], textarea, select {
+    width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); font-family: 'Inter', sans-serif;
+    font-size: 0.875rem; color: var(--black); background: #fafafa; outline: none; transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--orange); background: var(--white); }
+  textarea { resize: vertical; min-height: 100px; }
+  .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+  .btn-cancel { padding: 0.7rem 1.25rem; background: none; border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; color: var(--gray); }
+  .empty-state { text-align: center; padding: 3rem 2rem; background: var(--white); border: 1px solid var(--border); color: var(--gray); font-size: 0.875rem; }
+  .empty-state strong { display: block; font-size: 0.95rem; color: var(--black); margin-bottom: 0.5rem; }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .cards-row { grid-template-columns: 1fr; }
+    .resource-grid { grid-template-columns: 1fr; }
+    .hamburger { display: flex !important; }
+  }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; }
+  .hamburger span { width: 22px; height: 2px; background: var(--black); display: block; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><a href="index.html"><em>E</em>LEVARE</a></div>
+    <div class="sidebar-user">
+      <div class="sidebar-name" id="sidebarName">Loading...</div>
+      <div class="sidebar-program" id="sidebarProgram"></div>
+    </div>
+    <nav>
+      <div class="nav-item active" data-panel="overview">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Overview
+      </div>
+      <div class="nav-item" data-panel="sessions">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Sessions
+      </div>
+      <div class="nav-item" data-panel="tasks">
+        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Action Items
+      </div>
+      <div class="nav-item" data-panel="journal">
+        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Journal
+      </div>
+      <div class="nav-item" data-panel="resources">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Resources
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        <span class="page-title" id="pageTitle">Overview</span>
+      </div>
+      <span class="topbar-date" id="topbarDate"></span>
+    </div>
+
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <div class="panel active" id="panel-overview">
+        <div class="cards-row">
+          <div class="stat-card accent">
+            <div class="stat-label">Sessions Completed</div>
+            <div class="stat-val"><span id="sessComp">0</span> <span style="font-size:1.5rem;color:var(--gray)">/ <span id="sessTot">0</span></span></div>
+            <div class="prog-bar"><div class="prog-fill" id="sessBar" style="width:0%"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Open Action Items</div>
+            <div class="stat-val" id="openTasks">0</div>
+            <div class="stat-sub">tasks outstanding</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Journal Entries</div>
+            <div class="stat-val" id="journalCount">0</div>
+            <div class="stat-sub">reflections logged</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <div>
+            <div class="section-head"><span class="section-title">Recent Action Items</span></div>
+            <div class="item-list" id="overviewTasks"><div class="empty-state"><strong>No action items yet</strong>Your coach will assign tasks here.</div></div>
+          </div>
+          <div>
+            <div class="section-head"><span class="section-title">Upcoming Sessions</span></div>
+            <div class="item-list" id="overviewSessions"><div class="empty-state"><strong>No sessions scheduled</strong>Sessions will appear here.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SESSIONS -->
+      <div class="panel" id="panel-sessions">
+        <div class="section-head"><span class="section-title">All Sessions</span></div>
+        <div class="item-list" id="sessionsList"><div class="empty-state"><strong>No sessions yet</strong>Your coach will add sessions as they're scheduled.</div></div>
+      </div>
+
+      <!-- TASKS -->
+      <div class="panel" id="panel-tasks">
+        <div class="section-head">
+          <span class="section-title">Action Items</span>
+        </div>
+        <div class="item-list" id="tasksList"><div class="empty-state"><strong>No action items yet</strong>Your coach will assign tasks here.</div></div>
+      </div>
+
+      <!-- JOURNAL -->
+      <div class="panel" id="panel-journal">
+        <div class="section-head">
+          <span class="section-title">My Journal</span>
+          <button class="btn-sm" id="newJournalBtn">+ New Entry</button>
+        </div>
+        <div id="journalList"><div class="empty-state"><strong>No entries yet</strong>Use this space to reflect on your leadership journey.</div></div>
+      </div>
+
+      <!-- RESOURCES -->
+      <div class="panel" id="panel-resources">
+        <div class="section-head"><span class="section-title">Resources</span></div>
+        <div class="resource-grid" id="resourceGrid"></div>
+        <div id="noResources" class="empty-state" style="display:none;"><strong>No resources yet</strong>Your coach will upload materials here.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Journal Modal -->
+<div class="modal-overlay" id="journalModal">
+  <div class="modal">
+    <div class="modal-title">New Journal Entry</div>
+    <div class="field-group">
+      <label class="field-label">Title</label>
+      <input type="text" id="jTitle" placeholder="e.g. Reflection after session 3">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Entry</label>
+      <textarea id="jContent" placeholder="What did you learn? What will you apply?" style="min-height:140px;"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-sm" id="saveJournal">Save Entry</button>
+      <button class="btn-cancel" id="cancelJournal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createClient } = supabase
+const db = createClient('https://djjtgsdnorxgxzkfbxbj.supabase.co', 'sb_publishable_F5RpcjB3xhZjY8j_AHzODQ_8K7Nw719')
+
+let currentUser = null
+
+// Auth guard
+db.auth.getSession().then(async ({ data: { session } }) => {
+  if (!session) { window.location.href = 'portal.html'; return }
+  currentUser = session.user
+  loadProfile()
+  loadAll()
+})
+
+// Date
+document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' })
+
+async function loadProfile() {
+  const { data } = await db.from('profiles').select('*').eq('id', currentUser.id).single()
+  if (data) {
+    document.getElementById('sidebarName').textContent = data.full_name || currentUser.email
+    document.getElementById('sidebarProgram').textContent = data.program || 'Elevare Leadership Program'
+  }
+}
+
+async function loadAll() {
+  await Promise.all([loadSessions(), loadTasks(), loadJournal(), loadResources()])
+}
+
+async function loadSessions() {
+  const { data } = await db.from('sessions').select('*').eq('client_id', currentUser.id).order('session_number')
+  const completed = data?.filter(s => s.completed).length || 0
+  const total = data?.length || 0
+  document.getElementById('sessComp').textContent = completed
+  document.getElementById('sessTot').textContent = total
+  document.getElementById('sessBar').style.width = total ? `${(completed/total)*100}%` : '0%'
+
+  // Full list
+  const list = document.getElementById('sessionsList')
+  if (!data?.length) { list.innerHTML = '<div class="empty-state"><strong>No sessions yet</strong>Sessions will appear here as they are scheduled.</div>'; return }
+  list.innerHTML = data.map(s => `
+    <div class="session-item">
+      <div>
+        <div class="session-num">Session ${s.session_number || '—'}</div>
+        <div class="session-title">${s.title}</div>
+        <div class="session-date">${s.session_date ? new Date(s.session_date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : 'Date TBD'}</div>
+      </div>
+      <span class="item-badge ${s.completed ? 'badge-done' : 'badge-pending'}">${s.completed ? 'Completed' : 'Scheduled'}</span>
+    </div>`).join('')
+
+  // Overview upcoming
+  const upcoming = data.filter(s => !s.completed).slice(0,3)
+  const ov = document.getElementById('overviewSessions')
+  if (!upcoming.length) { ov.innerHTML = '<div class="empty-state"><strong>All sessions complete!</strong></div>'; return }
+  ov.innerHTML = upcoming.map(s => `
+    <div class="session-item">
+      <div>
+        <div class="session-num">Session ${s.session_number || '—'}</div>
+        <div class="session-title">${s.title}</div>
+        <div class="session-date">${s.session_date ? new Date(s.session_date).toLocaleDateString('en-US',{month:'long',day:'numeric'}) : 'TBD'}</div>
+      </div>
+      <span class="item-badge badge-upcoming">Upcoming</span>
+    </div>`).join('')
+}
+
+async function loadTasks() {
+  const { data } = await db.from('action_items').select('*').eq('client_id', currentUser.id).order('created_at', { ascending: false })
+  const open = data?.filter(t => !t.completed).length || 0
+  document.getElementById('openTasks').textContent = open
+
+  const render = (items, container) => {
+    if (!items?.length) { container.innerHTML = '<div class="empty-state"><strong>No action items</strong>Your coach will assign tasks here.</div>'; return }
+    container.innerHTML = items.map(t => `
+      <div class="list-item">
+        <div class="item-check ${t.completed ? 'done' : ''}" data-id="${t.id}" onclick="toggleTask('${t.id}', ${t.completed})"></div>
+        <div style="flex:1;">
+          <div class="item-title ${t.completed ? 'done-text' : ''}">${t.title}</div>
+          ${t.description ? `<div class="item-meta">${t.description}</div>` : ''}
+          ${t.due_date ? `<div class="item-meta">Due: ${new Date(t.due_date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>` : ''}
+        </div>
+        <span class="item-badge ${t.completed ? 'badge-done' : 'badge-pending'}">${t.completed ? 'Done' : 'Open'}</span>
+      </div>`).join('')
+  }
+
+  render(data, document.getElementById('tasksList'))
+  render(data?.filter(t => !t.completed).slice(0,4), document.getElementById('overviewTasks'))
+}
+
+window.toggleTask = async (id, current) => {
+  await db.from('action_items').update({ completed: !current }).eq('id', id)
+  loadTasks()
+}
+
+async function loadJournal() {
+  const { data } = await db.from('journal_entries').select('*').eq('client_id', currentUser.id).order('created_at', { ascending: false })
+  document.getElementById('journalCount').textContent = data?.length || 0
+  const container = document.getElementById('journalList')
+  if (!data?.length) { container.innerHTML = '<div class="empty-state"><strong>No entries yet</strong>Use this space to reflect on your leadership journey.</div>'; return }
+  container.innerHTML = data.map(e => `
+    <div class="journal-entry">
+      <div class="journal-entry-title">${e.title || 'Untitled Entry'}</div>
+      <div class="journal-entry-date">${new Date(e.created_at).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</div>
+      <div class="journal-entry-body">${e.content}</div>
+    </div>`).join('')
+}
+
+async function loadResources() {
+  const { data } = await db.from('resources').select('*').or(`client_id.eq.${currentUser.id},client_id.is.null`).order('created_at', { ascending: false })
+  const grid = document.getElementById('resourceGrid')
+  const empty = document.getElementById('noResources')
+  if (!data?.length) { grid.innerHTML = ''; empty.style.display = 'block'; return }
+  empty.style.display = 'none'
+  grid.innerHTML = data.map(r => `
+    <a href="${r.url || '#'}" target="_blank" class="resource-card">
+      <div class="resource-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div>
+        <div class="resource-name">${r.title}</div>
+        <div class="resource-desc">${r.description || 'Click to open'}</div>
+      </div>
+    </a>`).join('')
+}
+
+// Journal modal
+document.getElementById('newJournalBtn').addEventListener('click', () => document.getElementById('journalModal').classList.add('open'))
+document.getElementById('cancelJournal').addEventListener('click', () => document.getElementById('journalModal').classList.remove('open'))
+document.getElementById('saveJournal').addEventListener('click', async () => {
+  const title = document.getElementById('jTitle').value
+  const content = document.getElementById('jContent').value
+  if (!content.trim()) return
+  await db.from('journal_entries').insert({ client_id: currentUser.id, title, content })
+  document.getElementById('jTitle').value = ''
+  document.getElementById('jContent').value = ''
+  document.getElementById('journalModal').classList.remove('open')
+  loadJournal()
+})
+
+// Nav
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'))
+    item.classList.add('active')
+    const panel = document.getElementById('panel-' + item.dataset.panel)
+    if (panel) panel.classList.add('active')
+    document.getElementById('pageTitle').textContent = item.textContent.trim()
+    document.getElementById('sidebar').classList.remove('open')
+  })
+})
+
+// Hamburger
+document.getElementById('hamburger').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'))
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await db.auth.signOut()
+  window.location.href = 'portal.html'
+})
+</script>
+</body>
+</html>
