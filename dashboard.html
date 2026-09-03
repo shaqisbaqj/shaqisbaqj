@@ -248,6 +248,11 @@ input.journal-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px r
       Coach Notes
     </button>
 
+    <button class="nav-item" id="nav-profile" onclick="navTo('profile')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      My Profile
+    </button>
+
     <div class="sb-footer">
       <button class="logout-btn" id="logoutBtn">Sign Out</button>
     </div>
@@ -522,6 +527,37 @@ input.journal-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px r
         <div id="sessionsList"></div>
       </div>
 
+      <!-- ── PROFILE ── -->
+      <div class="panel" id="panel-profile">
+        <div class="coach-header">
+          <div class="coach-eyebrow">Account</div>
+          <div class="coach-heading">My Profile</div>
+          <p class="coach-sub">Update your name, email, or password at any time.</p>
+        </div>
+
+        <div style="max-width:520px;">
+          <div class="section-label" style="margin-bottom:1.5rem;">Personal Info</div>
+          <label class="field-label" style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:0.35rem;">Full Name</label>
+          <input type="text" id="profileName" style="width:100%;padding:0.85rem 1rem;border:1px solid #e5e7eb;font-family:var(--sans);font-size:0.92rem;margin-bottom:1rem;background:#faf8f5;outline:none;" placeholder="Your full name">
+
+          <label class="field-label" style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:0.35rem;">Email Address</label>
+          <input type="email" id="profileEmail" style="width:100%;padding:0.85rem 1rem;border:1px solid #e5e7eb;font-family:var(--sans);font-size:0.92rem;margin-bottom:1.5rem;background:#faf8f5;outline:none;" placeholder="your@email.com">
+
+          <button onclick="saveProfile()" style="padding:0.85rem 2rem;background:var(--orange);color:#fff;border:none;font-family:var(--sans);font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;" id="saveProfileBtn" data-label="Save Changes">Save Changes</button>
+
+          <div style="margin-top:2.5rem;padding-top:2rem;border-top:1px solid #e5e7eb;">
+            <div class="section-label" style="margin-bottom:1.5rem;">Change Password</div>
+            <label class="field-label" style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:0.35rem;">New Password</label>
+            <input type="password" id="profileNewPass" style="width:100%;padding:0.85rem 1rem;border:1px solid #e5e7eb;font-family:var(--sans);font-size:0.92rem;margin-bottom:1rem;background:#faf8f5;outline:none;" placeholder="At least 6 characters">
+
+            <label class="field-label" style="display:block;font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:0.35rem;">Confirm New Password</label>
+            <input type="password" id="profileConfirmPass" style="width:100%;padding:0.85rem 1rem;border:1px solid #e5e7eb;font-family:var(--sans);font-size:0.92rem;margin-bottom:1.5rem;background:#faf8f5;outline:none;" placeholder="Repeat new password">
+
+            <button onclick="savePassword()" style="padding:0.85rem 2rem;background:#111;color:#fff;border:none;font-family:var(--sans);font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;" id="savePassBtn" data-label="Update Password">Update Password</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -561,6 +597,7 @@ async function init() {
     const first = name.split(' ')[0] || ''
     document.getElementById('sbName').textContent = name
     document.getElementById('sbProgram').textContent = profile?.program || 'Elevare Leadership Program'
+    loadProfilePanel(profile)
 
     const hour = new Date().getHours()
     const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
@@ -836,7 +873,7 @@ function showToast(msg, type = 'success') {
 const NAV_TITLES = {
   overview: 'My Dashboard', sessions: 'Sessions',
   knowledge: 'Knowledge', experience: 'Experience', capacity: 'Leadership Capacity', risk: 'Performance Risk',
-  transfer: 'Knowledge Transfer', files: 'Files & Resources', notes: 'Coach Notes'
+  transfer: 'Knowledge Transfer', files: 'Files & Resources', notes: 'Coach Notes', profile: 'My Profile'
 }
 
 function navTo(panel) {
@@ -855,6 +892,44 @@ function showPanel(name) {
 
 document.getElementById('hamburger').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'))
 document.getElementById('logoutBtn').addEventListener('click', async () => { await db.auth.signOut(); window.location.href = 'portal.html' })
+
+// ── Profile ──
+function loadProfilePanel(profile) {
+  document.getElementById('profileName').value = profile?.full_name || ''
+  document.getElementById('profileEmail').value = profile?.email || user?.email || ''
+}
+
+async function saveProfile() {
+  const btn = document.getElementById('saveProfileBtn')
+  btn.textContent = 'Saving…'; btn.disabled = true
+  const name = document.getElementById('profileName').value.trim()
+  const email = document.getElementById('profileEmail').value.trim()
+
+  const { error: profileErr } = await db.from('profiles').update({ full_name: name, email }).eq('id', user.id)
+  if (profileErr) { showToast('Save failed: ' + profileErr.message, 'error'); btn.textContent = btn.dataset.label; btn.disabled = false; return }
+
+  if (email !== user.email) {
+    const { error: emailErr } = await db.auth.updateUser({ email })
+    if (emailErr) { showToast('Profile saved but email update failed: ' + emailErr.message, 'error'); btn.textContent = btn.dataset.label; btn.disabled = false; return }
+  }
+
+  document.getElementById('sbName').textContent = name
+  showToast('Profile updated')
+  btn.textContent = btn.dataset.label; btn.disabled = false
+}
+
+async function savePassword() {
+  const btn = document.getElementById('savePassBtn')
+  const newPass = document.getElementById('profileNewPass').value
+  const confirm = document.getElementById('profileConfirmPass').value
+  if (newPass.length < 6) { showToast('Password must be at least 6 characters', 'error'); return }
+  if (newPass !== confirm) { showToast('Passwords do not match', 'error'); return }
+  btn.textContent = 'Updating…'; btn.disabled = true
+  const { error } = await db.auth.updateUser({ password: newPass })
+  if (error) { showToast('Failed: ' + error.message, 'error') }
+  else { showToast('Password updated'); document.getElementById('profileNewPass').value = ''; document.getElementById('profileConfirmPass').value = '' }
+  btn.textContent = btn.dataset.label; btn.disabled = false
+}
 
 window.saveSignal = saveSignal
 window.saveTransfer = saveTransfer

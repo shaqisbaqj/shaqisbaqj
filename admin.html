@@ -385,30 +385,41 @@ async function loadClients() {
     return;
   }
 
-  listEl.innerHTML = clients.map(c => {
-    const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-    return `<button class="client-link" id="cl-${c.id}" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">
-      <div class="client-avatar">${initials}</div>
-      <span>${escHtml(c.full_name || c.email)}</span>
-    </button>`;
-  }).join('');
+  // Group sidebar by cohort/program
+  const groups = {};
+  clients.forEach(c => {
+    const key = c.program || 'No Program';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(c);
+  });
+  listEl.innerHTML = Object.entries(groups).map(([prog, members]) => `
+    <div style="padding:0.5rem 1.5rem 0.2rem;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:0.5rem;">${escHtml(prog)}</div>
+    ${members.map(c => {
+      const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      return `<button class="client-link" id="cl-${c.id}" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">
+        <div class="client-avatar">${initials}</div>
+        <span>${escHtml(c.full_name || c.email)}</span>
+      </button>`;
+    }).join('')}
+  `).join('');
 
-  // Populate overview table
+  // Overview table grouped by cohort
   const tableEl = document.getElementById('clientsTable');
-  tableEl.innerHTML = `<table style="width:100%;border-collapse:collapse;">
-    <thead><tr style="border-bottom:1px solid var(--border);">
-      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Name</th>
-      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Email</th>
-      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Program</th>
-      <th style="padding:0.5rem 0.75rem;"></th>
-    </tr></thead>
-    <tbody>${clients.map(c => `<tr style="border-bottom:1px solid var(--border);">
-      <td style="padding:0.75rem;font-size:0.85rem;font-weight:500;">${escHtml(c.full_name || '—')}</td>
-      <td style="padding:0.75rem;font-size:0.82rem;color:var(--gray);">${escHtml(c.email || '—')}</td>
-      <td style="padding:0.75rem;font-size:0.82rem;color:var(--gray);">${escHtml(c.program || '—')}</td>
-      <td style="padding:0.75rem;text-align:right;"><button class="btn btn-outline" style="font-size:0.7rem;padding:0.4rem 0.85rem;" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">View →</button></td>
-    </tr>`).join('')}</tbody>
-  </table>`;
+  tableEl.innerHTML = Object.entries(groups).map(([prog, members]) => `
+    <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);padding:1.25rem 0 0.5rem;">${escHtml(prog)}</div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:1rem;">
+      <thead><tr style="border-bottom:1px solid var(--border);">
+        <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Name</th>
+        <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Email</th>
+        <th style="padding:0.5rem 0.75rem;"></th>
+      </tr></thead>
+      <tbody>${members.map(c => `<tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:0.75rem;font-size:0.85rem;font-weight:500;">${escHtml(c.full_name || '—')}</td>
+        <td style="padding:0.75rem;font-size:0.82rem;color:var(--gray);">${escHtml(c.email || '—')}</td>
+        <td style="padding:0.75rem;text-align:right;"><button class="btn btn-outline" style="font-size:0.7rem;padding:0.4rem 0.85rem;" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">View →</button></td>
+      </tr>`).join('')}</tbody>
+    </table>
+  `).join('');
 
   document.getElementById('stat-clients').textContent = clients.length;
 }
