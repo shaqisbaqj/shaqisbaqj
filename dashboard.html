@@ -549,26 +549,38 @@ db.auth.getSession().then(({ data: { session } }) => {
 })
 
 async function init() {
-  const { data: profile } = await db.from('profiles').select('*').eq('id', user.id).single()
-  const name = profile?.full_name || ''
-  const first = name.split(' ')[0] || ''
-  document.getElementById('sbName').textContent = name || user.email
-  document.getElementById('sbProgram').textContent = profile?.program || 'Elevare Leadership Program'
+  try {
+    const { data: profile, error: profileErr } = await db.from('profiles').select('*').eq('id', user.id).single()
 
-  const hour = new Date().getHours()
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
-  document.getElementById('welcomeHeading').textContent = first ? `${greeting}, ${first}.` : `${greeting}.`
-  document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+    if (profileErr && profileErr.code !== 'PGRST116') {
+      // PGRST116 = no rows found (new user, profile not yet created)
+      console.error('Profile error:', profileErr)
+    }
 
-  await loadSignals()
-  await loadTransfer()
-  loadFiles()
-  loadNotes()
-  loadSessions()
+    const name = profile?.full_name || user.email || ''
+    const first = name.split(' ')[0] || ''
+    document.getElementById('sbName').textContent = name
+    document.getElementById('sbProgram').textContent = profile?.program || 'Elevare Leadership Program'
+
+    const hour = new Date().getHours()
+    const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
+    document.getElementById('welcomeHeading').textContent = first ? `${greeting}, ${first}.` : `${greeting}.`
+    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+
+    await loadSignals()
+    await loadTransfer()
+    loadFiles()
+    loadNotes()
+    loadSessions()
+  } catch (e) {
+    console.error('Init error:', e)
+    showToast('Error loading dashboard. Check console for details.', 'error')
+  }
 }
 
 async function loadSignals() {
-  const { data } = await db.from('signal_entries').select('*').eq('client_id', user.id)
+  const { data, error } = await db.from('signal_entries').select('*').eq('client_id', user.id)
+  if (error) { console.error('loadSignals error:', error); return }
   signalData = {}
   data?.forEach(s => { signalData[s.signal_type] = s })
 
@@ -596,14 +608,14 @@ function setValue(id, val) {
 function renderOverview() {
   const priorityType = Object.keys(SIGNALS).find(t => signalData[t]?.is_priority)
   const banner = document.getElementById('priorityBanner')
-  const val = document.getElementById('priorityValue')
+  const priorityEl = document.getElementById('priorityValue')
 
   if (priorityType) {
     banner.classList.remove('empty')
-    val.textContent = SIGNALS[priorityType].label
+    priorityEl.textContent = SIGNALS[priorityType].label
   } else {
     banner.classList.add('empty')
-    val.textContent = "You haven't marked a priority signal yet"
+    priorityEl.textContent = "You haven't marked a priority signal yet"
   }
 
   const grid = document.getElementById('overviewGrid')
@@ -644,7 +656,7 @@ async function saveSignal(type) {
   if (error) {
     console.error(error)
     setBtn(btn, btn.dataset.label, false)
-    showToast('Couldn't save — ' + error.message, 'error')
+    showToast('Save failed: ' + error.message, 'error')
     return
   }
 
@@ -678,7 +690,7 @@ async function saveTransfer() {
   if (error) {
     console.error(error)
     setBtn(btn, btn.dataset.label, false)
-    showToast('Couldn't save — ' + error.message, 'error')
+    showToast('Save failed: ' + error.message, 'error')
     return
   }
 
