@@ -714,13 +714,15 @@ async function createCode() {
 }
 
 async function toggleCode(id, active) {
-  await db.from('cohort_codes').update({ active }).eq('id', id);
+  const { error } = await db.from('cohort_codes').update({ active }).eq('id', id);
+  if (error) { showToast('Failed: ' + error.message, 'error'); return; }
   loadCodes();
 }
 
 async function deleteCode(id) {
   if (!confirm('Delete this code? Existing accounts created with it are not affected.')) return;
-  await db.from('cohort_codes').delete().eq('id', id);
+  const { error } = await db.from('cohort_codes').delete().eq('id', id);
+  if (error) { showToast('Failed: ' + error.message, 'error'); return; }
   loadCodes();
 }
 
