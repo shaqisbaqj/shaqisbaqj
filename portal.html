@@ -134,41 +134,18 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
   btn.disabled = true; btn.textContent = 'Signing in…'
   err.style.display = 'none'
 
-  function status(msg) {
-    err.style.background = '#f0fdf4'; err.style.borderColor = '#bbf7d0'; err.style.color = '#166534'
-    err.textContent = msg; err.style.display = 'block'
-  }
-
-  status('Step 1: Contacting Supabase…')
   const { data, error } = await db.auth.signInWithPassword({
     email: document.getElementById('loginEmail').value.trim(),
     password: document.getElementById('loginPass').value
   })
 
   if (error) {
-    err.style.background = ''; err.style.borderColor = ''; err.style.color = ''
-    err.textContent = 'Auth error: ' + error.message
+    err.textContent = error.message || 'Invalid email or password. Please try again.'
     err.style.display = 'block'
     btn.disabled = false; btn.textContent = 'Sign In →'
     return
   }
-
-  status('Step 2: Auth OK — user ' + data.user.id.slice(0,8) + '… — loading profile…')
-  await new Promise(r => setTimeout(r, 400))
-
-  const { data: profile, error: profileErr } = await db.from('profiles').select('role').eq('id', data.user.id).single()
-
-  if (profileErr) {
-    err.style.background = ''; err.style.borderColor = ''; err.style.color = ''
-    err.textContent = 'Profile error: ' + profileErr.message + ' (code: ' + profileErr.code + ')'
-    err.style.display = 'block'
-    btn.disabled = false; btn.textContent = 'Sign In →'
-    return
-  }
-
-  status('Step 3: Profile role = ' + profile.role + ' — redirecting…')
-  await new Promise(r => setTimeout(r, 600))
-  window.location.href = profile.role === 'admin' ? 'admin.html' : 'dashboard.html'
+  redirectByRole(data.user.id)
 })
 
 // ── Sign Up with Code ──
