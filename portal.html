@@ -202,7 +202,7 @@ document.getElementById('signupForm').addEventListener('submit', async e => {
     .single()
 
   if (codeErr || !cohort) {
-    err.textContent = 'That access code isn't valid or has been deactivated. Check with your coach.'
+    err.textContent = 'That access code is not valid or has been deactivated. Check with your coach.'
     err.style.display = 'block'
     btn.disabled = false; btn.textContent = 'Create My Account →'
     return
