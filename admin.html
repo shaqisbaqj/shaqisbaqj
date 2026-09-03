@@ -116,6 +116,10 @@
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
+  /* Template chip buttons */
+  .template-chip { display: inline-flex; align-items: center; padding: 0.3rem 0.75rem; font-size: 0.72rem; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--gray); font-family: 'Inter', sans-serif; transition: all 0.15s; margin-right: 0.4rem; margin-bottom: 0.4rem; }
+  .template-chip:hover { border-color: var(--orange); color: var(--orange); }
+
   @media (max-width: 800px) {
     .sidebar { width: 220px; }
     .main { margin-left: 220px; }
@@ -269,6 +273,12 @@
         <!-- Sessions tab -->
         <div class="tab-panel" id="tab-sessions">
           <div class="card" style="margin-bottom:1.5rem;">
+            <div style="margin-bottom:1rem;">
+              <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.6rem;">Quick Templates</div>
+              <button class="template-chip" onclick="fillSessionTemplate('kickoff')">Kickoff</button>
+              <button class="template-chip" onclick="fillSessionTemplate('midprogram')">Mid-Program Check-in</button>
+              <button class="template-chip" onclick="fillSessionTemplate('closing')">Closing Session</button>
+            </div>
             <div class="card-title">Add Session</div>
             <label>Title</label>
             <input type="text" id="sess-title" placeholder="e.g. Kickoff Session">
@@ -315,6 +325,19 @@
         <div class="card">
           <div class="card-title">Active Codes</div>
           <div id="codesList"><div class="empty"><div class="empty-icon">🔑</div>No codes yet.</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Message a Cohort</div>
+          <p style="font-size:0.82rem;color:var(--gray);margin-bottom:1.25rem;line-height:1.6;">Send a note to all clients in a cohort — it will appear in each client's Coach Notes feed.</p>
+          <label>Select Cohort</label>
+          <select id="cohort-msg-select">
+            <option value="">— Select a cohort —</option>
+          </select>
+          <label>Message</label>
+          <textarea id="cohort-msg-text" placeholder="Enter your message to all clients in this cohort…" style="min-height:100px;"></textarea>
+          <div style="margin-top:1rem;">
+            <button class="btn btn-primary" onclick="sendCohortMessage()">Send to Cohort</button>
+          </div>
         </div>
       </div>
 
@@ -673,6 +696,12 @@ async function createClient() {
 async function loadCodes() {
   const { data } = await db.from('cohort_codes').select('*').order('created_at', { ascending: false });
   const list = document.getElementById('codesList');
+  const sel = document.getElementById('cohort-msg-select');
+  if (sel) {
+    const active = (data || []).filter(c => c.active);
+    sel.innerHTML = '<option value="">— Select a cohort —</option>' +
+      active.map(c => '<option value="' + escHtml(c.code) + '">' + escHtml(c.code) + (c.program ? ' — ' + escHtml(c.program) : '') + '</option>').join('');
+  }
   if (!data || data.length === 0) {
     list.innerHTML = '<div class="empty"><div class="empty-icon">🔑</div>No codes yet.</div>';
     return;
@@ -831,6 +860,44 @@ async function deleteSession(id) {
   await db.from('sessions').delete().eq('id', id);
   showToast('Session deleted.');
   loadAdminSessions(currentClientId);
+}
+
+async function sendCohortMessage() {
+  const code = document.getElementById('cohort-msg-select').value.trim();
+  const message = document.getElementById('cohort-msg-text').value.trim();
+  if (!code) { showToast('Select a cohort first.'); return; }
+  if (!message) { showToast('Message cannot be empty.'); return; }
+
+  const { data: clients } = await db.from('profiles').select('id').eq('cohort', code).eq('role', 'client');
+  if (!clients || clients.length === 0) { showToast('No clients found in that cohort.'); return; }
+
+  const rows = clients.map(c => ({ client_id: c.id, content: message, created_by: 'Your Coach' }));
+  const { error } = await db.from('client_notes').insert(rows);
+  if (error) { showToast('Error: ' + error.message); return; }
+
+  document.getElementById('cohort-msg-text').value = '';
+  showToast('Message sent to ' + clients.length + ' client' + (clients.length !== 1 ? 's' : '') + '.');
+}
+
+function fillSessionTemplate(type) {
+  const templates = {
+    kickoff: {
+      title: 'Kickoff Session',
+      notes: 'Introductions, goal-setting, program overview, and establishing our coaching agreement.'
+    },
+    midprogram: {
+      title: 'Mid-Program Check-in',
+      notes: 'Progress review, obstacles check, re-alignment on 90-day goals.'
+    },
+    closing: {
+      title: 'Closing Session',
+      notes: 'Final reflection, wins celebration, 90-day action plan, next steps beyond the program.'
+    }
+  };
+  const t = templates[type];
+  if (!t) return;
+  document.getElementById('sess-title').value = t.title;
+  document.getElementById('sess-notes').value = t.notes;
 }
 
 async function signOut() {

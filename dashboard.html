@@ -171,6 +171,22 @@ input.journal-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px r
 .toast.success { background: var(--black); color: var(--white); border-color: var(--orange); }
 .toast.error { background: #fff1f1; color: #dc2626; border-color: #dc2626; }
 
+/* ── PROGRESS ── */
+.progress-section { margin-bottom: 2rem; }
+.progress-section-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.75rem; }
+.progress-stats-row { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.progress-stat { flex: 1; background: var(--white); padding: 1.25rem 1.5rem; }
+.progress-stat-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.4rem; }
+.progress-stat-value { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; color: var(--black); margin-bottom: 0.75rem; }
+.progress-bar-track { height: 3px; background: var(--border); }
+.progress-bar-fill { height: 3px; background: var(--orange); transition: width 0.4s; }
+/* ── UPCOMING BANNER ── */
+.upcoming-banner { border-left: 3px solid var(--orange); background: var(--warm-mid); padding: 1.125rem 1.5rem; margin-bottom: 2.5rem; }
+.upcoming-banner-eyebrow { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.3rem; }
+.upcoming-banner-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 600; color: var(--black); margin-bottom: 0.2rem; }
+.upcoming-banner-date { font-size: 0.78rem; color: var(--gray); margin-bottom: 0.5rem; }
+.upcoming-banner-link { font-size: 0.72rem; font-weight: 600; color: var(--orange); cursor: pointer; background: none; border: none; font-family: var(--sans); padding: 0; }
+
 /* ── MOBILE ── */
 @media (max-width: 768px) {
   /* Sidebar slides in as overlay */
@@ -329,6 +345,7 @@ input.journal-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px r
 
       <!-- ── OVERVIEW ── -->
       <div class="panel active" id="panel-overview">
+        <div id="upcomingBanner" hidden></div>
         <div class="overview-greeting">
           <div class="overview-eyebrow">Your Leadership Journey</div>
           <h1 class="overview-heading" id="welcomeHeading">Good morning.</h1>
@@ -343,6 +360,7 @@ input.journal-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px r
           </div>
         </div>
 
+        <div id="progressSection"></div>
         <div class="signal-grid" id="overviewGrid"></div>
       </div>
 
@@ -632,7 +650,7 @@ const SIGNALS = {
   risk:       { label: 'Performance Risk',    desc: "Where you'll break under pressure", num: '04' }
 }
 
-let user = null, signalData = {}
+let user = null, signalData = {}, sessionsData = []
 
 db.auth.getSession().then(({ data: { session } }) => {
   if (!session) { window.location.href = 'portal.html'; return }
@@ -664,7 +682,11 @@ async function init() {
     await loadTransfer()
     loadFiles()
     loadNotes()
-    loadSessions()
+    await loadSessions()
+    const signalsFilled = Object.values(signalData).filter(s => s.goal && s.goal.trim()).length
+    const completed = sessionsData.filter(s => s.completed).length
+    const total = sessionsData.length > 0 ? (sessionsData[0].total_sessions || sessionsData.length) : 0
+    renderProgress(signalsFilled, completed, total)
   } catch (e) {
     console.error('Init error:', e)
     showToast('Error loading dashboard. Check console for details.', 'error')
@@ -726,6 +748,28 @@ function renderOverview() {
       <div class="signal-tile-arrow">Open →</div>
     </div>`
   }).join('')
+}
+
+function renderProgress(signalsFilled, completed, total) {
+  const el = document.getElementById('progressSection')
+  if (!el) return
+  const sigPct = Math.round((signalsFilled / 4) * 100)
+  const sessPct = total > 0 ? Math.round((completed / total) * 100) : 0
+  el.innerHTML = `<div class="progress-section">
+    <div class="progress-section-label">Your Progress</div>
+    <div class="progress-stats-row">
+      <div class="progress-stat">
+        <div class="progress-stat-label">Signals Filled</div>
+        <div class="progress-stat-value">${signalsFilled}/4</div>
+        <div class="progress-bar-track"><div class="progress-bar-fill" style="width:${sigPct}%"></div></div>
+      </div>
+      <div class="progress-stat">
+        <div class="progress-stat-label">Sessions Completed</div>
+        <div class="progress-stat-value">${completed}/${total > 0 ? total : '—'}</div>
+        <div class="progress-bar-track"><div class="progress-bar-fill" style="width:${sessPct}%"></div></div>
+      </div>
+    </div>
+  </div>`
 }
 
 function goToSignal(type) {
@@ -854,6 +898,7 @@ async function loadFiles() {
 
 async function loadSessions() {
   const { data } = await db.from('sessions').select('*').eq('client_id', user.id).order('session_date', { ascending: true })
+  sessionsData = data || []
   const el = document.getElementById('sessionsList')
   if (!data || data.length === 0) {
     el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">—</div><div class="empty-state-heading">No sessions scheduled yet</div><div class="empty-state-sub">Your coach will schedule sessions here as your engagement begins.</div></div>`
@@ -862,8 +907,21 @@ async function loadSessions() {
 
   const today = new Date().toISOString().slice(0, 10)
   const upcoming = data.filter(s => !s.completed && (!s.session_date || s.session_date >= today))
-  const past = data.filter(s => s.completed || (s.session_date && s.session_date < today && !upcoming.includes(s)))
   const nextSession = upcoming[0]
+  const bannerEl = document.getElementById('upcomingBanner')
+  if (nextSession && bannerEl) {
+    const dateStr = nextSession.session_date
+      ? new Date(nextSession.session_date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+      : ''
+    bannerEl.className = 'upcoming-banner'
+    bannerEl.hidden = false
+    bannerEl.innerHTML = `
+      <div class="upcoming-banner-eyebrow">Upcoming Session</div>
+      <div class="upcoming-banner-title">${esc(nextSession.title || 'Coaching Session')}</div>
+      ${dateStr ? `<div class="upcoming-banner-date">${esc(dateStr)}</div>` : ''}
+      <button class="upcoming-banner-link" onclick="navTo('sessions')">View Sessions &rarr;</button>`
+  }
+  const past = data.filter(s => s.completed || (s.session_date && s.session_date < today && !upcoming.includes(s)))
 
   function sessionCard(s, isNext) {
     const dateStr = s.session_date
