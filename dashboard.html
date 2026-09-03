@@ -173,16 +173,71 @@ input.journal-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px r
 
 /* ── MOBILE ── */
 @media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
+  /* Sidebar slides in as overlay */
+  .sidebar { transform: translateX(-100%); box-shadow: none; transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s; }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,0.35); }
   .main { margin-left: 0; }
   .hamburger { display: flex; }
-  .signal-grid { grid-template-columns: 1fr; }
+
+  /* Topbar */
+  .topbar { padding: 0.875rem 1.25rem; }
+  .topbar-date { display: none; }
+
+  /* Content */
+  .content { padding: 1.75rem 1.125rem; }
+
+  /* Overview */
+  .overview-greeting { margin-bottom: 2rem; }
+  .overview-heading { font-size: 2rem; line-height: 1.1; }
+  .overview-sub { font-size: 0.85rem; }
+  .priority-banner { padding: 1.25rem 1.25rem; gap: 1rem; }
+  .priority-banner-value { font-size: 1.3rem; }
+  .signal-grid { grid-template-columns: 1fr; gap: 0; }
+  .signal-tile { padding: 1.25rem; }
+  .signal-tile-name { font-size: 1.25rem; }
+
+  /* Signal panels */
+  .signal-name-lg { font-size: 2.25rem; }
+  .signal-intro { margin-bottom: 2rem; padding-bottom: 1.5rem; }
+  .journal-field { margin-bottom: 2rem; }
+  .journal-field-prompt { font-size: 1.1rem; }
+  .save-row { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+  .save-row .save-note { text-align: center; }
+  .save-btn { width: 100%; padding: 0.875rem; font-size: 0.72rem; }
+
+  /* Knowledge transfer */
   .kt-person-row { grid-template-columns: 1fr; }
-  .content { padding: 2rem 1.25rem; }
-  .signal-name-lg { font-size: 2.5rem; }
-  .overview-heading { font-size: 2.2rem; }
-  .topbar { padding: 1rem 1.25rem; }
+
+  /* Coach header */
+  .coach-heading { font-size: 2rem; }
+
+  /* File cards */
+  .file-card { padding: 1.125rem; gap: 1rem; }
+  .file-icon-wrap { width: 36px; height: 36px; flex-shrink: 0; }
+
+  /* Toast — bottom center on mobile */
+  .toast { bottom: 1.25rem; right: 1.25rem; left: 1.25rem; text-align: center; }
+
+  /* Priority toggle full width */
+  .priority-toggle { width: 100%; justify-content: center; }
+
+  /* Profile panel inputs */
+  #panel-profile input[type="text"],
+  #panel-profile input[type="email"],
+  #panel-profile input[type="password"] { font-size: 1rem; }
+  #panel-profile button { width: 100%; }
+}
+
+/* Sidebar overlay backdrop on mobile */
+@media (max-width: 768px) {
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 99; }
+  .sidebar.open ~ .sidebar-overlay { display: block; }
+}
+
+/* Slightly smaller padding on mid-size tablets */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .content { padding: 2.5rem 2rem; }
+  .overview-heading { font-size: 2.5rem; }
 }
 </style>
 </head>
@@ -190,6 +245,7 @@ input.journal-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px r
 <div class="layout-wrapper">
 <div class="layout">
 
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sb-logo">
       <a href="index.html"><em>E</em>LEVARE</a>
@@ -891,6 +947,7 @@ function showPanel(name) {
 }
 
 document.getElementById('hamburger').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'))
+document.getElementById('sidebarOverlay').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'))
 document.getElementById('logoutBtn').addEventListener('click', async () => { await db.auth.signOut(); window.location.href = 'portal.html' })
 
 // ── Profile ──
