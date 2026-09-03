@@ -212,6 +212,7 @@
           <button class="tab-btn" onclick="switchTab('transfer')">Knowledge Transfer</button>
           <button class="tab-btn" onclick="switchTab('files')">Files</button>
           <button class="tab-btn" onclick="switchTab('notes')">Coach Notes</button>
+          <button class="tab-btn" onclick="switchTab('sessions')">Sessions</button>
         </div>
 
         <!-- Signals tab -->
@@ -264,6 +265,38 @@
             <div class="card-title">Coach Notes</div>
             <div class="notes-list" id="notesList">
               <div class="empty"><div class="empty-icon">📝</div>No notes yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sessions tab -->
+        <div class="tab-panel" id="tab-sessions">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-title">Add Session</div>
+            <label>Title</label>
+            <input type="text" id="sess-title" placeholder="e.g. Kickoff Session">
+            <label>Date</label>
+            <input type="date" id="sess-date">
+            <div class="form-row" style="margin-top:1rem;">
+              <div>
+                <label style="margin-top:0;">Session Number</label>
+                <input type="number" id="sess-number" min="1" placeholder="e.g. 1">
+              </div>
+              <div>
+                <label style="margin-top:0;">Total Sessions</label>
+                <input type="number" id="sess-total" min="1" placeholder="e.g. 12" value="12">
+              </div>
+            </div>
+            <label>Notes (optional)</label>
+            <textarea id="sess-notes" placeholder="Session notes, agenda, or observations…"></textarea>
+            <div style="margin-top:1rem;">
+              <button class="btn btn-primary" onclick="addSession()">Add Session</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Sessions</div>
+            <div id="adminSessionsList">
+              <div class="empty"><div class="empty-icon">📅</div>No sessions yet.</div>
             </div>
           </div>
         </div>
@@ -698,7 +731,83 @@ function switchTab(name) {
     if (name === 'transfer') loadTransfer(currentClientId);
     if (name === 'files') loadFiles(currentClientId);
     if (name === 'notes') loadNotes(currentClientId);
+    if (name === 'sessions') loadAdminSessions(currentClientId);
   }
+}
+
+async function loadAdminSessions(clientId) {
+  const { data } = await db.from('sessions').select('*').eq('client_id', clientId).order('session_date', { ascending: true });
+  const list = document.getElementById('adminSessionsList');
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📅</div>No sessions yet.</div>';
+    return;
+  }
+  list.innerHTML = data.map(s => {
+    const dateStr = s.session_date
+      ? new Date(s.session_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      : 'No date';
+    const sessionLabel = s.session_number && s.total_sessions
+      ? `Session ${s.session_number} of ${s.total_sessions}`
+      : s.session_number ? `Session ${s.session_number}` : 'Session';
+    return `<div style="padding:1rem;border:1px solid var(--border);border-left:3px solid ${s.completed ? '#16a34a' : 'var(--orange)'};margin-bottom:0.75rem;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+        <div style="flex:1;">
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);margin-bottom:0.25rem;">${escHtml(sessionLabel)} · ${escHtml(dateStr)}</div>
+          <div style="font-size:0.9rem;font-weight:600;margin-bottom:${s.notes ? '0.4rem' : '0'};">${escHtml(s.title || 'Coaching Session')}</div>
+          ${s.notes ? `<div style="font-size:0.82rem;color:var(--gray);line-height:1.5;white-space:pre-wrap;">${escHtml(s.notes)}</div>` : ''}
+          ${s.completed ? '<div style="margin-top:0.4rem;font-size:0.65rem;font-weight:700;color:#16a34a;letter-spacing:0.1em;text-transform:uppercase;">Completed</div>' : ''}
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-shrink:0;">
+          ${!s.completed ? `<button class="btn btn-outline" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="markSessionComplete('${s.id}')">Mark Complete</button>` : ''}
+          <button class="btn btn-danger" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="deleteSession('${s.id}')">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function addSession() {
+  const title = document.getElementById('sess-title').value.trim();
+  const date = document.getElementById('sess-date').value;
+  const number = parseInt(document.getElementById('sess-number').value) || null;
+  const total = parseInt(document.getElementById('sess-total').value) || 12;
+  const notes = document.getElementById('sess-notes').value.trim();
+
+  if (!title) { showToast('Title is required.'); return; }
+
+  const { error } = await db.from('sessions').insert({
+    client_id: currentClientId,
+    title,
+    session_date: date || null,
+    session_number: number,
+    total_sessions: total,
+    notes: notes || null,
+    completed: false
+  });
+
+  if (error) { showToast('Error: ' + error.message); return; }
+
+  document.getElementById('sess-title').value = '';
+  document.getElementById('sess-date').value = '';
+  document.getElementById('sess-number').value = '';
+  document.getElementById('sess-total').value = '12';
+  document.getElementById('sess-notes').value = '';
+  showToast('Session added.');
+  loadAdminSessions(currentClientId);
+}
+
+async function markSessionComplete(id) {
+  const { error } = await db.from('sessions').update({ completed: true }).eq('id', id);
+  if (error) { showToast('Error: ' + error.message); return; }
+  showToast('Session marked complete.');
+  loadAdminSessions(currentClientId);
+}
+
+async function deleteSession(id) {
+  if (!confirm('Delete this session?')) return;
+  await db.from('sessions').delete().eq('id', id);
+  showToast('Session deleted.');
+  loadAdminSessions(currentClientId);
 }
 
 async function signOut() {

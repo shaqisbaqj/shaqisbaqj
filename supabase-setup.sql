@@ -1,9 +1,10 @@
 -- ============================================================
--- ELEVARE PORTAL — Supabase Database Setup
+-- ELEVARE PORTAL — Complete Supabase Database Setup
 -- Paste this entire file into your Supabase SQL Editor and Run
+-- Safe to run multiple times (uses IF NOT EXISTS / OR REPLACE)
 -- ============================================================
 
--- 1. Profiles table (extends Supabase auth users)
+-- ── 1. PROFILES ──────────────────────────────────────────────
 create table if not exists public.profiles (
   id uuid references auth.users on delete cascade primary key,
   full_name text,
@@ -14,7 +15,7 @@ create table if not exists public.profiles (
   created_at timestamptz default now()
 );
 
--- 2. Auto-create profile when a user signs up
+-- Auto-create profile on signup
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
@@ -35,7 +36,7 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
--- 3. Sessions
+-- ── 2. SESSIONS ───────────────────────────────────────────────
 create table if not exists public.sessions (
   id uuid default gen_random_uuid() primary key,
   client_id uuid references public.profiles(id) on delete cascade not null,
@@ -48,7 +49,7 @@ create table if not exists public.sessions (
   created_at timestamptz default now()
 );
 
--- 4. Action items
+-- ── 3. ACTION ITEMS ───────────────────────────────────────────
 create table if not exists public.action_items (
   id uuid default gen_random_uuid() primary key,
   client_id uuid references public.profiles(id) on delete cascade not null,
@@ -59,7 +60,7 @@ create table if not exists public.action_items (
   created_at timestamptz default now()
 );
 
--- 5. Journal entries
+-- ── 4. JOURNAL ENTRIES ────────────────────────────────────────
 create table if not exists public.journal_entries (
   id uuid default gen_random_uuid() primary key,
   client_id uuid references public.profiles(id) on delete cascade not null,
@@ -68,7 +69,7 @@ create table if not exists public.journal_entries (
   created_at timestamptz default now()
 );
 
--- 6. Resources
+-- ── 5. RESOURCES (legacy) ─────────────────────────────────────
 create table if not exists public.resources (
   id uuid default gen_random_uuid() primary key,
   title text not null,
@@ -79,73 +80,8 @@ create table if not exists public.resources (
   created_at timestamptz default now()
 );
 
--- ── Row Level Security ──
-
-alter table public.profiles enable row level security;
-alter table public.sessions enable row level security;
-alter table public.action_items enable row level security;
-alter table public.journal_entries enable row level security;
-alter table public.resources enable row level security;
-
--- Helper: check if current user is admin (avoids RLS recursion)
-create or replace function public.is_admin()
-returns boolean as $$
-  select coalesce(
-    (select role = 'admin' from public.profiles where id = auth.uid()),
-    false
-  )
-$$ language sql security definer stable;
-
--- PROFILES policies
-drop policy if exists "Own profile" on public.profiles;
-create policy "Own profile" on public.profiles
-  for select using (auth.uid() = id or public.is_admin());
-
-drop policy if exists "Update own profile" on public.profiles;
-create policy "Update own profile" on public.profiles
-  for update using (auth.uid() = id or public.is_admin());
-
-drop policy if exists "Admin insert profiles" on public.profiles;
-create policy "Admin insert profiles" on public.profiles
-  for insert with check (public.is_admin() or auth.uid() = id);
-
--- SESSIONS policies
-drop policy if exists "Client view sessions" on public.sessions;
-create policy "Client view sessions" on public.sessions
-  for select using (auth.uid() = client_id or public.is_admin());
-
-drop policy if exists "Admin manage sessions" on public.sessions;
-create policy "Admin manage sessions" on public.sessions
-  for all using (public.is_admin());
-
--- ACTION ITEMS policies
-drop policy if exists "Client view tasks" on public.action_items;
-create policy "Client view tasks" on public.action_items
-  for select using (auth.uid() = client_id or public.is_admin());
-
-drop policy if exists "Client update tasks" on public.action_items;
-create policy "Client update tasks" on public.action_items
-  for update using (auth.uid() = client_id);
-
-drop policy if exists "Admin manage tasks" on public.action_items;
-create policy "Admin manage tasks" on public.action_items
-  for all using (public.is_admin());
-
--- JOURNAL policies
-drop policy if exists "Client manage journal" on public.journal_entries;
-create policy "Client manage journal" on public.journal_entries
-  for all using (auth.uid() = client_id);
-
--- RESOURCES policies
-drop policy if exists "Client view resources" on public.resources;
-create policy "Client view resources" on public.resources
-  for select using (client_id = auth.uid() or client_id is null or public.is_admin());
-
-drop policy if exists "Admin manage resources" on public.resources;
-create policy "Admin manage resources" on public.resources
-  for all using (public.is_admin());
-
--- 7. Signal entries (4 Signals framework — one row per client per signal type)
+-- ── 6. SIGNAL ENTRIES (4 Signals framework) ───────────────────
+-- One row per client per signal type. Unique on (client_id, signal_type).
 create table if not exists public.signal_entries (
   id uuid default gen_random_uuid() primary key,
   client_id uuid references public.profiles(id) on delete cascade not null,
@@ -158,7 +94,8 @@ create table if not exists public.signal_entries (
   unique(client_id, signal_type)
 );
 
--- 8. Knowledge Transfer (one row per client)
+-- ── 7. KNOWLEDGE TRANSFER ─────────────────────────────────────
+-- One row per client (who they are developing).
 create table if not exists public.knowledge_transfer (
   id uuid default gen_random_uuid() primary key,
   client_id uuid references public.profiles(id) on delete cascade not null,
@@ -171,7 +108,8 @@ create table if not exists public.knowledge_transfer (
   unique(client_id)
 );
 
--- 9. Client files (admin pastes shareable links)
+-- ── 8. CLIENT FILES ───────────────────────────────────────────
+-- Admin pastes shareable links (Google Drive, Dropbox, etc.)
 create table if not exists public.client_files (
   id uuid default gen_random_uuid() primary key,
   client_id uuid references public.profiles(id) on delete cascade not null,
@@ -182,7 +120,7 @@ create table if not exists public.client_files (
   created_at timestamptz default now()
 );
 
--- 10. Coach notes (admin only)
+-- ── 9. COACH NOTES ────────────────────────────────────────────
 create table if not exists public.client_notes (
   id uuid default gen_random_uuid() primary key,
   client_id uuid references public.profiles(id) on delete cascade not null,
@@ -191,7 +129,8 @@ create table if not exists public.client_notes (
   created_at timestamptz default now()
 );
 
--- 11. Cohort codes (admin creates; clients use to self-register)
+-- ── 10. COHORT CODES ──────────────────────────────────────────
+-- Admin creates codes; clients use them to self-register via the portal.
 create table if not exists public.cohort_codes (
   id uuid default gen_random_uuid() primary key,
   code text not null unique,
@@ -200,53 +139,131 @@ create table if not exists public.cohort_codes (
   created_at timestamptz default now()
 );
 
--- ── RLS for new tables ──
+-- ── ROW LEVEL SECURITY ────────────────────────────────────────
 
-alter table public.cohort_codes enable row level security;
+alter table public.profiles       enable row level security;
+alter table public.sessions       enable row level security;
+alter table public.action_items   enable row level security;
+alter table public.journal_entries enable row level security;
+alter table public.resources      enable row level security;
 alter table public.signal_entries enable row level security;
 alter table public.knowledge_transfer enable row level security;
-alter table public.client_files enable row level security;
-alter table public.client_notes enable row level security;
+alter table public.client_files   enable row level security;
+alter table public.client_notes   enable row level security;
+alter table public.cohort_codes   enable row level security;
 
--- Cohort codes — anyone can read active codes (for signup validation), only admin can manage
-drop policy if exists "Anyone can read active codes" on public.cohort_codes;
-create policy "Anyone can read active codes" on public.cohort_codes
-  for select using (active = true or public.is_admin());
+-- Helper: is the current user an admin? (security definer avoids RLS recursion)
+create or replace function public.is_admin()
+returns boolean as $$
+  select coalesce(
+    (select role = 'admin' from public.profiles where id = auth.uid()),
+    false
+  )
+$$ language sql security definer stable;
 
-drop policy if exists "Admin manage codes" on public.cohort_codes;
-create policy "Admin manage codes" on public.cohort_codes
+-- ── PROFILES ──
+drop policy if exists "Own profile"            on public.profiles;
+drop policy if exists "Update own profile"     on public.profiles;
+drop policy if exists "Admin insert profiles"  on public.profiles;
+
+create policy "Own profile" on public.profiles
+  for select using (auth.uid() = id or public.is_admin());
+
+create policy "Update own profile" on public.profiles
+  for update using (auth.uid() = id or public.is_admin());
+
+create policy "Admin insert profiles" on public.profiles
+  for insert with check (public.is_admin() or auth.uid() = id);
+
+-- ── SESSIONS ──
+drop policy if exists "Client view sessions"  on public.sessions;
+drop policy if exists "Admin manage sessions" on public.sessions;
+
+create policy "Client view sessions" on public.sessions
+  for select using (auth.uid() = client_id or public.is_admin());
+
+create policy "Admin manage sessions" on public.sessions
   for all using (public.is_admin());
 
--- Signal entries
+-- ── ACTION ITEMS ──
+drop policy if exists "Client view tasks"   on public.action_items;
+drop policy if exists "Client update tasks" on public.action_items;
+drop policy if exists "Admin manage tasks"  on public.action_items;
+
+create policy "Client view tasks" on public.action_items
+  for select using (auth.uid() = client_id or public.is_admin());
+
+create policy "Client update tasks" on public.action_items
+  for update using (auth.uid() = client_id);
+
+create policy "Admin manage tasks" on public.action_items
+  for all using (public.is_admin());
+
+-- ── JOURNAL ──
+drop policy if exists "Client manage journal" on public.journal_entries;
+
+create policy "Client manage journal" on public.journal_entries
+  for all using (auth.uid() = client_id);
+
+-- ── RESOURCES ──
+drop policy if exists "Client view resources" on public.resources;
+drop policy if exists "Admin manage resources" on public.resources;
+
+create policy "Client view resources" on public.resources
+  for select using (client_id = auth.uid() or client_id is null or public.is_admin());
+
+create policy "Admin manage resources" on public.resources
+  for all using (public.is_admin());
+
+-- ── SIGNAL ENTRIES ──
 drop policy if exists "Client manage signals" on public.signal_entries;
+
 create policy "Client manage signals" on public.signal_entries
   for all using (auth.uid() = client_id or public.is_admin());
 
--- Knowledge transfer
+-- ── KNOWLEDGE TRANSFER ──
 drop policy if exists "Client manage transfer" on public.knowledge_transfer;
+
 create policy "Client manage transfer" on public.knowledge_transfer
   for all using (auth.uid() = client_id or public.is_admin());
 
--- Client files — client can view, admin can manage
-drop policy if exists "Client view files" on public.client_files;
+-- ── CLIENT FILES ──
+drop policy if exists "Client view files"   on public.client_files;
+drop policy if exists "Admin manage files"  on public.client_files;
+
 create policy "Client view files" on public.client_files
   for select using (auth.uid() = client_id or public.is_admin());
 
-drop policy if exists "Admin manage files" on public.client_files;
 create policy "Admin manage files" on public.client_files
   for all using (public.is_admin());
 
--- Coach notes — admin only
+-- ── COACH NOTES ──
 drop policy if exists "Admin manage notes" on public.client_notes;
+drop policy if exists "Client view notes"  on public.client_notes;
+
 create policy "Admin manage notes" on public.client_notes
   for all using (public.is_admin());
 
-drop policy if exists "Client view notes" on public.client_notes;
 create policy "Client view notes" on public.client_notes
   for select using (auth.uid() = client_id);
 
--- ── DONE ──
--- After running this, go to your Supabase Auth > Users and create Jason's admin account.
--- Then run this query to make him admin (replace the email):
+-- ── COHORT CODES ──
+drop policy if exists "Anyone can read active codes" on public.cohort_codes;
+drop policy if exists "Admin manage codes"           on public.cohort_codes;
+
+-- Unauthenticated visitors can read active codes (needed for self-signup validation)
+create policy "Anyone can read active codes" on public.cohort_codes
+  for select using (active = true or public.is_admin());
+
+create policy "Admin manage codes" on public.cohort_codes
+  for all using (public.is_admin());
+
+-- ── DONE ─────────────────────────────────────────────────────
+-- After running this:
+-- 1. Go to Supabase Auth > Users and create your admin account manually,
+--    OR sign up via the portal and then run:
 --
--- update public.profiles set role = 'admin' where email = 'jason@elevaresolutions.com';
+--    update public.profiles set role = 'admin' where email = 'your@email.com';
+--
+-- 2. To create cohort codes for self-signup, log into the admin panel
+--    and use the Cohort Codes section.
