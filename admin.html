@@ -382,16 +382,18 @@ async function loadClients() {
     return;
   }
 
-  // Group sidebar by cohort/program
+  // Group by cohort code (falls back to program, then Unassigned)
   const groups = {};
   clients.forEach(c => {
-    const key = c.program || 'No Program';
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(c);
+    const key = c.cohort || c.program || 'Unassigned';
+    if (!groups[key]) groups[key] = { program: c.program || '', members: [] };
+    groups[key].members.push(c);
   });
-  listEl.innerHTML = Object.entries(groups).map(([prog, members]) => `
-    <div style="padding:0.5rem 1.5rem 0.2rem;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:0.5rem;">${escHtml(prog)}</div>
-    ${members.map(c => {
+
+  // Sidebar grouped by cohort code
+  listEl.innerHTML = Object.entries(groups).map(([code, group]) => `
+    <div style="padding:0.5rem 1.5rem 0.2rem;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:0.5rem;">${escHtml(code)}</div>
+    ${group.members.map(c => {
       const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
       return `<button class="client-link" id="cl-${c.id}" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">
         <div class="client-avatar">${initials}</div>
@@ -400,20 +402,21 @@ async function loadClients() {
     }).join('')}
   `).join('');
 
-  // Overview: cohort cards
+  // Overview: one card per cohort code
   const tableEl = document.getElementById('clientsTable');
   tableEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:1.25rem;">` +
-    Object.entries(groups).map(([prog, members]) => `
+    Object.entries(groups).map(([code, group]) => `
     <div class="card" style="padding:0;overflow:hidden;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:#fafafa;border-bottom:1px solid var(--border);">
         <div>
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);margin-bottom:0.2rem;">Cohort</div>
-          <div style="font-size:0.95rem;font-weight:600;">${escHtml(prog)}</div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);margin-bottom:0.2rem;">Access Code</div>
+          <div style="font-size:1rem;font-weight:700;letter-spacing:0.05em;">${escHtml(code)}</div>
+          ${group.program ? `<div style="font-size:0.78rem;color:var(--gray);margin-top:0.15rem;">${escHtml(group.program)}</div>` : ''}
         </div>
-        <div style="font-size:0.75rem;color:var(--gray);font-weight:500;">${members.length} ${members.length === 1 ? 'participant' : 'participants'}</div>
+        <div style="font-size:0.75rem;color:var(--gray);font-weight:500;">${group.members.length} ${group.members.length === 1 ? 'participant' : 'participants'}</div>
       </div>
       <table style="width:100%;border-collapse:collapse;">
-        <tbody>${members.map(c => {
+        <tbody>${group.members.map(c => {
           const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
           return `<tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
             <td style="padding:0.85rem 1.25rem;width:40px;">
