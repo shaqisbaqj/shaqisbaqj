@@ -189,11 +189,8 @@
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title">All Clients</div>
-          <div id="clientsTable">
-            <div class="empty"><div class="empty-icon">👥</div>No clients yet.</div>
-          </div>
+        <div id="clientsTable">
+          <div class="empty"><div class="empty-icon">👥</div>No clients yet.</div>
         </div>
       </div>
 
@@ -403,23 +400,33 @@ async function loadClients() {
     }).join('')}
   `).join('');
 
-  // Overview table grouped by cohort
+  // Overview: cohort cards
   const tableEl = document.getElementById('clientsTable');
-  tableEl.innerHTML = Object.entries(groups).map(([prog, members]) => `
-    <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);padding:1.25rem 0 0.5rem;">${escHtml(prog)}</div>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:1rem;">
-      <thead><tr style="border-bottom:1px solid var(--border);">
-        <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Name</th>
-        <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Email</th>
-        <th style="padding:0.5rem 0.75rem;"></th>
-      </tr></thead>
-      <tbody>${members.map(c => `<tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:0.75rem;font-size:0.85rem;font-weight:500;">${escHtml(c.full_name || '—')}</td>
-        <td style="padding:0.75rem;font-size:0.82rem;color:var(--gray);">${escHtml(c.email || '—')}</td>
-        <td style="padding:0.75rem;text-align:right;"><button class="btn btn-outline" style="font-size:0.7rem;padding:0.4rem 0.85rem;" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">View →</button></td>
-      </tr>`).join('')}</tbody>
-    </table>
-  `).join('');
+  tableEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:1.25rem;">` +
+    Object.entries(groups).map(([prog, members]) => `
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:#fafafa;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);margin-bottom:0.2rem;">Cohort</div>
+          <div style="font-size:0.95rem;font-weight:600;">${escHtml(prog)}</div>
+        </div>
+        <div style="font-size:0.75rem;color:var(--gray);font-weight:500;">${members.length} ${members.length === 1 ? 'participant' : 'participants'}</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <tbody>${members.map(c => {
+          const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+          return `<tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
+            <td style="padding:0.85rem 1.25rem;width:40px;">
+              <div style="width:32px;height:32px;background:rgba(200,90,30,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--orange);">${initials}</div>
+            </td>
+            <td style="padding:0.85rem 0;font-size:0.88rem;font-weight:500;">${escHtml(c.full_name || '—')}</td>
+            <td style="padding:0.85rem 0;font-size:0.82rem;color:var(--gray);">${escHtml(c.email || '—')}</td>
+            <td style="padding:0.85rem 1.25rem;text-align:right;"><button class="btn btn-outline" style="font-size:0.7rem;padding:0.35rem 0.85rem;" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">View →</button></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>
+  `).join('') + `</div>`;
 
   document.getElementById('stat-clients').textContent = clients.length;
 }
