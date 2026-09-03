@@ -10,22 +10,21 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; --pale: #FBF0EA; --bg: #f9fafb; }
-  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); -webkit-font-smoothing: antialiased; }
+  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
   .layout { display: flex; min-height: 100vh; }
 
-  /* Sidebar */
   .sidebar { width: 260px; background: var(--black); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto; }
   .sidebar-logo { padding: 1.75rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
   .sidebar-logo a { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--white); display: block; }
   .sidebar-logo em { color: var(--orange); font-style: normal; }
   .sidebar-logo-sub { font-size: 0.62rem; color: rgba(255,255,255,0.25); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.3rem; }
   .sidebar-section { padding: 1.25rem 1.5rem 0.5rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
-  .client-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
+  .client-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; border: none; background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
   .client-link:hover { color: var(--white); background: rgba(255,255,255,0.04); }
   .client-link.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.07); }
   .client-avatar { width: 26px; height: 26px; background: rgba(200,90,30,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--orange); flex-shrink: 0; }
-  .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.45); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
+  .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.45); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; border: none; background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
   .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.04); }
   .nav-item.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.07); }
   .nav-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
@@ -35,277 +34,256 @@
   .add-client-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.5rem; font-size: 0.72rem; font-weight: 600; color: var(--orange); cursor: pointer; letter-spacing: 0.06em; background: none; border: none; font-family: 'Inter',sans-serif; width: 100%; text-align: left; transition: background 0.15s; }
   .add-client-btn:hover { background: rgba(200,90,30,0.07); }
 
-  /* Main */
   .main { margin-left: 260px; flex: 1; }
   .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
   .page-title { font-size: 1.05rem; font-weight: 600; }
-  .topbar-right { display: flex; gap: 0.75rem; align-items: center; }
   .content { padding: 2rem; }
   .panel { display: none; }
   .panel.active { display: block; }
 
-  /* Stats row */
-  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-bottom: 2rem; }
-  .stat-card { background: var(--white); border: 1px solid var(--border); padding: 1.25rem; border-top: 2px solid var(--border); }
-  .stat-card.accent { border-top-color: var(--orange); }
-  .stat-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.4rem; }
-  .stat-val { font-family: 'Cormorant Garamond',serif; font-size: 2rem; font-weight: 600; color: var(--black); }
-  .stat-val.orange { color: var(--orange); }
+  /* Cards & Forms */
+  .card { background: var(--white); border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.5rem; }
+  .card-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 1.25rem; }
+  .card-subtitle { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
 
-  /* Tables */
-  .table-card { background: var(--white); border: 1px solid var(--border); }
-  .table-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .table-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
-  table { width: 100%; border-collapse: collapse; }
-  th { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); padding: 0.75rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); background: #fafafa; }
-  td { padding: 0.875rem 1.5rem; font-size: 0.85rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #fafafa; cursor: pointer; }
-  .badge { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; }
-  .badge-active { background: #dcfce7; color: #166534; }
-  .badge-done { background: #eff6ff; color: #1e40af; }
-  .badge-open { background: #fef9c3; color: #854d0e; }
+  label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--gray); margin-bottom: 0.4rem; margin-top: 1rem; }
+  label:first-of-type { margin-top: 0; }
+  input, textarea, select { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--black); background: var(--white); outline: none; transition: border-color 0.15s; }
+  input:focus, textarea:focus, select:focus { border-color: var(--orange); }
+  textarea { resize: vertical; min-height: 90px; }
 
-  /* Client detail */
-  .client-header { background: var(--white); border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; }
-  .client-name-lg { font-family: 'Cormorant Garamond',serif; font-size: 1.8rem; font-weight: 600; margin-bottom: 0.3rem; }
-  .client-meta { font-size: 0.8rem; color: var(--gray); }
-  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  .detail-section { background: var(--white); border: 1px solid var(--border); }
-  .detail-section-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .detail-section-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
-  .detail-items { padding: 0; }
-  .detail-item { padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; }
-  .detail-item:last-child { border-bottom: none; }
-  .detail-item-title { font-weight: 500; }
-  .detail-item-meta { font-size: 0.72rem; color: var(--gray); margin-top: 0.2rem; }
-
-  /* Buttons */
-  .btn-sm { padding: 0.45rem 0.9rem; background: var(--orange); color: var(--white); border: none; font-family: 'Inter',sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
-  .btn-sm:hover { background: #a34716; }
-  .btn-outline { background: transparent; color: var(--orange); border: 1px solid var(--orange); }
-  .btn-outline:hover { background: var(--orange); color: var(--white); }
-  .btn-danger { background: #dc2626; }
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.25rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; transition: all 0.15s; border: none; font-family: 'Inter', sans-serif; }
+  .btn-primary { background: var(--orange); color: var(--white); }
+  .btn-primary:hover { background: #a84a17; }
+  .btn-outline { background: transparent; color: var(--black); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--black); }
+  .btn-ghost { background: transparent; color: var(--gray); border: none; font-size: 0.72rem; }
+  .btn-danger { background: #dc2626; color: var(--white); }
   .btn-danger:hover { background: #b91c1c; }
 
-  /* Modals */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; }
-  .modal-overlay.open { display: flex; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* Signal grid */
+  .signals-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
+  .signal-card { background: var(--white); border: 1px solid var(--border); padding: 1.25rem; border-top: 3px solid var(--border); }
+  .signal-card.priority { border-top-color: var(--orange); }
+  .signal-name { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.5rem; }
+  .signal-goal { font-size: 0.82rem; color: var(--black); line-height: 1.5; margin-bottom: 0.5rem; }
+  .signal-meta { font-size: 0.72rem; color: var(--gray); }
+  .priority-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); }
+  .priority-dot { width: 6px; height: 6px; background: var(--orange); border-radius: 50%; }
+
+  /* Files list */
+  .files-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .file-item { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg); border: 1px solid var(--border); gap: 1rem; }
+  .file-info { flex: 1; min-width: 0; }
+  .file-title { font-size: 0.85rem; font-weight: 500; }
+  .file-desc { font-size: 0.75rem; color: var(--gray); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-url { font-size: 0.7rem; color: var(--orange); text-decoration: none; }
+  .file-url:hover { text-decoration: underline; }
+
+  /* Notes list */
+  .notes-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .note-item { padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--orange); }
+  .note-content { font-size: 0.85rem; line-height: 1.55; }
+  .note-meta { font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; }
+
+  /* Modal */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  .modal-backdrop.hidden { display: none; }
   .modal { background: var(--white); width: 100%; max-width: 500px; padding: 2rem; max-height: 90vh; overflow-y: auto; }
-  .modal-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
-  .field-group { margin-bottom: 1.25rem; }
-  .field-label { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 0.4rem; }
-  input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"], textarea, select {
-    width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); font-family: 'Inter',sans-serif;
-    font-size: 0.875rem; color: var(--black); background: #fafafa; outline: none; transition: border-color 0.15s;
+  .modal-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; }
+  .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+  /* Client overview */
+  .client-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; }
+  .client-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; }
+  .client-program { font-size: 0.78rem; color: var(--gray); margin-top: 0.25rem; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 3rem 1.5rem; color: var(--gray); font-size: 0.85rem; }
+  .empty-icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.4; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--black); color: var(--white); padding: 0.85rem 1.25rem; font-size: 0.8rem; z-index: 1000; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Tabs within client panel */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; gap: 0; }
+  .tab-btn { padding: 0.75rem 1.25rem; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--gray); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+  .tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab-btn:hover:not(.active) { color: var(--black); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  @media (max-width: 800px) {
+    .sidebar { width: 220px; }
+    .main { margin-left: 220px; }
+    .signals-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
   }
-  input:focus, textarea:focus, select:focus { border-color: var(--orange); background: var(--white); }
-  textarea { resize: vertical; min-height: 80px; }
-  .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
-  .btn-cancel { padding: 0.7rem 1.25rem; background: none; border: 1px solid var(--border); font-family: 'Inter',sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; color: var(--gray); }
-  .empty-state { padding: 2.5rem 1.5rem; text-align: center; color: var(--gray); font-size: 0.85rem; }
-  .empty-state strong { display: block; font-size: 0.95rem; color: var(--black); margin-bottom: 0.35rem; }
-
-  .progress-bar { background: var(--border); height: 5px; border-radius: 3px; margin-top: 0.5rem; }
-  .progress-fill { height: 100%; background: var(--orange); border-radius: 3px; }
-  .search-input { padding: 0.55rem 1rem; border: 1px solid var(--border); font-family: 'Inter',sans-serif; font-size: 0.82rem; outline: none; width: 200px; }
-  .search-input:focus { border-color: var(--orange); }
-  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--black); color: var(--white); padding: 0.875rem 1.5rem; font-size: 0.82rem; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-  .toast.show { opacity: 1; }
-
-  @media (max-width: 900px) { .detail-grid { grid-template-columns: 1fr; } .stats-row { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .content { padding: 1.25rem; }
+  }
 </style>
 </head>
 <body>
+
 <div class="layout">
-  <aside class="sidebar" id="sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar">
     <div class="sidebar-logo">
-      <a href="index.html"><em>E</em>LEVARE</a>
-      <div class="sidebar-logo-sub">Admin Panel</div>
+      <a href="index.html"><em>E</em>levare</a>
+      <div class="sidebar-logo-sub">Admin Portal</div>
     </div>
 
-    <nav style="padding:0.75rem 0;">
-      <div class="nav-item active" data-view="overview">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Dashboard
-      </div>
-      <div class="nav-item" data-view="resources">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Resources
-      </div>
-    </nav>
+    <div class="sidebar-section">Overview</div>
+    <button class="nav-item active" onclick="showPanel('overview')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
 
     <div class="sidebar-section">Clients</div>
-    <button class="add-client-btn" id="addClientBtn">+ Add New Client</button>
-    <div id="clientNav"></div>
+    <div id="clientList">
+      <div style="padding:0.5rem 1.5rem; font-size:0.75rem; color:rgba(255,255,255,0.25);">Loading…</div>
+    </div>
+    <button class="add-client-btn" onclick="openAddClientModal()">
+      <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Client
+    </button>
 
     <div class="sidebar-footer">
-      <button class="logout-btn" id="logoutBtn">Sign Out</button>
+      <button class="logout-btn" onclick="signOut()">Sign out</button>
     </div>
   </aside>
 
-  <div class="main">
+  <!-- Main -->
+  <main class="main">
     <div class="topbar">
-      <span class="page-title" id="pageTitle">Dashboard</span>
-      <div class="topbar-right">
-        <span style="font-size:0.75rem;color:var(--gray);" id="adminName"></span>
-      </div>
+      <div class="page-title" id="topbarTitle">Admin Dashboard</div>
+      <div id="adminName" style="font-size:0.78rem;color:var(--gray);"></div>
     </div>
 
     <div class="content">
 
-      <!-- OVERVIEW -->
-      <div class="panel active" id="view-overview">
-        <div class="stats-row">
-          <div class="stat-card accent">
-            <div class="stat-label">Total Clients</div>
-            <div class="stat-val orange" id="statClients">0</div>
+      <!-- Overview Panel -->
+      <div class="panel active" id="panel-overview">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem;">
+          <div class="card" style="padding:1.25rem;">
+            <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.5rem;">Total Clients</div>
+            <div id="stat-clients" style="font-size:2rem;font-weight:300;">—</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-label">Sessions Logged</div>
-            <div class="stat-val" id="statSessions">0</div>
+          <div class="card" style="padding:1.25rem;border-top:2px solid var(--orange);">
+            <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.5rem;">Signals Logged</div>
+            <div id="stat-signals" style="font-size:2rem;font-weight:300;">—</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-label">Open Action Items</div>
-            <div class="stat-val" id="statTasks">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Resources Uploaded</div>
-            <div class="stat-val" id="statResources">0</div>
+          <div class="card" style="padding:1.25rem;">
+            <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.5rem;">Files Shared</div>
+            <div id="stat-files" style="font-size:2rem;font-weight:300;">—</div>
           </div>
         </div>
-        <div class="table-card">
-          <div class="table-head">
-            <span class="table-title">All Clients</span>
-            <input class="search-input" placeholder="Search clients..." id="clientSearch">
+
+        <div class="card">
+          <div class="card-title">All Clients</div>
+          <div id="clientsTable">
+            <div class="empty"><div class="empty-icon">👥</div>No clients yet.</div>
           </div>
-          <table id="clientTable">
-            <thead><tr><th>Name</th><th>Email</th><th>Program</th><th>Sessions</th><th>Open Tasks</th></tr></thead>
-            <tbody id="clientTableBody"></tbody>
-          </table>
         </div>
       </div>
 
-      <!-- CLIENT DETAIL -->
-      <div class="panel" id="view-client">
+      <!-- Client Panel -->
+      <div class="panel" id="panel-client">
         <div class="client-header">
           <div>
-            <div class="client-name-lg" id="detailName">—</div>
-            <div class="client-meta" id="detailMeta">—</div>
+            <div class="client-name" id="client-display-name">Client Name</div>
+            <div class="client-program" id="client-display-program"></div>
           </div>
-          <div style="display:flex;gap:0.75rem;">
-            <button class="btn-sm btn-outline" id="addSessionBtn">+ Session</button>
-            <button class="btn-sm btn-outline" id="addTaskBtn">+ Task</button>
-            <button class="btn-sm btn-outline" id="addResourceBtn">+ Resource</button>
+          <button class="btn btn-outline" onclick="showPanel('overview')" style="font-size:0.72rem;">← All Clients</button>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('signals')">4 Signals</button>
+          <button class="tab-btn" onclick="switchTab('transfer')">Knowledge Transfer</button>
+          <button class="tab-btn" onclick="switchTab('files')">Files</button>
+          <button class="tab-btn" onclick="switchTab('notes')">Coach Notes</button>
+        </div>
+
+        <!-- Signals tab -->
+        <div class="tab-panel active" id="tab-signals">
+          <div class="signals-grid" id="signalsGrid">
+            <div class="empty"><div class="empty-icon">📊</div>No signal entries yet.</div>
           </div>
         </div>
 
-        <div class="detail-grid">
-          <div class="detail-section">
-            <div class="detail-section-head">
-              <span class="detail-section-title">Sessions</span>
-              <span id="sessionProgress" style="font-size:0.72rem;color:var(--gray);"></span>
-            </div>
-            <div class="detail-items" id="detailSessions"><div class="empty-state"><strong>No sessions yet</strong></div></div>
-          </div>
-          <div class="detail-section">
-            <div class="detail-section-head">
-              <span class="detail-section-title">Action Items</span>
-            </div>
-            <div class="detail-items" id="detailTasks"><div class="empty-state"><strong>No action items yet</strong></div></div>
-          </div>
-          <div class="detail-section" style="grid-column:1/-1;">
-            <div class="detail-section-head">
-              <span class="detail-section-title">Resources Assigned</span>
-              <button class="btn-sm" style="font-size:0.62rem;" id="addResourceClientBtn">+ Add Resource</button>
-            </div>
-            <div class="detail-items" id="detailResources"><div class="empty-state"><strong>No resources yet</strong></div></div>
+        <!-- Knowledge Transfer tab -->
+        <div class="tab-panel" id="tab-transfer">
+          <div class="card" id="transferCard">
+            <div class="empty"><div class="empty-icon">🔄</div>No knowledge transfer entry yet.</div>
           </div>
         </div>
-      </div>
 
-      <!-- RESOURCES -->
-      <div class="panel" id="view-resources">
-        <div class="table-card">
-          <div class="table-head">
-            <span class="table-title">All Resources</span>
-            <button class="btn-sm" id="newResourceBtn">+ New Resource</button>
+        <!-- Files tab -->
+        <div class="tab-panel" id="tab-files">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-title">Add File / Link</div>
+            <label>Title</label>
+            <input type="text" id="file-title" placeholder="e.g. Leadership Assessment Q3">
+            <label>URL (Google Drive, Dropbox, etc.)</label>
+            <input type="url" id="file-url" placeholder="https://drive.google.com/…">
+            <label>Description (optional)</label>
+            <input type="text" id="file-desc" placeholder="Brief description">
+            <div style="margin-top:1rem;">
+              <button class="btn btn-primary" onclick="addFile()">Add File</button>
+            </div>
           </div>
-          <table>
-            <thead><tr><th>Title</th><th>Type</th><th>Assigned To</th><th>Date Added</th><th></th></tr></thead>
-            <tbody id="resourceTableBody"></tbody>
-          </table>
+          <div class="card">
+            <div class="card-title">Shared Files</div>
+            <div class="files-list" id="filesList">
+              <div class="empty"><div class="empty-icon">📁</div>No files shared yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes tab -->
+        <div class="tab-panel" id="tab-notes">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-title">Add Coach Note</div>
+            <label>Note</label>
+            <textarea id="note-content" placeholder="Enter coaching observation, insight, or action item…" style="min-height:120px;"></textarea>
+            <div style="margin-top:1rem;">
+              <button class="btn btn-primary" onclick="addNote()">Save Note</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Coach Notes</div>
+            <div class="notes-list" id="notesList">
+              <div class="empty"><div class="empty-icon">📝</div>No notes yet.</div>
+            </div>
+          </div>
         </div>
       </div>
 
     </div>
-  </div>
+  </main>
 </div>
 
-<!-- ADD CLIENT MODAL -->
-<div class="modal-overlay" id="modalClient">
+<!-- Add Client Modal -->
+<div class="modal-backdrop hidden" id="addClientModal">
   <div class="modal">
     <div class="modal-title">Add New Client</div>
-    <div class="field-group"><label class="field-label">Full Name</label><input type="text" id="cName" placeholder="Jane Smith"></div>
-    <div class="field-group"><label class="field-label">Email Address</label><input type="email" id="cEmail" placeholder="jane@company.com"></div>
-    <div class="field-group"><label class="field-label">Temporary Password</label><input type="password" id="cPass" placeholder="They can change this after login"></div>
-    <div class="field-group"><label class="field-label">Program / Cohort</label><input type="text" id="cProgram" placeholder="e.g. Executive Coaching Q3 2026"></div>
-    <div class="modal-actions">
-      <button class="btn-sm" id="saveClient">Create Client Account</button>
-      <button class="btn-cancel" onclick="closeModal('modalClient')">Cancel</button>
-    </div>
-    <div style="font-size:0.72rem;color:var(--gray);margin-top:1rem;">The client will receive a confirmation email and can log in with these credentials.</div>
-  </div>
-</div>
-
-<!-- ADD SESSION MODAL -->
-<div class="modal-overlay" id="modalSession">
-  <div class="modal">
-    <div class="modal-title">Add Session</div>
-    <div class="field-group"><label class="field-label">Session Title</label><input type="text" id="sTitle" placeholder="e.g. Communicating with Clarity"></div>
-    <div class="field-group"><label class="field-label">Session Number</label><input type="number" id="sNum" min="1" placeholder="1"></div>
-    <div class="field-group"><label class="field-label">Total Sessions in Program</label><input type="number" id="sTot" min="1" value="12"></div>
-    <div class="field-group"><label class="field-label">Date</label><input type="date" id="sDate"></div>
-    <div class="field-group">
-      <label class="field-label">Status</label>
-      <select id="sCompleted"><option value="false">Scheduled / Upcoming</option><option value="true">Completed</option></select>
-    </div>
-    <div class="field-group"><label class="field-label">Notes (optional)</label><textarea id="sNotes" placeholder="Session notes, key takeaways..."></textarea></div>
-    <div class="modal-actions">
-      <button class="btn-sm" id="saveSession">Save Session</button>
-      <button class="btn-cancel" onclick="closeModal('modalSession')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADD TASK MODAL -->
-<div class="modal-overlay" id="modalTask">
-  <div class="modal">
-    <div class="modal-title">Add Action Item</div>
-    <div class="field-group"><label class="field-label">Task Title</label><input type="text" id="tTitle" placeholder="e.g. Complete delegation exercise"></div>
-    <div class="field-group"><label class="field-label">Description (optional)</label><textarea id="tDesc" placeholder="Additional context or instructions..."></textarea></div>
-    <div class="field-group"><label class="field-label">Due Date (optional)</label><input type="date" id="tDue"></div>
-    <div class="modal-actions">
-      <button class="btn-sm" id="saveTask">Assign Task</button>
-      <button class="btn-cancel" onclick="closeModal('modalTask')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADD RESOURCE MODAL -->
-<div class="modal-overlay" id="modalResource">
-  <div class="modal">
-    <div class="modal-title">Add Resource</div>
-    <div class="field-group"><label class="field-label">Title</label><input type="text" id="rTitle" placeholder="e.g. Leadership Workbook"></div>
-    <div class="field-group"><label class="field-label">Description (optional)</label><input type="text" id="rDesc" placeholder="Brief description"></div>
-    <div class="field-group"><label class="field-label">URL / Link</label><input type="text" id="rUrl" placeholder="https://..."></div>
-    <div class="field-group">
-      <label class="field-label">Assign To</label>
-      <select id="rAssign"><option value="all">All Clients</option></select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-sm" id="saveResource">Save Resource</button>
-      <button class="btn-cancel" onclick="closeModal('modalResource')">Cancel</button>
+    <label>Full Name</label>
+    <input type="text" id="nc-name" placeholder="Jane Smith">
+    <label>Email</label>
+    <input type="email" id="nc-email" placeholder="jane@company.com">
+    <label>Temporary Password</label>
+    <input type="text" id="nc-pass" placeholder="Min 6 characters">
+    <label>Program / Cohort (optional)</label>
+    <input type="text" id="nc-program" placeholder="e.g. Executive Coaching — Fall 2025">
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('addClientModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="createClient()">Create Account</button>
     </div>
   </div>
 </div>
@@ -313,300 +291,358 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const { createClient } = supabase
-const db = createClient('https://djjtgsdnorxgxzkfbxbj.supabase.co', 'sb_publishable_F5RpcjB3xhZjY8j_AHzODQ_8K7Nw719')
+const SUPABASE_URL = 'https://djjtgsdnorxgxzkfbxbj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_F5RpcjB3xhZjY8j_AHzODQ_8K7Nw719';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let adminUser = null, clients = [], selectedClient = null
+let currentUser = null;
+let currentClientId = null;
 
-// Auth guard + admin check
-db.auth.getSession().then(async ({ data: { session } }) => {
-  if (!session) { window.location.href = 'portal.html'; return }
-  adminUser = session.user
-  const { data: profile } = await db.from('profiles').select('*').eq('id', adminUser.id).single()
-  if (profile?.role !== 'admin') { window.location.href = 'dashboard.html'; return }
-  document.getElementById('adminName').textContent = profile.full_name || adminUser.email
-  loadAll()
-})
+const SIGNAL_LABELS = {
+  knowledge: 'Knowledge',
+  experience: 'Experience',
+  capacity: 'Leadership Capacity',
+  risk: 'Performance Risk'
+};
 
-async function loadAll() {
-  await loadClients()
-  loadOverviewStats()
-  loadResourceTable()
+async function init() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { window.location.href = 'portal.html'; return; }
+  currentUser = session.user;
+
+  const { data: profile } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+  if (!profile || profile.role !== 'admin') { window.location.href = 'dashboard.html'; return; }
+
+  document.getElementById('adminName').textContent = profile.full_name || profile.email;
+
+  loadClients();
+  loadOverviewStats();
 }
 
 async function loadClients() {
-  const { data } = await db.from('profiles').select('*').eq('role', 'client').order('full_name')
-  clients = data || []
-  renderClientNav()
-  renderClientTable(clients)
-  document.getElementById('statClients').textContent = clients.length
+  const { data: clients } = await db.from('profiles').select('*').eq('role', 'client').order('full_name');
+  if (!clients) return;
 
-  // Populate resource assign dropdown
-  const sel = document.getElementById('rAssign')
-  sel.innerHTML = '<option value="all">All Clients</option>' + clients.map(c => `<option value="${c.id}">${c.full_name || c.email}</option>`).join('')
-}
+  const listEl = document.getElementById('clientList');
+  if (clients.length === 0) {
+    listEl.innerHTML = '<div style="padding:0.5rem 1.5rem;font-size:0.75rem;color:rgba(255,255,255,0.25);">No clients yet</div>';
+    return;
+  }
 
-function renderClientNav() {
-  document.getElementById('clientNav').innerHTML = clients.map(c => `
-    <div class="client-link" data-id="${c.id}" onclick="selectClient('${c.id}')">
-      <div class="client-avatar">${(c.full_name || c.email || '?')[0].toUpperCase()}</div>
-      <span>${c.full_name || c.email}</span>
-    </div>`).join('')
-}
+  listEl.innerHTML = clients.map(c => {
+    const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    return `<button class="client-link" id="cl-${c.id}" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">
+      <div class="client-avatar">${initials}</div>
+      <span>${escHtml(c.full_name || c.email)}</span>
+    </button>`;
+  }).join('');
 
-function renderClientTable(list) {
-  const tbody = document.getElementById('clientTableBody')
-  if (!list.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem;">No clients yet. Add your first client above.</td></tr>'; return }
-  tbody.innerHTML = list.map(c => `
-    <tr onclick="selectClient('${c.id}')">
-      <td><strong>${c.full_name || '—'}</strong></td>
-      <td>${c.email || '—'}</td>
-      <td>${c.program || '—'}</td>
-      <td id="sess-${c.id}">—</td>
-      <td id="task-${c.id}">—</td>
-    </tr>`).join('')
-  // Load per-client stats async
-  list.forEach(async c => {
-    const [{ data: sess }, { data: tasks }] = await Promise.all([
-      db.from('sessions').select('id,completed').eq('client_id', c.id),
-      db.from('action_items').select('id,completed').eq('client_id', c.id)
-    ])
-    const el1 = document.getElementById(`sess-${c.id}`)
-    const el2 = document.getElementById(`task-${c.id}`)
-    if (el1) el1.textContent = `${sess?.filter(s=>s.completed).length||0} / ${sess?.length||0}`
-    if (el2) el2.textContent = tasks?.filter(t=>!t.completed).length || 0
-  })
+  // Populate overview table
+  const tableEl = document.getElementById('clientsTable');
+  tableEl.innerHTML = `<table style="width:100%;border-collapse:collapse;">
+    <thead><tr style="border-bottom:1px solid var(--border);">
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Name</th>
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Email</th>
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Program</th>
+      <th style="padding:0.5rem 0.75rem;"></th>
+    </tr></thead>
+    <tbody>${clients.map(c => `<tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.75rem;font-size:0.85rem;font-weight:500;">${escHtml(c.full_name || '—')}</td>
+      <td style="padding:0.75rem;font-size:0.82rem;color:var(--gray);">${escHtml(c.email || '—')}</td>
+      <td style="padding:0.75rem;font-size:0.82rem;color:var(--gray);">${escHtml(c.program || '—')}</td>
+      <td style="padding:0.75rem;text-align:right;"><button class="btn btn-outline" style="font-size:0.7rem;padding:0.4rem 0.85rem;" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">View →</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+
+  document.getElementById('stat-clients').textContent = clients.length;
 }
 
 async function loadOverviewStats() {
-  const [{ count: sc }, { data: tasks }, { count: rc }] = await Promise.all([
-    db.from('sessions').select('*', { count:'exact', head:true }),
-    db.from('action_items').select('completed'),
-    db.from('resources').select('*', { count:'exact', head:true })
-  ])
-  document.getElementById('statSessions').textContent = sc || 0
-  document.getElementById('statTasks').textContent = tasks?.filter(t=>!t.completed).length || 0
-  document.getElementById('statResources').textContent = rc || 0
+  const [{ count: sCount }, { count: fCount }] = await Promise.all([
+    db.from('signal_entries').select('*', { count: 'exact', head: true }),
+    db.from('client_files').select('*', { count: 'exact', head: true })
+  ]);
+  document.getElementById('stat-signals').textContent = sCount ?? '—';
+  document.getElementById('stat-files').textContent = fCount ?? '—';
 }
 
-async function selectClient(id) {
-  selectedClient = clients.find(c => c.id === id)
-  if (!selectedClient) return
+async function openClient(id, name, program) {
+  currentClientId = id;
 
-  // Update sidebar
-  document.querySelectorAll('.client-link').forEach(el => el.classList.remove('active'))
-  document.querySelector(`.client-link[data-id="${id}"]`)?.classList.add('active')
+  document.querySelectorAll('.client-link').forEach(el => el.classList.remove('active'));
+  const link = document.getElementById('cl-' + id);
+  if (link) link.classList.add('active');
 
-  showView('client')
-  document.getElementById('detailName').textContent = selectedClient.full_name || selectedClient.email
-  document.getElementById('detailMeta').textContent = `${selectedClient.email}${selectedClient.program ? ' · ' + selectedClient.program : ''}`
-  document.getElementById('pageTitle').textContent = selectedClient.full_name || 'Client'
+  document.getElementById('client-display-name').textContent = name;
+  document.getElementById('client-display-program').textContent = program;
+  document.getElementById('topbarTitle').textContent = name;
 
-  loadDetailSessions()
-  loadDetailTasks()
-  loadDetailResources()
+  showPanel('client');
+  switchTab('signals');
+  loadSignals(id);
 }
 
-async function loadDetailSessions() {
-  const { data } = await db.from('sessions').select('*').eq('client_id', selectedClient.id).order('session_number')
-  const comp = data?.filter(s=>s.completed).length||0
-  const tot = data?.length||0
-  document.getElementById('sessionProgress').textContent = `${comp} / ${tot} completed`
-  const el = document.getElementById('detailSessions')
-  if (!data?.length) { el.innerHTML = '<div class="empty-state"><strong>No sessions yet</strong></div>'; return }
-  el.innerHTML = data.map(s => `
-    <div class="detail-item">
-      <div>
-        <div class="detail-item-title">Session ${s.session_number||'—'}: ${s.title}</div>
-        <div class="detail-item-meta">${s.session_date ? new Date(s.session_date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'No date set'}</div>
-      </div>
-      <div style="display:flex;gap:0.5rem;align-items:center;">
-        <span class="badge ${s.completed?'badge-done':'badge-open'}">${s.completed?'Done':'Scheduled'}</span>
-        <button class="btn-sm ${s.completed?'btn-danger':''}" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="toggleSession('${s.id}',${s.completed})">${s.completed?'Unmark':'✓ Mark Done'}</button>
-        <button class="btn-sm btn-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="deleteRow('sessions','${s.id}',loadDetailSessions)">✕</button>
-      </div>
-    </div>`).join('')
-}
+async function loadSignals(clientId) {
+  const { data } = await db.from('signal_entries').select('*').eq('client_id', clientId);
+  const grid = document.getElementById('signalsGrid');
 
-async function loadDetailTasks() {
-  const { data } = await db.from('action_items').select('*').eq('client_id', selectedClient.id).order('created_at',{ascending:false})
-  const el = document.getElementById('detailTasks')
-  if (!data?.length) { el.innerHTML = '<div class="empty-state"><strong>No action items yet</strong></div>'; return }
-  el.innerHTML = data.map(t => `
-    <div class="detail-item">
-      <div>
-        <div class="detail-item-title" style="${t.completed?'text-decoration:line-through;color:var(--gray);':''}">${t.title}</div>
-        ${t.description?`<div class="detail-item-meta">${t.description}</div>`:''}
-        ${t.due_date?`<div class="detail-item-meta">Due: ${new Date(t.due_date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>`:''}
-      </div>
-      <div style="display:flex;gap:0.5rem;">
-        <span class="badge ${t.completed?'badge-done':'badge-open'}">${t.completed?'Done':'Open'}</span>
-        <button class="btn-sm btn-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="deleteRow('action_items','${t.id}',loadDetailTasks)">✕</button>
-      </div>
-    </div>`).join('')
-}
-
-async function loadDetailResources() {
-  const { data } = await db.from('resources').select('*').eq('client_id', selectedClient.id)
-  const el = document.getElementById('detailResources')
-  if (!data?.length) { el.innerHTML = '<div class="empty-state"><strong>No resources assigned to this client yet</strong></div>'; return }
-  el.innerHTML = data.map(r => `
-    <div class="detail-item">
-      <div><div class="detail-item-title">${r.title}</div><div class="detail-item-meta">${r.url||''}</div></div>
-      <button class="btn-sm btn-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="deleteRow('resources','${r.id}',loadDetailResources)">✕</button>
-    </div>`).join('')
-}
-
-async function loadResourceTable() {
-  const { data } = await db.from('resources').select('*, profiles(full_name)').order('created_at',{ascending:false})
-  const tbody = document.getElementById('resourceTableBody')
-  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem;">No resources yet.</td></tr>'; return }
-  tbody.innerHTML = data.map(r => `
-    <tr>
-      <td><strong>${r.title}</strong>${r.description?`<div style="font-size:0.72rem;color:var(--gray);">${r.description}</div>`:''}</td>
-      <td>${r.file_type||'link'}</td>
-      <td>${r.profiles?.full_name || (r.client_id ? '—' : 'All Clients')}</td>
-      <td>${new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td>
-      <td><button class="btn-sm btn-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem;" onclick="deleteRow('resources','${r.id}',loadResourceTable)">Remove</button></td>
-    </tr>`).join('')
-}
-
-// Toggle session done
-window.toggleSession = async (id, current) => {
-  await db.from('sessions').update({ completed: !current }).eq('id', id)
-  loadDetailSessions()
-}
-
-// Delete row
-window.deleteRow = async (table, id, reload) => {
-  if (!confirm('Remove this item?')) return
-  await db.from(table).delete().eq('id', id)
-  reload()
-  toast('Removed')
-}
-
-// Add client
-document.getElementById('addClientBtn').addEventListener('click', () => openModal('modalClient'))
-document.getElementById('saveClient').addEventListener('click', async () => {
-  const name = document.getElementById('cName').value
-  const email = document.getElementById('cEmail').value
-  const pass = document.getElementById('cPass').value
-  const program = document.getElementById('cProgram').value
-  if (!email || !pass) return toast('Email and password required')
-
-  const { data, error } = await db.auth.signUp({ email, password: pass, options: { data: { full_name: name, role: 'client' } } })
-  if (error) { toast('Error: ' + error.message); return }
-
-  // Update program in profile (trigger creates the row)
-  if (data.user) {
-    setTimeout(async () => {
-      await db.from('profiles').update({ program, full_name: name }).eq('id', data.user.id)
-      loadAll()
-      closeModal('modalClient')
-      toast('Client account created')
-    }, 1000)
+  if (!data || data.length === 0) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">📊</div>Client has not filled in any signals yet.</div>';
+    return;
   }
-})
 
-// Add session
-document.getElementById('addSessionBtn').addEventListener('click', () => openModal('modalSession'))
-document.getElementById('addResourceClientBtn').addEventListener('click', () => {
-  if (selectedClient) {
-    document.getElementById('rAssign').value = selectedClient.id
+  const map = {};
+  data.forEach(s => { map[s.signal_type] = s; });
+
+  grid.innerHTML = Object.entries(SIGNAL_LABELS).map(([type, label]) => {
+    const s = map[type];
+    const isPriority = s?.is_priority;
+    return `<div class="signal-card ${isPriority ? 'priority' : ''}">
+      <div class="signal-name">${label}${isPriority ? ' <span class="priority-badge"><span class="priority-dot"></span>Priority</span>' : ''}</div>
+      ${s ? `
+        <div style="margin-bottom:0.75rem;">
+          <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">1-Year Goal</div>
+          <div class="signal-goal">${escHtml(s.goal || '—')}</div>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+          <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Current State</div>
+          <div class="signal-goal">${escHtml(s.current_state || '—')}</div>
+        </div>
+        <div>
+          <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Next Step</div>
+          <div class="signal-goal">${escHtml(s.next_step || '—')}</div>
+        </div>
+      ` : '<div class="signal-meta">Not yet completed</div>'}
+    </div>`;
+  }).join('');
+}
+
+async function loadTransfer(clientId) {
+  const { data } = await db.from('knowledge_transfer').select('*').eq('client_id', clientId).single();
+  const card = document.getElementById('transferCard');
+
+  if (!data) {
+    card.innerHTML = '<div class="empty"><div class="empty-icon">🔄</div>Client has not filled in Knowledge Transfer yet.</div>';
+    return;
   }
-  openModal('modalResource')
-})
-document.getElementById('saveSession').addEventListener('click', async () => {
-  const title = document.getElementById('sTitle').value
-  if (!title || !selectedClient) return
-  await db.from('sessions').insert({
-    client_id: selectedClient.id, title,
-    session_number: parseInt(document.getElementById('sNum').value)||null,
-    total_sessions: parseInt(document.getElementById('sTot').value)||12,
-    session_date: document.getElementById('sDate').value||null,
-    completed: document.getElementById('sCompleted').value === 'true',
-    notes: document.getElementById('sNotes').value||null
-  })
-  closeModal('modalSession')
-  loadDetailSessions()
-  toast('Session added')
-})
 
-// Add task
-document.getElementById('addTaskBtn').addEventListener('click', () => openModal('modalTask'))
-document.getElementById('saveTask').addEventListener('click', async () => {
-  const title = document.getElementById('tTitle').value
-  if (!title || !selectedClient) return
-  await db.from('action_items').insert({
-    client_id: selectedClient.id, title,
-    description: document.getElementById('tDesc').value||null,
-    due_date: document.getElementById('tDue').value||null
-  })
-  closeModal('modalTask')
-  loadDetailTasks()
-  toast('Action item assigned')
-})
-
-// Add resource
-document.getElementById('addResourceBtn').addEventListener('click', () => openModal('modalResource'))
-document.getElementById('newResourceBtn').addEventListener('click', () => openModal('modalResource'))
-document.getElementById('saveResource').addEventListener('click', async () => {
-  const title = document.getElementById('rTitle').value
-  if (!title) return
-  const assignVal = document.getElementById('rAssign').value
-  await db.from('resources').insert({
-    title, description: document.getElementById('rDesc').value||null,
-    url: document.getElementById('rUrl').value||null,
-    client_id: assignVal === 'all' ? null : assignVal
-  })
-  closeModal('modalResource')
-  loadResourceTable()
-  if (selectedClient) loadDetailResources()
-  loadOverviewStats()
-  toast('Resource added')
-})
-
-// Search
-document.getElementById('clientSearch').addEventListener('input', e => {
-  const q = e.target.value.toLowerCase()
-  renderClientTable(clients.filter(c => (c.full_name||'').toLowerCase().includes(q) || (c.email||'').toLowerCase().includes(q)))
-})
-
-// View switching
-document.querySelectorAll('[data-view]').forEach(el => {
-  el.addEventListener('click', () => {
-    document.querySelectorAll('[data-view]').forEach(x => x.classList.remove('active'))
-    el.classList.add('active')
-    document.querySelectorAll('.client-link').forEach(x => x.classList.remove('active'))
-    showView(el.dataset.view)
-    document.getElementById('pageTitle').textContent = el.textContent.trim()
-  })
-})
-
-function showView(name) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'))
-  document.getElementById('view-' + name)?.classList.add('active')
+  card.innerHTML = `
+    <div class="card-title">Knowledge Transfer</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+      <div>
+        <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Person</div>
+        <div style="font-size:0.85rem;">${escHtml(data.person_name || '—')}</div>
+      </div>
+      <div>
+        <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Their Role</div>
+        <div style="font-size:0.85rem;">${escHtml(data.person_role || '—')}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Knowledge Being Transferred</div>
+      <div style="font-size:0.85rem;line-height:1.55;">${escHtml(data.knowledge_being_transferred || '—')}</div>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">1-Year Goal</div>
+      <div style="font-size:0.85rem;line-height:1.55;">${escHtml(data.goal || '—')}</div>
+    </div>
+    <div>
+      <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Next Step</div>
+      <div style="font-size:0.85rem;line-height:1.55;">${escHtml(data.next_step || '—')}</div>
+    </div>
+  `;
 }
 
-function openModal(id) { document.getElementById(id).classList.add('open') }
-function closeModal(id) { document.getElementById(id).classList.remove('open') }
-window.closeModal = closeModal
+async function loadFiles(clientId) {
+  const { data } = await db.from('client_files').select('*').eq('client_id', clientId).order('created_at', { ascending: false });
+  const list = document.getElementById('filesList');
 
-// Close modal on overlay click
-document.querySelectorAll('.modal-overlay').forEach(el => {
-  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open') })
-})
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📁</div>No files shared yet.</div>';
+    return;
+  }
 
-function toast(msg) {
-  const el = document.getElementById('toast')
-  el.textContent = msg; el.classList.add('show')
-  setTimeout(() => el.classList.remove('show'), 2500)
+  list.innerHTML = data.map(f => `
+    <div class="file-item">
+      <div class="file-info">
+        <div class="file-title">${escHtml(f.title)}</div>
+        ${f.description ? `<div class="file-desc">${escHtml(f.description)}</div>` : ''}
+        <a class="file-url" href="${escHtml(f.url)}" target="_blank" rel="noopener">${escHtml(f.url)}</a>
+      </div>
+      <button class="btn btn-ghost" onclick="deleteFile('${f.id}')" style="color:#dc2626;font-size:0.72rem;">Remove</button>
+    </div>
+  `).join('');
 }
 
-document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await db.auth.signOut()
-  window.location.href = 'portal.html'
-})
+async function loadNotes(clientId) {
+  const { data } = await db.from('client_notes').select('*').eq('client_id', clientId).order('created_at', { ascending: false });
+  const list = document.getElementById('notesList');
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📝</div>No notes yet.</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(n => `
+    <div class="note-item">
+      <div class="note-content">${escHtml(n.content)}</div>
+      <div class="note-meta">${n.created_by ? escHtml(n.created_by) + ' · ' : ''}${formatDate(n.created_at)}
+        <button onclick="deleteNote('${n.id}')" style="margin-left:1rem;background:none;border:none;color:#dc2626;font-size:0.7rem;cursor:pointer;">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function addFile() {
+  const title = document.getElementById('file-title').value.trim();
+  const url = document.getElementById('file-url').value.trim();
+  const desc = document.getElementById('file-desc').value.trim();
+
+  if (!title || !url) { showToast('Title and URL are required.'); return; }
+
+  const { error } = await db.from('client_files').insert({
+    client_id: currentClientId,
+    title,
+    url,
+    description: desc || null,
+    file_type: 'link'
+  });
+
+  if (error) { showToast('Error: ' + error.message); return; }
+
+  document.getElementById('file-title').value = '';
+  document.getElementById('file-url').value = '';
+  document.getElementById('file-desc').value = '';
+  showToast('File added.');
+  loadFiles(currentClientId);
+  loadOverviewStats();
+}
+
+async function deleteFile(id) {
+  if (!confirm('Remove this file?')) return;
+  await db.from('client_files').delete().eq('id', id);
+  loadFiles(currentClientId);
+  loadOverviewStats();
+}
+
+async function addNote() {
+  const content = document.getElementById('note-content').value.trim();
+  if (!content) { showToast('Note cannot be empty.'); return; }
+
+  const { data: profile } = await db.from('profiles').select('full_name').eq('id', currentUser.id).single();
+
+  const { error } = await db.from('client_notes').insert({
+    client_id: currentClientId,
+    content,
+    created_by: profile?.full_name || currentUser.email
+  });
+
+  if (error) { showToast('Error: ' + error.message); return; }
+  document.getElementById('note-content').value = '';
+  showToast('Note saved.');
+  loadNotes(currentClientId);
+}
+
+async function deleteNote(id) {
+  if (!confirm('Delete this note?')) return;
+  await db.from('client_notes').delete().eq('id', id);
+  loadNotes(currentClientId);
+}
+
+function openAddClientModal() {
+  document.getElementById('addClientModal').classList.remove('hidden');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+}
+
+async function createClient() {
+  const name = document.getElementById('nc-name').value.trim();
+  const email = document.getElementById('nc-email').value.trim();
+  const pass = document.getElementById('nc-pass').value.trim();
+  const program = document.getElementById('nc-program').value.trim();
+
+  if (!name || !email || !pass) { showToast('Name, email, and password required.'); return; }
+  if (pass.length < 6) { showToast('Password must be at least 6 characters.'); return; }
+
+  const { data, error } = await db.auth.signUp({
+    email,
+    password: pass,
+    options: { data: { full_name: name, role: 'client' } }
+  });
+
+  if (error) { showToast('Error: ' + error.message); return; }
+
+  if (data?.user) {
+    await db.from('profiles').upsert({
+      id: data.user.id,
+      full_name: name,
+      email,
+      role: 'client',
+      program: program || null
+    }, { onConflict: 'id' });
+  }
+
+  showToast(`Account created for ${name}.`);
+  closeModal('addClientModal');
+  document.getElementById('nc-name').value = '';
+  document.getElementById('nc-email').value = '';
+  document.getElementById('nc-pass').value = '';
+  document.getElementById('nc-program').value = '';
+  loadClients();
+}
+
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+
+  if (name === 'overview') {
+    document.getElementById('topbarTitle').textContent = 'Admin Dashboard';
+    document.querySelectorAll('.client-link').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelector('.nav-item').classList.add('active');
+  }
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+
+  if (currentClientId) {
+    if (name === 'signals') loadSignals(currentClientId);
+    if (name === 'transfer') loadTransfer(currentClientId);
+    if (name === 'files') loadFiles(currentClientId);
+    if (name === 'notes') loadNotes(currentClientId);
+  }
+}
+
+async function signOut() {
+  await db.auth.signOut();
+  window.location.href = 'portal.html';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+init();
 </script>
 </body>
 </html>

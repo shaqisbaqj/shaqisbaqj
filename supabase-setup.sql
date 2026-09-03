@@ -145,6 +145,87 @@ drop policy if exists "Admin manage resources" on public.resources;
 create policy "Admin manage resources" on public.resources
   for all using (public.is_admin());
 
+-- 7. Signal entries (4 Signals framework — one row per client per signal type)
+create table if not exists public.signal_entries (
+  id uuid default gen_random_uuid() primary key,
+  client_id uuid references public.profiles(id) on delete cascade not null,
+  signal_type text not null, -- 'knowledge' | 'experience' | 'capacity' | 'risk'
+  goal text,
+  current_state text,
+  next_step text,
+  is_priority boolean default false,
+  updated_at timestamptz default now(),
+  unique(client_id, signal_type)
+);
+
+-- 8. Knowledge Transfer (one row per client)
+create table if not exists public.knowledge_transfer (
+  id uuid default gen_random_uuid() primary key,
+  client_id uuid references public.profiles(id) on delete cascade not null,
+  person_name text,
+  person_role text,
+  knowledge_being_transferred text,
+  goal text,
+  next_step text,
+  updated_at timestamptz default now(),
+  unique(client_id)
+);
+
+-- 9. Client files (admin pastes shareable links)
+create table if not exists public.client_files (
+  id uuid default gen_random_uuid() primary key,
+  client_id uuid references public.profiles(id) on delete cascade not null,
+  title text not null,
+  url text not null,
+  description text,
+  file_type text default 'link',
+  created_at timestamptz default now()
+);
+
+-- 10. Coach notes (admin only)
+create table if not exists public.client_notes (
+  id uuid default gen_random_uuid() primary key,
+  client_id uuid references public.profiles(id) on delete cascade not null,
+  content text not null,
+  created_by text,
+  created_at timestamptz default now()
+);
+
+-- ── RLS for new tables ──
+
+alter table public.signal_entries enable row level security;
+alter table public.knowledge_transfer enable row level security;
+alter table public.client_files enable row level security;
+alter table public.client_notes enable row level security;
+
+-- Signal entries
+drop policy if exists "Client manage signals" on public.signal_entries;
+create policy "Client manage signals" on public.signal_entries
+  for all using (auth.uid() = client_id or public.is_admin());
+
+-- Knowledge transfer
+drop policy if exists "Client manage transfer" on public.knowledge_transfer;
+create policy "Client manage transfer" on public.knowledge_transfer
+  for all using (auth.uid() = client_id or public.is_admin());
+
+-- Client files — client can view, admin can manage
+drop policy if exists "Client view files" on public.client_files;
+create policy "Client view files" on public.client_files
+  for select using (auth.uid() = client_id or public.is_admin());
+
+drop policy if exists "Admin manage files" on public.client_files;
+create policy "Admin manage files" on public.client_files
+  for all using (public.is_admin());
+
+-- Coach notes — admin only
+drop policy if exists "Admin manage notes" on public.client_notes;
+create policy "Admin manage notes" on public.client_notes
+  for all using (public.is_admin());
+
+drop policy if exists "Client view notes" on public.client_notes;
+create policy "Client view notes" on public.client_notes
+  for select using (auth.uid() = client_id);
+
 -- ── DONE ──
 -- After running this, go to your Supabase Auth > Users and create Jason's admin account.
 -- Then run this query to make him admin (replace the email):

@@ -3,175 +3,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>My Dashboard — Elevare</title>
+<title>My Portal — Elevare</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; --pale: #FBF0EA; --bg: #f9fafb; }
-  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); -webkit-font-smoothing: antialiased; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange: #C85A1E; --black: #0f0f0f; --white: #fff;
+  --gray: #6b7280; --border: #e5e7eb; --light: #f9fafb;
+  --serif: 'Cormorant Garamond', serif; --sans: 'Inter', sans-serif;
+}
+html, body { height: 100%; font-family: var(--sans); background: var(--light); color: var(--black); -webkit-font-smoothing: antialiased; }
 
-  /* ── SIDEBAR ── */
-  .layout { display: flex; min-height: 100vh; }
-  .sidebar { width: 240px; background: var(--black); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
-  .sidebar-logo { padding: 1.75rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
-  .sidebar-logo a { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--white); display: block; }
-  .sidebar-logo em { color: var(--orange); font-style: normal; }
-  .sidebar-user { padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
-  .sidebar-name { font-size: 0.85rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
-  .sidebar-program { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
-  nav { flex: 1; padding: 1rem 0; }
-  .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.45); text-decoration: none; cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
-  .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.04); }
-  .nav-item.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.07); }
-  .nav-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
-  .sidebar-footer { padding: 1.25rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.07); }
-  .logout-btn { font-size: 0.72rem; color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.06em; padding: 0; transition: color 0.15s; }
-  .logout-btn:hover { color: var(--orange); }
+/* Layout */
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 256px; background: var(--black); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto; transition: transform 0.3s; }
+.main { margin-left: 256px; flex: 1; min-height: 100vh; }
 
-  /* ── MAIN ── */
-  .main { margin-left: 240px; flex: 1; min-height: 100vh; }
-  .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-  .page-title { font-size: 1.05rem; font-weight: 600; color: var(--black); }
-  .topbar-date { font-size: 0.75rem; color: var(--gray); }
-  .content { padding: 2rem; }
+/* Sidebar */
+.sb-logo { padding: 2rem 1.75rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.sb-logo a { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; color: var(--white); }
+.sb-logo em { color: var(--orange); font-style: normal; }
+.sb-logo-sub { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-top: 0.3rem; }
+.sb-user { padding: 1.25rem 1.75rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.sb-name { font-size: 0.875rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-program { font-size: 0.68rem; color: rgba(255,255,255,0.3); }
+.sb-section { padding: 1.25rem 1.75rem 0.4rem; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
+.nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1.75rem; font-size: 0.78rem; color: rgba(255,255,255,0.42); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; user-select: none; }
+.nav-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.08); }
+.nav-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+.signal-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.15); flex-shrink: 0; margin-left: auto; }
+.signal-dot.priority { background: var(--orange); }
+.signal-dot.complete { background: #22c55e; }
+.sb-footer { padding: 1.25rem 1.75rem; border-top: 1px solid rgba(255,255,255,0.06); margin-top: auto; }
+.logout-btn { font-size: 0.7rem; color: rgba(255,255,255,0.25); background: none; border: none; cursor: pointer; font-family: var(--sans); transition: color 0.15s; padding: 0; }
+.logout-btn:hover { color: var(--orange); }
 
-  /* ── PANELS ── */
-  .panel { display: none; }
-  .panel.active { display: block; }
+/* Topbar */
+.topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 1.1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+.topbar-title { font-size: 0.95rem; font-weight: 600; }
+.topbar-date { font-size: 0.72rem; color: var(--gray); }
+.hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; background: none; border: none; padding: 0.25rem; }
+.hamburger span { width: 20px; height: 1.5px; background: var(--black); display: block; }
 
-  /* ── CARDS ── */
-  .cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
-  .stat-card { background: var(--white); border: 1px solid var(--border); padding: 1.5rem; border-top: 2px solid var(--border); }
-  .stat-card.accent { border-top-color: var(--orange); }
-  .stat-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.5rem; }
-  .stat-val { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 600; color: var(--black); line-height: 1; margin-bottom: 0.35rem; }
-  .stat-val span { color: var(--orange); }
-  .stat-sub { font-size: 0.75rem; color: var(--gray); }
+/* Content */
+.content { padding: 2.5rem 2rem; max-width: 900px; }
+.panel { display: none; }
+.panel.active { display: block; }
 
-  /* Progress bar */
-  .prog-bar { background: var(--border); height: 6px; border-radius: 3px; margin-top: 0.75rem; overflow: hidden; }
-  .prog-fill { height: 100%; background: var(--orange); border-radius: 3px; transition: width 0.6s ease; }
+/* Overview cards */
+.signal-overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2.5rem; }
+.signal-card { background: var(--white); border: 1px solid var(--border); padding: 1.75rem; cursor: pointer; transition: border-color 0.2s; position: relative; }
+.signal-card:hover { border-color: #d1d5db; }
+.signal-card.is-priority { border-top: 2px solid var(--orange); }
+.signal-card-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+.priority-tag { background: rgba(200,90,30,0.1); color: var(--orange); font-size: 0.55rem; padding: 0.15rem 0.5rem; border-radius: 999px; font-weight: 700; letter-spacing: 0.12em; }
+.signal-card-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--black); margin-bottom: 0.5rem; }
+.signal-card-desc { font-size: 0.78rem; color: var(--gray); line-height: 1.6; }
+.signal-card-goal { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.78rem; color: var(--black); line-height: 1.5; }
+.signal-card-goal-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.35rem; }
+.signal-card-link { font-size: 0.7rem; font-weight: 600; color: var(--orange); margin-top: 1rem; display: inline-block; }
+.no-goal { color: rgba(0,0,0,0.2); font-style: italic; }
 
-  /* Section headers */
-  .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
-  .section-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); }
-  .btn-sm { padding: 0.45rem 1rem; background: var(--orange); color: var(--white); border: none; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; border-radius: 1px; }
-  .btn-sm:hover { background: #a34716; }
-  .btn-outline { background: transparent; color: var(--orange); border: 1px solid var(--orange); }
-  .btn-outline:hover { background: var(--orange); color: var(--white); }
+/* Signal detail view */
+.signal-header { margin-bottom: 2.5rem; }
+.signal-eyebrow { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.5rem; }
+.signal-title-lg { font-family: var(--serif); font-size: 2.4rem; font-weight: 600; color: var(--black); margin-bottom: 0.5rem; line-height: 1.1; }
+.signal-subtitle { font-size: 0.9rem; color: var(--gray); line-height: 1.65; max-width: 560px; }
+.priority-toggle { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.5rem; padding: 0.875rem 1.25rem; border: 1px solid var(--border); background: var(--white); cursor: pointer; transition: all 0.2s; width: fit-content; }
+.priority-toggle:hover { border-color: var(--orange); }
+.priority-toggle.active { background: rgba(200,90,30,0.06); border-color: var(--orange); }
+.priority-toggle-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--border); transition: all 0.2s; }
+.priority-toggle.active .priority-toggle-dot { background: var(--orange); border-color: var(--orange); }
+.priority-toggle-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); }
+.priority-toggle.active .priority-toggle-label { color: var(--orange); }
 
-  /* Lists */
-  .item-list { background: var(--white); border: 1px solid var(--border); }
-  .list-item { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 0.875rem; }
-  .list-item:last-child { border-bottom: none; }
-  .item-check { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 50%; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; margin-top: 1px; }
-  .item-check.done { background: var(--orange); border-color: var(--orange); }
-  .item-check.done::after { content: '✓'; color: white; font-size: 10px; }
-  .item-title { font-size: 0.875rem; font-weight: 500; color: var(--black); margin-bottom: 0.2rem; }
-  .item-title.done-text { text-decoration: line-through; color: var(--gray); }
-  .item-meta { font-size: 0.72rem; color: var(--gray); }
-  .item-badge { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 999px; }
-  .badge-done { background: #dcfce7; color: #166534; }
-  .badge-pending { background: #fef9c3; color: #854d0e; }
-  .badge-upcoming { background: #eff6ff; color: #1e40af; }
+/* Form fields */
+.field-block { background: var(--white); border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.25rem; }
+.field-block-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.field-block-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--black); margin-bottom: 0.2rem; }
+.field-block-hint { font-size: 0.72rem; color: var(--gray); }
+.save-btn { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); background: none; border: 1px solid var(--orange); padding: 0.35rem 0.85rem; cursor: pointer; font-family: var(--sans); transition: all 0.15s; white-space: nowrap; }
+.save-btn:hover { background: var(--orange); color: var(--white); }
+.save-btn.saved { color: #22c55e; border-color: #22c55e; }
+textarea.field-input {
+  width: 100%; min-height: 90px; padding: 0.875rem; border: 1px solid var(--border);
+  font-family: var(--sans); font-size: 0.875rem; color: var(--black); background: var(--light);
+  resize: vertical; outline: none; transition: border-color 0.15s; line-height: 1.65;
+}
+textarea.field-input:focus { border-color: var(--orange); background: var(--white); }
+textarea.field-input.goal-field { min-height: 60px; font-style: italic; }
+.saved-msg { font-size: 0.68rem; color: #22c55e; margin-top: 0.35rem; display: none; }
 
-  /* Session list */
-  .session-item { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .session-item:last-child { border-bottom: none; }
-  .session-num { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.25rem; }
-  .session-title { font-size: 0.88rem; font-weight: 500; }
-  .session-date { font-size: 0.72rem; color: var(--gray); margin-top: 0.2rem; }
+/* Knowledge transfer */
+.kt-person-block { background: var(--white); border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.25rem; }
+.kt-person-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+input.field-input {
+  width: 100%; padding: 0.75rem 0.875rem; border: 1px solid var(--border);
+  font-family: var(--sans); font-size: 0.875rem; color: var(--black);
+  background: var(--light); outline: none; transition: border-color 0.15s;
+}
+input.field-input:focus { border-color: var(--orange); background: var(--white); }
 
-  /* Resources */
-  .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .resource-card { background: var(--white); border: 1px solid var(--border); padding: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; text-decoration: none; transition: border-color 0.15s; }
-  .resource-card:hover { border-color: var(--orange); }
-  .resource-icon { width: 38px; height: 38px; background: var(--pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .resource-icon svg { width: 18px; height: 18px; stroke: var(--orange); fill: none; stroke-width: 1.8; }
-  .resource-name { font-size: 0.85rem; font-weight: 600; color: var(--black); margin-bottom: 0.25rem; }
-  .resource-desc { font-size: 0.72rem; color: var(--gray); }
+/* Files */
+.file-item { background: var(--white); border: 1px solid var(--border); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1.25rem; margin-bottom: 0.75rem; text-decoration: none; transition: border-color 0.15s; }
+.file-item:hover { border-color: var(--orange); }
+.file-icon { width: 40px; height: 40px; background: rgba(200,90,30,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.file-icon svg { width: 18px; height: 18px; stroke: var(--orange); fill: none; stroke-width: 1.8; }
+.file-name { font-size: 0.875rem; font-weight: 600; color: var(--black); margin-bottom: 0.2rem; }
+.file-desc { font-size: 0.72rem; color: var(--gray); }
 
-  /* Journal */
-  .journal-entry { background: var(--white); border: 1px solid var(--border); padding: 1.25rem; margin-bottom: 1rem; }
-  .journal-entry-title { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.35rem; }
-  .journal-entry-date { font-size: 0.68rem; color: var(--gray); margin-bottom: 0.75rem; }
-  .journal-entry-body { font-size: 0.85rem; color: var(--gray); line-height: 1.7; white-space: pre-wrap; }
+/* Coach notes */
+.note-item { background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--orange); padding: 1.25rem 1.5rem; margin-bottom: 0.875rem; }
+.note-meta { font-size: 0.65rem; color: var(--gray); margin-bottom: 0.75rem; }
+.note-content { font-size: 0.875rem; color: var(--black); line-height: 1.7; white-space: pre-wrap; }
 
-  /* Modal */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--white); width: 100%; max-width: 480px; padding: 2rem; }
-  .modal-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; }
-  .field-group { margin-bottom: 1.25rem; }
-  .field-label { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 0.4rem; }
-  input[type="text"], input[type="date"], textarea, select {
-    width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); font-family: 'Inter', sans-serif;
-    font-size: 0.875rem; color: var(--black); background: #fafafa; outline: none; transition: border-color 0.15s;
-  }
-  input:focus, textarea:focus, select:focus { border-color: var(--orange); background: var(--white); }
-  textarea { resize: vertical; min-height: 100px; }
-  .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
-  .btn-cancel { padding: 0.7rem 1.25rem; background: none; border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; color: var(--gray); }
-  .empty-state { text-align: center; padding: 3rem 2rem; background: var(--white); border: 1px solid var(--border); color: var(--gray); font-size: 0.875rem; }
-  .empty-state strong { display: block; font-size: 0.95rem; color: var(--black); margin-bottom: 0.5rem; }
+/* Empty states */
+.empty { text-align: center; padding: 3rem; background: var(--white); border: 1px solid var(--border); color: var(--gray); }
+.empty strong { display: block; font-size: 0.95rem; color: var(--black); margin-bottom: 0.4rem; }
 
-  /* Mobile */
-  @media (max-width: 768px) {
-    .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
-    .sidebar.open { transform: translateX(0); }
-    .main { margin-left: 0; }
-    .cards-row { grid-template-columns: 1fr; }
-    .resource-grid { grid-template-columns: 1fr; }
-    .hamburger { display: flex !important; }
-  }
-  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; }
-  .hamburger span { width: 22px; height: 2px; background: var(--black); display: block; }
+/* Mobile */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .hamburger { display: flex; }
+  .signal-overview-grid { grid-template-columns: 1fr; }
+  .kt-person-row { grid-template-columns: 1fr; }
+  .content { padding: 1.5rem 1.25rem; }
+}
 </style>
 </head>
 <body>
 <div class="layout">
-  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo"><a href="index.html"><em>E</em>LEVARE</a></div>
-    <div class="sidebar-user">
-      <div class="sidebar-name" id="sidebarName">Loading...</div>
-      <div class="sidebar-program" id="sidebarProgram"></div>
+    <div class="sb-logo">
+      <a href="index.html"><em>E</em>LEVARE</a>
+      <div class="sb-logo-sub">Client Portal</div>
     </div>
-    <nav>
-      <div class="nav-item active" data-panel="overview">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Overview
-      </div>
-      <div class="nav-item" data-panel="sessions">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Sessions
-      </div>
-      <div class="nav-item" data-panel="tasks">
-        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        Action Items
-      </div>
-      <div class="nav-item" data-panel="journal">
-        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        Journal
-      </div>
-      <div class="nav-item" data-panel="resources">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Resources
-      </div>
-    </nav>
-    <div class="sidebar-footer">
+    <div class="sb-user">
+      <div class="sb-name" id="sbName">Loading...</div>
+      <div class="sb-program" id="sbProgram"></div>
+    </div>
+    <div class="sb-section">Overview</div>
+    <div class="nav-item active" data-panel="overview">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="sb-section">The 4 Signals</div>
+    <div class="nav-item" data-panel="knowledge">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Knowledge
+      <div class="signal-dot" id="dot-knowledge"></div>
+    </div>
+    <div class="nav-item" data-panel="experience">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Experience
+      <div class="signal-dot" id="dot-experience"></div>
+    </div>
+    <div class="nav-item" data-panel="capacity">
+      <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      Leadership Capacity
+      <div class="signal-dot" id="dot-capacity"></div>
+    </div>
+    <div class="nav-item" data-panel="risk">
+      <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Performance Risk
+      <div class="signal-dot" id="dot-risk"></div>
+    </div>
+    <div class="sb-section">Development</div>
+    <div class="nav-item" data-panel="transfer">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Knowledge Transfer
+    </div>
+    <div class="sb-section">From Your Coach</div>
+    <div class="nav-item" data-panel="files">
+      <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Files & Resources
+    </div>
+    <div class="nav-item" data-panel="notes">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Coach Notes
+    </div>
+    <div class="sb-footer">
       <button class="logout-btn" id="logoutBtn">Sign Out</button>
     </div>
   </aside>
 
-  <!-- Main -->
   <div class="main">
     <div class="topbar">
       <div style="display:flex;align-items:center;gap:1rem;">
-        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-        <span class="page-title" id="pageTitle">Overview</span>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        <span class="topbar-title" id="topbarTitle">Dashboard</span>
       </div>
       <span class="topbar-date" id="topbarDate"></span>
     </div>
@@ -180,85 +205,221 @@
 
       <!-- OVERVIEW -->
       <div class="panel active" id="panel-overview">
-        <div class="cards-row">
-          <div class="stat-card accent">
-            <div class="stat-label">Sessions Completed</div>
-            <div class="stat-val"><span id="sessComp">0</span> <span style="font-size:1.5rem;color:var(--gray)">/ <span id="sessTot">0</span></span></div>
-            <div class="prog-bar"><div class="prog-fill" id="sessBar" style="width:0%"></div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Open Action Items</div>
-            <div class="stat-val" id="openTasks">0</div>
-            <div class="stat-sub">tasks outstanding</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Journal Entries</div>
-            <div class="stat-val" id="journalCount">0</div>
-            <div class="stat-sub">reflections logged</div>
-          </div>
+        <div style="margin-bottom:2rem;">
+          <h1 style="font-family:var(--serif);font-size:2rem;font-weight:600;margin-bottom:0.35rem;" id="welcomeHeading">Welcome back</h1>
+          <p style="font-size:0.875rem;color:var(--gray);">Your leadership signals — track your goals and next steps across each area.</p>
         </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
-          <div>
-            <div class="section-head"><span class="section-title">Recent Action Items</span></div>
-            <div class="item-list" id="overviewTasks"><div class="empty-state"><strong>No action items yet</strong>Your coach will assign tasks here.</div></div>
-          </div>
-          <div>
-            <div class="section-head"><span class="section-title">Upcoming Sessions</span></div>
-            <div class="item-list" id="overviewSessions"><div class="empty-state"><strong>No sessions scheduled</strong>Sessions will appear here.</div></div>
-          </div>
+        <div class="signal-overview-grid" id="overviewGrid"></div>
+        <div style="background:var(--white);border:1px solid var(--border);padding:1.75rem;">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--orange);margin-bottom:0.5rem;">Highest Priority Signal</div>
+          <div style="font-family:var(--serif);font-size:1.5rem;font-weight:600;color:var(--black);" id="priorityDisplay">No signal marked as priority yet</div>
+          <p style="font-size:0.78rem;color:var(--gray);margin-top:0.4rem;">Go into each signal to mark your highest priority area.</p>
         </div>
       </div>
 
-      <!-- SESSIONS -->
-      <div class="panel" id="panel-sessions">
-        <div class="section-head"><span class="section-title">All Sessions</span></div>
-        <div class="item-list" id="sessionsList"><div class="empty-state"><strong>No sessions yet</strong>Your coach will add sessions as they're scheduled.</div></div>
-      </div>
-
-      <!-- TASKS -->
-      <div class="panel" id="panel-tasks">
-        <div class="section-head">
-          <span class="section-title">Action Items</span>
+      <!-- KNOWLEDGE -->
+      <div class="panel" id="panel-knowledge">
+        <div class="signal-header">
+          <div class="signal-eyebrow">Signal 1 of 4</div>
+          <div class="signal-title-lg">Knowledge</div>
+          <div class="signal-subtitle">What you know — the depth and breadth of what you've learned, studied, and can draw from as a leader.</div>
+          <div class="priority-toggle" id="pt-knowledge" onclick="togglePriority('knowledge')">
+            <div class="priority-toggle-dot"></div>
+            <span class="priority-toggle-label">Mark as my highest priority signal</span>
+          </div>
         </div>
-        <div class="item-list" id="tasksList"><div class="empty-state"><strong>No action items yet</strong>Your coach will assign tasks here.</div></div>
-      </div>
-
-      <!-- JOURNAL -->
-      <div class="panel" id="panel-journal">
-        <div class="section-head">
-          <span class="section-title">My Journal</span>
-          <button class="btn-sm" id="newJournalBtn">+ New Entry</button>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div>
+              <div class="field-block-title">1-Year Goal</div>
+              <div class="field-block-hint">Where do you want your Knowledge to be in 12 months?</div>
+            </div>
+            <button class="save-btn" onclick="saveSignal('knowledge')">Save</button>
+          </div>
+          <textarea class="field-input goal-field" id="goal-knowledge" placeholder="e.g. Complete two leadership certifications and build a reading habit around organizational culture..."></textarea>
         </div>
-        <div id="journalList"><div class="empty-state"><strong>No entries yet</strong>Use this space to reflect on your leadership journey.</div></div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div>
+              <div class="field-block-title">Current Assessment</div>
+              <div class="field-block-hint">Where are you right now? What do you know deeply, and where are the gaps?</div>
+            </div>
+          </div>
+          <textarea class="field-input" id="current-knowledge" placeholder="Reflect honestly on your current knowledge base — strengths, blind spots, and areas you've been avoiding..."></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div>
+              <div class="field-block-title">My Next Step</div>
+              <div class="field-block-hint">The single most important action you'll take on this signal.</div>
+            </div>
+          </div>
+          <textarea class="field-input" id="next-knowledge" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
+        </div>
+        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('knowledge')">Save All Changes</button></div>
       </div>
 
-      <!-- RESOURCES -->
-      <div class="panel" id="panel-resources">
-        <div class="section-head"><span class="section-title">Resources</span></div>
-        <div class="resource-grid" id="resourceGrid"></div>
-        <div id="noResources" class="empty-state" style="display:none;"><strong>No resources yet</strong>Your coach will upload materials here.</div>
+      <!-- EXPERIENCE -->
+      <div class="panel" id="panel-experience">
+        <div class="signal-header">
+          <div class="signal-eyebrow">Signal 2 of 4</div>
+          <div class="signal-title-lg">Experience</div>
+          <div class="signal-subtitle">What you've lived — the situations, challenges, and seasons that have shaped how you lead.</div>
+          <div class="priority-toggle" id="pt-experience" onclick="togglePriority('experience')">
+            <div class="priority-toggle-dot"></div>
+            <span class="priority-toggle-label">Mark as my highest priority signal</span>
+          </div>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">1-Year Goal</div><div class="field-block-hint">What experiences do you need to seek, step into, or process in the next 12 months?</div></div>
+            <button class="save-btn" onclick="saveSignal('experience')">Save</button>
+          </div>
+          <textarea class="field-input goal-field" id="goal-experience" placeholder="e.g. Lead my first cross-functional initiative, debrief past failures with a mentor..."></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">Current Assessment</div><div class="field-block-hint">What have you lived that has made you stronger? What have you avoided or not yet processed?</div></div>
+          </div>
+          <textarea class="field-input" id="current-experience" placeholder="Reflect on the experiences — positive and painful — that have shaped your leadership..."></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">My Next Step</div><div class="field-block-hint">The single most important action you'll take on this signal.</div></div>
+          </div>
+          <textarea class="field-input" id="next-experience" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
+        </div>
+        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('experience')">Save All Changes</button></div>
       </div>
 
-    </div>
-  </div>
-</div>
+      <!-- CAPACITY -->
+      <div class="panel" id="panel-capacity">
+        <div class="signal-header">
+          <div class="signal-eyebrow">Signal 3 of 4</div>
+          <div class="signal-title-lg">Leadership Capacity</div>
+          <div class="signal-subtitle">What you can carry — your current bandwidth, resilience, and ability to sustain leadership over time.</div>
+          <div class="priority-toggle" id="pt-capacity" onclick="togglePriority('capacity')">
+            <div class="priority-toggle-dot"></div>
+            <span class="priority-toggle-label">Mark as my highest priority signal</span>
+          </div>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">1-Year Goal</div><div class="field-block-hint">What does healthy, sustainable capacity look like for you in 12 months?</div></div>
+            <button class="save-btn" onclick="saveSignal('capacity')">Save</button>
+          </div>
+          <textarea class="field-input goal-field" id="goal-capacity" placeholder="e.g. Build consistent rhythms that allow me to lead at full strength without burning out..."></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">Current Assessment</div><div class="field-block-hint">How much can you currently carry? Where are the limits, drains, and hidden stressors?</div></div>
+          </div>
+          <textarea class="field-input" id="current-capacity" placeholder="Be honest about what's filling your capacity and whether it's sustainable..."></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">My Next Step</div><div class="field-block-hint">The single most important action you'll take on this signal.</div></div>
+          </div>
+          <textarea class="field-input" id="next-capacity" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
+        </div>
+        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('capacity')">Save All Changes</button></div>
+      </div>
 
-<!-- Journal Modal -->
-<div class="modal-overlay" id="journalModal">
-  <div class="modal">
-    <div class="modal-title">New Journal Entry</div>
-    <div class="field-group">
-      <label class="field-label">Title</label>
-      <input type="text" id="jTitle" placeholder="e.g. Reflection after session 3">
-    </div>
-    <div class="field-group">
-      <label class="field-label">Entry</label>
-      <textarea id="jContent" placeholder="What did you learn? What will you apply?" style="min-height:140px;"></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-sm" id="saveJournal">Save Entry</button>
-      <button class="btn-cancel" id="cancelJournal">Cancel</button>
+      <!-- RISK -->
+      <div class="panel" id="panel-risk">
+        <div class="signal-header">
+          <div class="signal-eyebrow">Signal 4 of 4</div>
+          <div class="signal-title-lg">Performance Risk</div>
+          <div class="signal-subtitle">Where you'll break under pressure — the specific conditions, patterns, or demands most likely to expose a gap in your leadership.</div>
+          <div class="priority-toggle" id="pt-risk" onclick="togglePriority('risk')">
+            <div class="priority-toggle-dot"></div>
+            <span class="priority-toggle-label">Mark as my highest priority signal</span>
+          </div>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">1-Year Goal</div><div class="field-block-hint">What would it look like to significantly reduce your highest risk area in 12 months?</div></div>
+            <button class="save-btn" onclick="saveSignal('risk')">Save</button>
+          </div>
+          <textarea class="field-input goal-field" id="goal-risk" placeholder="e.g. Identify my two highest failure points and build specific disciplines around each..."></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">Current Assessment</div><div class="field-block-hint">Where is your leadership most likely to crack when demand increases? Be ruthlessly honest.</div></div>
+          </div>
+          <textarea class="field-input" id="current-risk" placeholder="Think about past high-pressure moments — what patterns emerged? What would you rather not admit?"></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">My Next Step</div><div class="field-block-hint">The single most important action you'll take on this signal.</div></div>
+          </div>
+          <textarea class="field-input" id="next-risk" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
+        </div>
+        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('risk')">Save All Changes</button></div>
+      </div>
+
+      <!-- KNOWLEDGE TRANSFER -->
+      <div class="panel" id="panel-transfer">
+        <div class="signal-header">
+          <div class="signal-eyebrow">Knowledge Transfer</div>
+          <div class="signal-title-lg">Who Are You Developing?</div>
+          <div class="signal-subtitle">Identify a direct report you are actively developing and define what you are deliberately passing to them — knowledge, skills, perspective, and responsibility.</div>
+        </div>
+        <div class="kt-person-block">
+          <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--black);margin-bottom:1rem;">Person You're Developing</div>
+          <div class="kt-person-row">
+            <div>
+              <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-bottom:0.4rem;">Their Name</div>
+              <input type="text" class="field-input" id="kt-name" placeholder="e.g. Marcus Johnson">
+            </div>
+            <div>
+              <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-bottom:0.4rem;">Their Role</div>
+              <input type="text" class="field-input" id="kt-role" placeholder="e.g. Team Lead, Operations Manager">
+            </div>
+          </div>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">What Are You Transferring?</div><div class="field-block-hint">What specific knowledge, skills, or responsibilities are you intentionally passing to them?</div></div>
+            <button class="save-btn" onclick="saveTransfer()">Save</button>
+          </div>
+          <textarea class="field-input" id="kt-knowledge" placeholder="Be specific — what do they need to know that lives in your head right now? What decisions should they be making?"></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">1-Year Goal for This Transfer</div><div class="field-block-hint">Where do you want this person to be in 12 months as a result of your investment?</div></div>
+          </div>
+          <textarea class="field-input goal-field" id="kt-goal" placeholder="e.g. Fully leading the operations review independently, managing client escalations without my involvement..."></textarea>
+        </div>
+        <div class="field-block">
+          <div class="field-block-header">
+            <div><div class="field-block-title">My Next Step</div><div class="field-block-hint">The most concrete thing you'll do this week to advance this transfer.</div></div>
+          </div>
+          <textarea class="field-input" id="kt-next" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
+        </div>
+        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveTransfer()">Save All Changes</button></div>
+      </div>
+
+      <!-- FILES -->
+      <div class="panel" id="panel-files">
+        <div style="margin-bottom:2rem;">
+          <div class="signal-eyebrow">From Your Coach</div>
+          <div class="signal-title-lg" style="font-size:2rem;">Files & Resources</div>
+          <p style="font-size:0.875rem;color:var(--gray);">Materials, workbooks, and resources shared by your coach.</p>
+        </div>
+        <div id="filesList"></div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="panel" id="panel-notes">
+        <div style="margin-bottom:2rem;">
+          <div class="signal-eyebrow">From Your Coach</div>
+          <div class="signal-title-lg" style="font-size:2rem;">Coach Notes</div>
+          <p style="font-size:0.875rem;color:var(--gray);">Observations, feedback, and guidance from your coaching sessions.</p>
+        </div>
+        <div id="notesList"></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -267,161 +428,218 @@
 const { createClient } = supabase
 const db = createClient('https://djjtgsdnorxgxzkfbxbj.supabase.co', 'sb_publishable_F5RpcjB3xhZjY8j_AHzODQ_8K7Nw719')
 
-let currentUser = null
+const SIGNALS = {
+  knowledge:  { label: 'Knowledge',           desc: 'What you know', num: 1 },
+  experience: { label: 'Experience',           desc: 'What you\'ve lived', num: 2 },
+  capacity:   { label: 'Leadership Capacity',  desc: 'What you can carry', num: 3 },
+  risk:       { label: 'Performance Risk',     desc: 'Where you\'ll break under pressure', num: 4 }
+}
 
-// Auth guard
-db.auth.getSession().then(async ({ data: { session } }) => {
+let user = null, signalData = {}
+
+db.auth.getSession().then(({ data: { session } }) => {
   if (!session) { window.location.href = 'portal.html'; return }
-  currentUser = session.user
-  loadProfile()
-  loadAll()
+  user = session.user
+  init()
 })
 
-// Date
-document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' })
+async function init() {
+  const { data: profile } = await db.from('profiles').select('*').eq('id', user.id).single()
+  document.getElementById('sbName').textContent = profile?.full_name || user.email
+  document.getElementById('sbProgram').textContent = profile?.program || 'Elevare Leadership Program'
+  document.getElementById('welcomeHeading').textContent = 'Welcome back, ' + (profile?.full_name?.split(' ')[0] || '')
+  document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' })
+  await loadSignals()
+  await loadTransfer()
+  loadFiles()
+  loadNotes()
+}
 
-async function loadProfile() {
-  const { data } = await db.from('profiles').select('*').eq('id', currentUser.id).single()
+async function loadSignals() {
+  const { data } = await db.from('signal_entries').select('*').eq('client_id', user.id)
+  signalData = {}
+  data?.forEach(s => { signalData[s.signal_type] = s })
+
+  // Populate fields
+  Object.keys(SIGNALS).forEach(type => {
+    const s = signalData[type]
+    if (!s) return
+    const g = document.getElementById('goal-' + type)
+    const c = document.getElementById('current-' + type)
+    const n = document.getElementById('next-' + type)
+    if (g) g.value = s.goal || ''
+    if (c) c.value = s.current_state || ''
+    if (n) n.value = s.next_step || ''
+    if (s.is_priority) {
+      document.getElementById('pt-' + type)?.classList.add('active')
+      document.getElementById('dot-' + type)?.classList.add('priority')
+    }
+    if (s.goal || s.current_state) document.getElementById('dot-' + type)?.classList.add('complete')
+  })
+
+  renderOverview()
+}
+
+function renderOverview() {
+  const priority = Object.keys(SIGNALS).find(t => signalData[t]?.is_priority)
+  document.getElementById('priorityDisplay').textContent = priority ? SIGNALS[priority].label : 'No signal marked as priority yet'
+
+  const grid = document.getElementById('overviewGrid')
+  grid.innerHTML = Object.entries(SIGNALS).map(([type, info]) => {
+    const s = signalData[type]
+    const isPriority = s?.is_priority
+    return `
+    <div class="signal-card ${isPriority ? 'is-priority' : ''}" onclick="goToSignal('${type}')">
+      <div class="signal-card-label">
+        Signal ${info.num}
+        ${isPriority ? '<span class="priority-tag">Priority</span>' : ''}
+      </div>
+      <div class="signal-card-title">${info.label}</div>
+      <div class="signal-card-desc">${info.desc}</div>
+      ${s?.goal ? `<div class="signal-card-goal"><div class="signal-card-goal-label">1-Year Goal</div>${s.goal}</div>` : `<div class="signal-card-goal"><div class="signal-card-goal-label">1-Year Goal</div><span class="no-goal">Not set yet</span></div>`}
+      <span class="signal-card-link">Open →</span>
+    </div>`
+  }).join('')
+}
+
+function goToSignal(type) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
+  document.querySelector(`[data-panel="${type}"]`)?.classList.add('active')
+  showPanel(type)
+}
+
+async function saveSignal(type) {
+  const goal = document.getElementById('goal-' + type)?.value || ''
+  const current_state = document.getElementById('current-' + type)?.value || ''
+  const next_step = document.getElementById('next-' + type)?.value || ''
+  const is_priority = signalData[type]?.is_priority || false
+  const { error } = await db.from('signal_entries').upsert({
+    client_id: user.id, signal_type: type, goal, current_state, next_step, is_priority, updated_at: new Date().toISOString()
+  }, { onConflict: 'client_id,signal_type' })
+  if (!error) {
+    if (!signalData[type]) signalData[type] = {}
+    signalData[type] = { ...signalData[type], goal, current_state, next_step, is_priority }
+    showSavedFeedback(type)
+    renderOverview()
+    const dot = document.getElementById('dot-' + type)
+    if (goal || current_state) dot?.classList.add('complete')
+  }
+}
+
+function showSavedFeedback(type) {
+  const btns = document.querySelectorAll(`#panel-${type} .save-btn`)
+  btns.forEach(btn => { btn.textContent = 'Saved ✓'; btn.classList.add('saved') })
+  setTimeout(() => btns.forEach(btn => { btn.textContent = btn.style.fontSize ? 'Save All Changes' : 'Save'; btn.classList.remove('saved') }), 1800)
+}
+
+async function togglePriority(type) {
+  // Load current state
+  const current = signalData[type]?.is_priority || false
+  const newVal = !current
+
+  // If turning on, turn off all others first
+  if (newVal) {
+    for (const t of Object.keys(SIGNALS)) {
+      if (t !== type && signalData[t]?.is_priority) {
+        await db.from('signal_entries').upsert({
+          client_id: user.id, signal_type: t,
+          goal: signalData[t]?.goal || '', current_state: signalData[t]?.current_state || '',
+          next_step: signalData[t]?.next_step || '', is_priority: false, updated_at: new Date().toISOString()
+        }, { onConflict: 'client_id,signal_type' })
+        if (signalData[t]) signalData[t].is_priority = false
+        document.getElementById('pt-' + t)?.classList.remove('active')
+        document.getElementById('dot-' + t)?.classList.remove('priority')
+      }
+    }
+  }
+
+  // Upsert this signal
+  await db.from('signal_entries').upsert({
+    client_id: user.id, signal_type: type,
+    goal: signalData[type]?.goal || '', current_state: signalData[type]?.current_state || '',
+    next_step: signalData[type]?.next_step || '', is_priority: newVal, updated_at: new Date().toISOString()
+  }, { onConflict: 'client_id,signal_type' })
+
+  if (!signalData[type]) signalData[type] = {}
+  signalData[type].is_priority = newVal
+  const tog = document.getElementById('pt-' + type)
+  const dot = document.getElementById('dot-' + type)
+  newVal ? tog?.classList.add('active') : tog?.classList.remove('active')
+  newVal ? dot?.classList.add('priority') : dot?.classList.remove('priority')
+  renderOverview()
+}
+
+async function loadTransfer() {
+  const { data } = await db.from('knowledge_transfer').select('*').eq('client_id', user.id).single()
   if (data) {
-    document.getElementById('sidebarName').textContent = data.full_name || currentUser.email
-    document.getElementById('sidebarProgram').textContent = data.program || 'Elevare Leadership Program'
+    document.getElementById('kt-name').value = data.person_name || ''
+    document.getElementById('kt-role').value = data.person_role || ''
+    document.getElementById('kt-knowledge').value = data.knowledge_being_transferred || ''
+    document.getElementById('kt-goal').value = data.goal || ''
+    document.getElementById('kt-next').value = data.next_step || ''
   }
 }
 
-async function loadAll() {
-  await Promise.all([loadSessions(), loadTasks(), loadJournal(), loadResources()])
-}
-
-async function loadSessions() {
-  const { data } = await db.from('sessions').select('*').eq('client_id', currentUser.id).order('session_number')
-  const completed = data?.filter(s => s.completed).length || 0
-  const total = data?.length || 0
-  document.getElementById('sessComp').textContent = completed
-  document.getElementById('sessTot').textContent = total
-  document.getElementById('sessBar').style.width = total ? `${(completed/total)*100}%` : '0%'
-
-  // Full list
-  const list = document.getElementById('sessionsList')
-  if (!data?.length) { list.innerHTML = '<div class="empty-state"><strong>No sessions yet</strong>Sessions will appear here as they are scheduled.</div>'; return }
-  list.innerHTML = data.map(s => `
-    <div class="session-item">
-      <div>
-        <div class="session-num">Session ${s.session_number || '—'}</div>
-        <div class="session-title">${s.title}</div>
-        <div class="session-date">${s.session_date ? new Date(s.session_date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : 'Date TBD'}</div>
-      </div>
-      <span class="item-badge ${s.completed ? 'badge-done' : 'badge-pending'}">${s.completed ? 'Completed' : 'Scheduled'}</span>
-    </div>`).join('')
-
-  // Overview upcoming
-  const upcoming = data.filter(s => !s.completed).slice(0,3)
-  const ov = document.getElementById('overviewSessions')
-  if (!upcoming.length) { ov.innerHTML = '<div class="empty-state"><strong>All sessions complete!</strong></div>'; return }
-  ov.innerHTML = upcoming.map(s => `
-    <div class="session-item">
-      <div>
-        <div class="session-num">Session ${s.session_number || '—'}</div>
-        <div class="session-title">${s.title}</div>
-        <div class="session-date">${s.session_date ? new Date(s.session_date).toLocaleDateString('en-US',{month:'long',day:'numeric'}) : 'TBD'}</div>
-      </div>
-      <span class="item-badge badge-upcoming">Upcoming</span>
-    </div>`).join('')
-}
-
-async function loadTasks() {
-  const { data } = await db.from('action_items').select('*').eq('client_id', currentUser.id).order('created_at', { ascending: false })
-  const open = data?.filter(t => !t.completed).length || 0
-  document.getElementById('openTasks').textContent = open
-
-  const render = (items, container) => {
-    if (!items?.length) { container.innerHTML = '<div class="empty-state"><strong>No action items</strong>Your coach will assign tasks here.</div>'; return }
-    container.innerHTML = items.map(t => `
-      <div class="list-item">
-        <div class="item-check ${t.completed ? 'done' : ''}" data-id="${t.id}" onclick="toggleTask('${t.id}', ${t.completed})"></div>
-        <div style="flex:1;">
-          <div class="item-title ${t.completed ? 'done-text' : ''}">${t.title}</div>
-          ${t.description ? `<div class="item-meta">${t.description}</div>` : ''}
-          ${t.due_date ? `<div class="item-meta">Due: ${new Date(t.due_date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>` : ''}
-        </div>
-        <span class="item-badge ${t.completed ? 'badge-done' : 'badge-pending'}">${t.completed ? 'Done' : 'Open'}</span>
-      </div>`).join('')
+async function saveTransfer() {
+  const { error } = await db.from('knowledge_transfer').upsert({
+    client_id: user.id,
+    person_name: document.getElementById('kt-name').value,
+    person_role: document.getElementById('kt-role').value,
+    knowledge_being_transferred: document.getElementById('kt-knowledge').value,
+    goal: document.getElementById('kt-goal').value,
+    next_step: document.getElementById('kt-next').value,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'client_id' })
+  if (!error) {
+    const btns = document.querySelectorAll('#panel-transfer .save-btn')
+    btns.forEach(b => { b.textContent = 'Saved ✓'; b.classList.add('saved') })
+    setTimeout(() => btns.forEach(b => { b.textContent = b.style.fontSize ? 'Save All Changes' : 'Save'; b.classList.remove('saved') }), 1800)
   }
-
-  render(data, document.getElementById('tasksList'))
-  render(data?.filter(t => !t.completed).slice(0,4), document.getElementById('overviewTasks'))
 }
 
-window.toggleTask = async (id, current) => {
-  await db.from('action_items').update({ completed: !current }).eq('id', id)
-  loadTasks()
-}
-
-async function loadJournal() {
-  const { data } = await db.from('journal_entries').select('*').eq('client_id', currentUser.id).order('created_at', { ascending: false })
-  document.getElementById('journalCount').textContent = data?.length || 0
-  const container = document.getElementById('journalList')
-  if (!data?.length) { container.innerHTML = '<div class="empty-state"><strong>No entries yet</strong>Use this space to reflect on your leadership journey.</div>'; return }
-  container.innerHTML = data.map(e => `
-    <div class="journal-entry">
-      <div class="journal-entry-title">${e.title || 'Untitled Entry'}</div>
-      <div class="journal-entry-date">${new Date(e.created_at).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</div>
-      <div class="journal-entry-body">${e.content}</div>
-    </div>`).join('')
-}
-
-async function loadResources() {
-  const { data } = await db.from('resources').select('*').or(`client_id.eq.${currentUser.id},client_id.is.null`).order('created_at', { ascending: false })
-  const grid = document.getElementById('resourceGrid')
-  const empty = document.getElementById('noResources')
-  if (!data?.length) { grid.innerHTML = ''; empty.style.display = 'block'; return }
-  empty.style.display = 'none'
-  grid.innerHTML = data.map(r => `
-    <a href="${r.url || '#'}" target="_blank" class="resource-card">
-      <div class="resource-icon">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      </div>
-      <div>
-        <div class="resource-name">${r.title}</div>
-        <div class="resource-desc">${r.description || 'Click to open'}</div>
-      </div>
+async function loadFiles() {
+  const { data } = await db.from('client_files').select('*').eq('client_id', user.id).order('created_at', { ascending: false })
+  const el = document.getElementById('filesList')
+  if (!data?.length) { el.innerHTML = '<div class="empty"><strong>No files yet</strong>Your coach will share resources here as your engagement progresses.</div>'; return }
+  el.innerHTML = data.map(f => `
+    <a href="${f.url || '#'}" target="_blank" class="file-item">
+      <div class="file-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div><div class="file-name">${f.title}</div><div class="file-desc">${f.description || 'Click to open'}</div></div>
     </a>`).join('')
 }
 
-// Journal modal
-document.getElementById('newJournalBtn').addEventListener('click', () => document.getElementById('journalModal').classList.add('open'))
-document.getElementById('cancelJournal').addEventListener('click', () => document.getElementById('journalModal').classList.remove('open'))
-document.getElementById('saveJournal').addEventListener('click', async () => {
-  const title = document.getElementById('jTitle').value
-  const content = document.getElementById('jContent').value
-  if (!content.trim()) return
-  await db.from('journal_entries').insert({ client_id: currentUser.id, title, content })
-  document.getElementById('jTitle').value = ''
-  document.getElementById('jContent').value = ''
-  document.getElementById('journalModal').classList.remove('open')
-  loadJournal()
-})
+async function loadNotes() {
+  const { data } = await db.from('client_notes').select('*').eq('client_id', user.id).order('created_at', { ascending: false })
+  const el = document.getElementById('notesList')
+  if (!data?.length) { el.innerHTML = '<div class="empty"><strong>No notes yet</strong>Your coach will add session notes and observations here.</div>'; return }
+  el.innerHTML = data.map(n => `
+    <div class="note-item">
+      <div class="note-meta">From your coach · ${new Date(n.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+      <div class="note-content">${n.content}</div>
+    </div>`).join('')
+}
 
 // Nav
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'))
     item.classList.add('active')
-    const panel = document.getElementById('panel-' + item.dataset.panel)
-    if (panel) panel.classList.add('active')
-    document.getElementById('pageTitle').textContent = item.textContent.trim()
+    showPanel(item.dataset.panel)
+    document.getElementById('topbarTitle').textContent = item.textContent.trim().replace(/\s+/g, ' ')
     document.getElementById('sidebar').classList.remove('open')
   })
 })
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'))
+  document.getElementById('panel-' + name)?.classList.add('active')
+}
 
-// Hamburger
 document.getElementById('hamburger').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'))
-
-// Logout
-document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await db.auth.signOut()
-  window.location.href = 'portal.html'
-})
+document.getElementById('logoutBtn').addEventListener('click', async () => { await db.auth.signOut(); window.location.href = 'portal.html' })
+window.saveSignal = saveSignal
+window.saveTransfer = saveTransfer
+window.togglePriority = togglePriority
+window.goToSignal = goToSignal
 </script>
 </body>
 </html>
