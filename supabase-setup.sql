@@ -19,14 +19,19 @@ create table if not exists public.profiles (
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, full_name, email, role)
+  insert into public.profiles (id, full_name, email, role, program, cohort)
   values (
     new.id,
     coalesce(new.raw_user_meta_data->>'full_name', ''),
     new.email,
-    coalesce(new.raw_user_meta_data->>'role', 'client')
+    coalesce(new.raw_user_meta_data->>'role', 'client'),
+    new.raw_user_meta_data->>'program',
+    new.raw_user_meta_data->>'cohort_code'
   )
-  on conflict (id) do nothing;
+  on conflict (id) do update set
+    full_name = coalesce(excluded.full_name, public.profiles.full_name),
+    program   = coalesce(excluded.program,   public.profiles.program),
+    cohort    = coalesce(excluded.cohort,    public.profiles.cohort);
   return new;
 end;
 $$ language plpgsql security definer;

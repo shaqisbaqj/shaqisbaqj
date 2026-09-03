@@ -185,11 +185,19 @@ document.getElementById('signupForm').addEventListener('submit', async e => {
     return
   }
 
-  // Create account
+  // Create auth account — pass all profile data as metadata so the
+  // handle_new_user trigger can store it even before email confirmation
   const { data, error: signupErr } = await db.auth.signUp({
     email,
     password: pass,
-    options: { data: { full_name: name, role: 'client' } }
+    options: {
+      data: {
+        full_name: name,
+        role: 'client',
+        program: cohort.program || null,
+        cohort_code: code
+      }
+    }
   })
 
   if (signupErr) {
@@ -199,15 +207,18 @@ document.getElementById('signupForm').addEventListener('submit', async e => {
     return
   }
 
-  // Upsert profile with cohort program
-  if (data?.user) {
-    await db.from('profiles').upsert({
+  // Also attempt direct upsert — works if email confirmation is off
+  // or if the user already has a session (e.g. magic link confirmed)
+  if (data?.user?.id) {
+    const { error: upsertErr } = await db.from('profiles').upsert({
       id: data.user.id,
       full_name: name,
       email,
       role: 'client',
-      program: cohort.program || null
+      program: cohort.program || null,
+      cohort: code
     }, { onConflict: 'id' })
+    if (upsertErr) console.warn('Profile upsert (expected if email unconfirmed):', upsertErr.message)
   }
 
   document.getElementById('signupForm').style.display = 'none'
