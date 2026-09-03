@@ -144,6 +144,10 @@
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Dashboard
     </button>
+    <button class="nav-item" onclick="showPanel('codes'); loadCodes();">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Cohort Codes
+    </button>
 
     <div class="sidebar-section">Clients</div>
     <div id="clientList">
@@ -262,6 +266,25 @@
               <div class="empty"><div class="empty-icon">📝</div>No notes yet.</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Cohort Codes Panel -->
+      <div class="panel" id="panel-codes">
+        <div class="card">
+          <div class="card-title">Create Access Code</div>
+          <p style="font-size:0.82rem;color:var(--gray);margin-bottom:1.25rem;line-height:1.6;">Participants use this code to self-register on the portal — no manual setup needed. One code can be shared with an entire cohort.</p>
+          <label>Code</label>
+          <input type="text" id="new-code" placeholder="e.g. FALL2025" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+          <label>Program / Cohort Name (shown on client profile)</label>
+          <input type="text" id="new-program" placeholder="e.g. Executive Coaching — Fall 2025">
+          <div style="margin-top:1rem;">
+            <button class="btn btn-primary" onclick="createCode()">Create Code</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Active Codes</div>
+          <div id="codesList"><div class="empty"><div class="empty-icon">🔑</div>No codes yet.</div></div>
         </div>
       </div>
 
@@ -591,6 +614,64 @@ async function createClient() {
   document.getElementById('nc-pass').value = '';
   document.getElementById('nc-program').value = '';
   loadClients();
+}
+
+async function loadCodes() {
+  const { data } = await db.from('cohort_codes').select('*').order('created_at', { ascending: false });
+  const list = document.getElementById('codesList');
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🔑</div>No codes yet.</div>';
+    return;
+  }
+  list.innerHTML = `<table style="width:100%;border-collapse:collapse;">
+    <thead><tr style="border-bottom:1px solid var(--border);">
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Code</th>
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Program</th>
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Status</th>
+      <th style="padding:0.5rem 0.75rem;"></th>
+    </tr></thead>
+    <tbody>${data.map(c => `<tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.75rem;font-size:0.88rem;font-weight:700;letter-spacing:0.08em;">${escHtml(c.code)}</td>
+      <td style="padding:0.75rem;font-size:0.82rem;color:var(--gray);">${escHtml(c.program || '—')}</td>
+      <td style="padding:0.75rem;">
+        <span style="font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;background:${c.active ? '#dcfce7' : '#f3f4f6'};color:${c.active ? '#166534' : '#6b7280'};">
+          ${c.active ? 'Active' : 'Inactive'}
+        </span>
+      </td>
+      <td style="padding:0.75rem;text-align:right;display:flex;gap:0.5rem;justify-content:flex-end;">
+        <button class="btn btn-outline" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="copyCode('${escHtml(c.code)}')">Copy</button>
+        <button class="btn ${c.active ? 'btn-outline' : 'btn-primary'}" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="toggleCode('${c.id}',${!c.active})">${c.active ? 'Deactivate' : 'Reactivate'}</button>
+        <button class="btn btn-danger" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="deleteCode('${c.id}')">Delete</button>
+      </td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+async function createCode() {
+  const code = document.getElementById('new-code').value.trim().toUpperCase();
+  const program = document.getElementById('new-program').value.trim();
+  if (!code) { showToast('Enter a code first.'); return; }
+  const { error } = await db.from('cohort_codes').insert({ code, program: program || null, active: true });
+  if (error) { showToast('Error: ' + (error.message.includes('unique') ? 'That code already exists.' : error.message)); return; }
+  document.getElementById('new-code').value = '';
+  document.getElementById('new-program').value = '';
+  showToast('Code created: ' + code);
+  loadCodes();
+}
+
+async function toggleCode(id, active) {
+  await db.from('cohort_codes').update({ active }).eq('id', id);
+  loadCodes();
+}
+
+async function deleteCode(id) {
+  if (!confirm('Delete this code? Existing accounts created with it are not affected.')) return;
+  await db.from('cohort_codes').delete().eq('id', id);
+  loadCodes();
+}
+
+function copyCode(code) {
+  navigator.clipboard.writeText(code).then(() => showToast('Copied: ' + code));
 }
 
 function showPanel(name) {

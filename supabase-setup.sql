@@ -191,12 +191,31 @@ create table if not exists public.client_notes (
   created_at timestamptz default now()
 );
 
+-- 11. Cohort codes (admin creates; clients use to self-register)
+create table if not exists public.cohort_codes (
+  id uuid default gen_random_uuid() primary key,
+  code text not null unique,
+  program text,
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
 -- ── RLS for new tables ──
 
+alter table public.cohort_codes enable row level security;
 alter table public.signal_entries enable row level security;
 alter table public.knowledge_transfer enable row level security;
 alter table public.client_files enable row level security;
 alter table public.client_notes enable row level security;
+
+-- Cohort codes — anyone can read active codes (for signup validation), only admin can manage
+drop policy if exists "Anyone can read active codes" on public.cohort_codes;
+create policy "Anyone can read active codes" on public.cohort_codes
+  for select using (active = true or public.is_admin());
+
+drop policy if exists "Admin manage codes" on public.cohort_codes;
+create policy "Admin manage codes" on public.cohort_codes
+  for all using (public.is_admin());
 
 -- Signal entries
 drop policy if exists "Client manage signals" on public.signal_entries;
