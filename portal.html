@@ -251,9 +251,10 @@ document.getElementById('resetForm').addEventListener('submit', async e => {
 async function redirectByRole(userId) {
   const { data, error } = await db.from('profiles').select('role').eq('id', userId).single()
   if (error) {
-    // Profile row missing or RLS blocked — default to dashboard
-    console.warn('redirectByRole error:', error)
-    window.location.href = 'dashboard.html'
+    document.getElementById('loginErr').textContent = 'Signed in but profile lookup failed: ' + error.message
+    document.getElementById('loginErr').style.display = 'block'
+    document.getElementById('loginBtn').disabled = false
+    document.getElementById('loginBtn').textContent = 'Sign In →'
     return
   }
   window.location.href = data?.role === 'admin' ? 'admin.html' : 'dashboard.html'
