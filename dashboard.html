@@ -124,6 +124,12 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
 .empty { text-align: center; padding: 3rem; background: var(--white); border: 1px solid var(--border); color: var(--gray); }
 .empty strong { display: block; font-size: 0.95rem; color: var(--black); margin-bottom: 0.4rem; }
 
+/* Toast */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.85rem 1.25rem; font-size: 0.8rem; font-weight: 500; z-index: 9999; opacity: 0; transform: translateY(6px); transition: all 0.25s; pointer-events: none; min-width: 200px; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { background: var(--black); color: var(--white); }
+.toast.error { background: #dc2626; color: var(--white); }
+
 /* Mobile */
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); }
@@ -234,7 +240,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
               <div class="field-block-title">1-Year Goal</div>
               <div class="field-block-hint">Where do you want your Knowledge to be in 12 months?</div>
             </div>
-            <button class="save-btn" onclick="saveSignal('knowledge')">Save</button>
+            <button class="save-btn" data-label="Save" onclick="saveSignal('knowledge')">Save</button>
           </div>
           <textarea class="field-input goal-field" id="goal-knowledge" placeholder="e.g. Complete two leadership certifications and build a reading habit around organizational culture..."></textarea>
         </div>
@@ -256,7 +262,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
           </div>
           <textarea class="field-input" id="next-knowledge" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
         </div>
-        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('knowledge')">Save All Changes</button></div>
+        <div style="text-align:right;"><button class="save-btn" data-label="Save All Changes" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('knowledge')">Save All Changes</button></div>
       </div>
 
       <!-- EXPERIENCE -->
@@ -273,7 +279,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
         <div class="field-block">
           <div class="field-block-header">
             <div><div class="field-block-title">1-Year Goal</div><div class="field-block-hint">What experiences do you need to seek, step into, or process in the next 12 months?</div></div>
-            <button class="save-btn" onclick="saveSignal('experience')">Save</button>
+            <button class="save-btn" data-label="Save" onclick="saveSignal('experience')">Save</button>
           </div>
           <textarea class="field-input goal-field" id="goal-experience" placeholder="e.g. Lead my first cross-functional initiative, debrief past failures with a mentor..."></textarea>
         </div>
@@ -289,7 +295,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
           </div>
           <textarea class="field-input" id="next-experience" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
         </div>
-        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('experience')">Save All Changes</button></div>
+        <div style="text-align:right;"><button class="save-btn" data-label="Save All Changes" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('experience')">Save All Changes</button></div>
       </div>
 
       <!-- CAPACITY -->
@@ -306,7 +312,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
         <div class="field-block">
           <div class="field-block-header">
             <div><div class="field-block-title">1-Year Goal</div><div class="field-block-hint">What does healthy, sustainable capacity look like for you in 12 months?</div></div>
-            <button class="save-btn" onclick="saveSignal('capacity')">Save</button>
+            <button class="save-btn" data-label="Save" onclick="saveSignal('capacity')">Save</button>
           </div>
           <textarea class="field-input goal-field" id="goal-capacity" placeholder="e.g. Build consistent rhythms that allow me to lead at full strength without burning out..."></textarea>
         </div>
@@ -322,7 +328,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
           </div>
           <textarea class="field-input" id="next-capacity" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
         </div>
-        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('capacity')">Save All Changes</button></div>
+        <div style="text-align:right;"><button class="save-btn" data-label="Save All Changes" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('capacity')">Save All Changes</button></div>
       </div>
 
       <!-- RISK -->
@@ -339,7 +345,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
         <div class="field-block">
           <div class="field-block-header">
             <div><div class="field-block-title">1-Year Goal</div><div class="field-block-hint">What would it look like to significantly reduce your highest risk area in 12 months?</div></div>
-            <button class="save-btn" onclick="saveSignal('risk')">Save</button>
+            <button class="save-btn" data-label="Save" onclick="saveSignal('risk')">Save</button>
           </div>
           <textarea class="field-input goal-field" id="goal-risk" placeholder="e.g. Identify my two highest failure points and build specific disciplines around each..."></textarea>
         </div>
@@ -355,7 +361,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
           </div>
           <textarea class="field-input" id="next-risk" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
         </div>
-        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('risk')">Save All Changes</button></div>
+        <div style="text-align:right;"><button class="save-btn" data-label="Save All Changes" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveSignal('risk')">Save All Changes</button></div>
       </div>
 
       <!-- KNOWLEDGE TRANSFER -->
@@ -381,7 +387,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
         <div class="field-block">
           <div class="field-block-header">
             <div><div class="field-block-title">What Are You Transferring?</div><div class="field-block-hint">What specific knowledge, skills, or responsibilities are you intentionally passing to them?</div></div>
-            <button class="save-btn" onclick="saveTransfer()">Save</button>
+            <button class="save-btn" data-label="Save" onclick="saveTransfer()">Save</button>
           </div>
           <textarea class="field-input" id="kt-knowledge" placeholder="Be specific — what do they need to know that lives in your head right now? What decisions should they be making?"></textarea>
         </div>
@@ -397,7 +403,7 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
           </div>
           <textarea class="field-input" id="kt-next" placeholder="Be specific — what will you do, and by when?" style="min-height:60px;"></textarea>
         </div>
-        <div style="text-align:right;"><button class="save-btn" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveTransfer()">Save All Changes</button></div>
+        <div style="text-align:right;"><button class="save-btn" data-label="Save All Changes" style="font-size:0.72rem;padding:0.5rem 1.25rem;" onclick="saveTransfer()">Save All Changes</button></div>
       </div>
 
       <!-- FILES -->
@@ -423,6 +429,8 @@ input.field-input:focus { border-color: var(--orange); background: var(--white);
     </div>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 const { createClient } = supabase
@@ -508,28 +516,44 @@ function goToSignal(type) {
   showPanel(type)
 }
 
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast')
+  t.textContent = msg
+  t.className = 'toast show ' + type
+  clearTimeout(t._timer)
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000)
+}
+
 async function saveSignal(type) {
   const goal = document.getElementById('goal-' + type)?.value || ''
   const current_state = document.getElementById('current-' + type)?.value || ''
   const next_step = document.getElementById('next-' + type)?.value || ''
   const is_priority = signalData[type]?.is_priority || false
-  const { error } = await db.from('signal_entries').upsert({
-    client_id: user.id, signal_type: type, goal, current_state, next_step, is_priority, updated_at: new Date().toISOString()
-  }, { onConflict: 'client_id,signal_type' })
-  if (!error) {
-    if (!signalData[type]) signalData[type] = {}
-    signalData[type] = { ...signalData[type], goal, current_state, next_step, is_priority }
-    showSavedFeedback(type)
-    renderOverview()
-    const dot = document.getElementById('dot-' + type)
-    if (goal || current_state) dot?.classList.add('complete')
-  }
-}
 
-function showSavedFeedback(type) {
   const btns = document.querySelectorAll(`#panel-${type} .save-btn`)
-  btns.forEach(btn => { btn.textContent = 'Saved ✓'; btn.classList.add('saved') })
-  setTimeout(() => btns.forEach(btn => { btn.textContent = btn.style.fontSize ? 'Save All Changes' : 'Save'; btn.classList.remove('saved') }), 1800)
+  btns.forEach(b => { b.textContent = 'Saving…'; b.disabled = true })
+
+  const { error } = await db.from('signal_entries').upsert({
+    client_id: user.id, signal_type: type, goal, current_state, next_step, is_priority,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'client_id,signal_type' })
+
+  if (error) {
+    console.error('Save error:', error)
+    btns.forEach(b => { b.textContent = 'Save'; b.disabled = false })
+    showToast('Save failed: ' + error.message, 'error')
+    return
+  }
+
+  if (!signalData[type]) signalData[type] = {}
+  signalData[type] = { ...signalData[type], goal, current_state, next_step, is_priority }
+  renderOverview()
+  const dot = document.getElementById('dot-' + type)
+  if (goal || current_state) dot?.classList.add('complete')
+
+  btns.forEach(b => { b.textContent = 'Saved ✓'; b.classList.add('saved'); b.disabled = false })
+  showToast('Changes saved.')
+  setTimeout(() => btns.forEach(b => { b.textContent = b.dataset.label || 'Save'; b.classList.remove('saved') }), 1800)
 }
 
 async function togglePriority(type) {
@@ -581,6 +605,9 @@ async function loadTransfer() {
 }
 
 async function saveTransfer() {
+  const btns = document.querySelectorAll('#panel-transfer .save-btn')
+  btns.forEach(b => { b.textContent = 'Saving…'; b.disabled = true })
+
   const { error } = await db.from('knowledge_transfer').upsert({
     client_id: user.id,
     person_name: document.getElementById('kt-name').value,
@@ -590,11 +617,17 @@ async function saveTransfer() {
     next_step: document.getElementById('kt-next').value,
     updated_at: new Date().toISOString()
   }, { onConflict: 'client_id' })
-  if (!error) {
-    const btns = document.querySelectorAll('#panel-transfer .save-btn')
-    btns.forEach(b => { b.textContent = 'Saved ✓'; b.classList.add('saved') })
-    setTimeout(() => btns.forEach(b => { b.textContent = b.style.fontSize ? 'Save All Changes' : 'Save'; b.classList.remove('saved') }), 1800)
+
+  if (error) {
+    console.error('Save error:', error)
+    btns.forEach(b => { b.textContent = 'Save'; b.disabled = false })
+    showToast('Save failed: ' + error.message, 'error')
+    return
   }
+
+  btns.forEach(b => { b.textContent = 'Saved ✓'; b.classList.add('saved'); b.disabled = false })
+  showToast('Changes saved.')
+  setTimeout(() => btns.forEach(b => { b.textContent = b.dataset.label || 'Save'; b.classList.remove('saved') }), 1800)
 }
 
 async function loadFiles() {
