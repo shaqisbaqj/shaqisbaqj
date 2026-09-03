@@ -28,7 +28,8 @@
       --sans:        'Inter', system-ui, sans-serif;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden;
+      max-width: 100%; }
 
     body {
       font-family: var(--sans);
@@ -36,6 +37,7 @@
       color: var(--black);
       line-height: 1.6;
       overflow-x: hidden;
+      max-width: 100%;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -578,7 +580,7 @@
     .btn-orange:hover::after { transform: translateX(0); }
 
     /* ── CLIENTS TICKER ── */
-    .ticker-wrap { overflow: hidden; width: 100%; }
+    .ticker-wrap { overflow: hidden; width: 100%; max-width: 100vw; }
     .ticker-row { display: flex; width: max-content; animation: ticker 22s linear infinite; }
     .ticker-row:hover { animation-play-state: paused; }
     .ticker-track { display: flex; align-items: center; gap: 0; }
@@ -906,6 +908,106 @@
     nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
     nav.scrolled .nav-inner { height: 58px; }
     .nav-inner { transition: height 0.3s ease; }
+
+    /* ── IPHONE / MOBILE POLISH ── */
+    @media (max-width: 480px) {
+      /* Nav */
+      .nav-logo { font-size: 1.1rem; }
+
+      /* Hero */
+      .hero-left { padding: 5rem 1.5rem 3rem !important; }
+      .hero-h { font-size: clamp(2.2rem, 10vw, 3rem) !important; }
+      .hero-sub { font-size: 0.9rem !important; margin-bottom: 2rem !important; }
+      .stats-row { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
+      .stat-n { font-size: 2.4rem !important; }
+      .hero-right { height: 240px !important; }
+      .hero-right-fallback .fb-text { font-size: 5rem !important; }
+
+      /* Tagline band */
+      .tagline-inner { grid-template-columns: 1fr !important; }
+      .tagline-left { padding: 2rem 1.5rem !important; }
+      .tagline-right { padding: 2rem 1.5rem !important; }
+      .tagline-left-text { font-size: 1.3rem !important; }
+      .tagline-right p { font-size: 0.9rem !important; }
+
+      /* Clients ticker */
+      .client-logo-slot .client-name { padding: 0 1.5rem !important; font-size: 0.75rem !important; }
+      .client-logo-img { height: 26px !important; }
+
+      /* Problem */
+      .problem-layout { grid-template-columns: 1fr !important; gap: 2rem !important; }
+      .problem-left h2 { font-size: 1.9rem !important; }
+      .cost-n { font-size: 2.2rem !important; }
+
+      /* Session band */
+      .session-band-inner { grid-template-columns: 1fr !important; }
+      .session-photo { height: 260px !important; }
+      .session-caption { padding: 2rem 1.5rem !important; }
+
+      /* CORE */
+      .core-grid { grid-template-columns: 1fr !important; }
+      .c-letter { font-size: 2.8rem !important; }
+
+      /* Testimonials */
+      .t-grid { grid-template-columns: 1fr !important; }
+
+      /* Retainer / pricing cards */
+      .p-card-single { padding: 2rem 1.5rem !important; }
+      .r-tabs { flex-direction: column !important; gap: 0.5rem !important; }
+      .r-tab { border-bottom: 1px solid rgba(255,255,255,0.1) !important; border-left: 2px solid transparent !important; padding: 0.75rem 1rem !important; font-size: 0.65rem !important; }
+      .r-tab.on { border-left-color: var(--orange) !important; border-bottom-color: rgba(255,255,255,0.1) !important; }
+      .r-price { font-size: 2.5rem !important; }
+      .ent-card { grid-template-columns: 1fr !important; gap: 2rem !important; }
+      .ent-l, .ent-r { padding: 1.75rem 1.5rem !important; }
+
+      /* Offerings grid */
+      .offerings-grid { grid-template-columns: 1fr !important; }
+
+      /* Certifications grid */
+      .certs-grid { grid-template-columns: 1fr 1fr !important; }
+
+      /* LIFT */
+      .lift-layout { grid-template-columns: 1fr !important; }
+      .lift-box { padding: 2rem 1.5rem !important; }
+      .lift-price { font-size: 2.2rem !important; }
+
+      /* Podcast */
+      .podcast-inner { grid-template-columns: 1fr !important; gap: 2rem !important; }
+      .podcast-visual { max-width: 100% !important; }
+      .podcast-title-placeholder { font-size: 1.3rem !important; }
+
+      /* Process steps */
+      .steps { grid-template-columns: 1fr !important; }
+      .s-item { border-bottom: 1px solid var(--border) !important; border-right: none !important; padding: 1.75rem 0 !important; }
+
+      /* About */
+      .about-layout { grid-template-columns: 1fr !important; }
+      .about-photo { max-width: 100% !important; aspect-ratio: 4/3 !important; }
+      .about-stats { grid-template-columns: 1fr 1fr !important; }
+
+      /* Before/after split */
+      .split-wrapper { grid-template-columns: 1fr !important; min-height: auto !important; } .split-inner { grid-template-columns: 1fr !important; }
+      .split-left, .split-right { padding: 2.5rem 1.5rem !important; }
+
+      /* Footer */
+      .footer-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+      .footer-brand { margin-bottom: 1rem !important; }
+
+      /* Section padding */
+      section { padding: 4rem 0 !important; }
+      .container { padding: 0 1.25rem !important; }
+
+      /* Float CTA */
+      #float-cta { bottom: 1rem !important; right: 1rem !important; font-size: 0.7rem !important; padding: 0.65rem 1.1rem !important; }
+
+      /* Section headings */
+      h2 { font-size: clamp(1.7rem, 7vw, 2.4rem) !important; }
+      .eyebrow { font-size: 0.6rem !important; }
+
+      /* Page hero band */
+      .page-hero { padding: 5rem 1.5rem 3.5rem !important; }
+      .page-hero h1 { font-size: clamp(2rem, 9vw, 2.8rem) !important; }
+    }
   </style>
 </head>
 <body>
@@ -931,7 +1033,7 @@
       <li><a href="community.html">Community</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <a href="https://calendly.com/jason-staten/discovery-call" target="_blank" class="btn btn-black">Book a Call</a>
+    <a href="portal.html" class="btn" style="background:transparent;border:1px solid #ddd;color:#6b7280;margin-right:0.4rem;font-size:0.72rem;padding:0.55rem 1rem;">Client Login</a><a href="https://calendly.com/jason-staten/discovery-call" target="_blank" class="btn btn-black">Book a Call</a>
     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
   </div>
 </nav>

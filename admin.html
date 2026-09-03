@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Elevare</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.2/dist/umd/supabase.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; --pale: #FBF0EA; --bg: #f9fafb; }
+  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 260px; background: var(--black); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto; }
+  .sidebar-logo { padding: 1.75rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .sidebar-logo a { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--white); display: block; }
+  .sidebar-logo em { color: var(--orange); font-style: normal; }
+  .sidebar-logo-sub { font-size: 0.62rem; color: rgba(255,255,255,0.25); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.3rem; }
+  .sidebar-section { padding: 1.25rem 1.5rem 0.5rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+  .client-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; border: none; background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
+  .client-link:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .client-link.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.07); }
+  .client-avatar { width: 26px; height: 26px; background: rgba(200,90,30,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--orange); flex-shrink: 0; }
+  .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.45); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; border: none; background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
+  .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .nav-item.active { color: var(--orange); border-left-color: var(--orange); background: rgba(200,90,30,0.07); }
+  .nav-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+  .sidebar-footer { padding: 1.25rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.07); margin-top: auto; }
+  .logout-btn { font-size: 0.72rem; color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; font-family: 'Inter',sans-serif; transition: color 0.15s; }
+  .logout-btn:hover { color: var(--orange); }
+  .add-client-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.5rem; font-size: 0.72rem; font-weight: 600; color: var(--orange); cursor: pointer; letter-spacing: 0.06em; background: none; border: none; font-family: 'Inter',sans-serif; width: 100%; text-align: left; transition: background 0.15s; }
+  .add-client-btn:hover { background: rgba(200,90,30,0.07); }
+
+  .main { margin-left: 260px; flex: 1; }
+  .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .page-title { font-size: 1.05rem; font-weight: 600; }
+  .content { padding: 2rem; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Cards & Forms */
+  .card { background: var(--white); border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.5rem; }
+  .card-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 1.25rem; }
+  .card-subtitle { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+  label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--gray); margin-bottom: 0.4rem; margin-top: 1rem; }
+  label:first-of-type { margin-top: 0; }
+  input, textarea, select { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--black); background: var(--white); outline: none; transition: border-color 0.15s; }
+  input:focus, textarea:focus, select:focus { border-color: var(--orange); }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.25rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; transition: all 0.15s; border: none; font-family: 'Inter', sans-serif; }
+  .btn-primary { background: var(--orange); color: var(--white); }
+  .btn-primary:hover { background: #a84a17; }
+  .btn-outline { background: transparent; color: var(--black); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--black); }
+  .btn-ghost { background: transparent; color: var(--gray); border: none; font-size: 0.72rem; }
+  .btn-danger { background: #dc2626; color: var(--white); }
+  .btn-danger:hover { background: #b91c1c; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* Signal grid */
+  .signals-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
+  .signal-card { background: var(--white); border: 1px solid var(--border); padding: 1.25rem; border-top: 3px solid var(--border); }
+  .signal-card.priority { border-top-color: var(--orange); }
+  .signal-name { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.5rem; }
+  .signal-goal { font-size: 0.82rem; color: var(--black); line-height: 1.5; margin-bottom: 0.5rem; }
+  .signal-meta { font-size: 0.72rem; color: var(--gray); }
+  .priority-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); }
+  .priority-dot { width: 6px; height: 6px; background: var(--orange); border-radius: 50%; }
+
+  /* Files list */
+  .files-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .file-item { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg); border: 1px solid var(--border); gap: 1rem; }
+  .file-info { flex: 1; min-width: 0; }
+  .file-title { font-size: 0.85rem; font-weight: 500; }
+  .file-desc { font-size: 0.75rem; color: var(--gray); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-url { font-size: 0.7rem; color: var(--orange); text-decoration: none; }
+  .file-url:hover { text-decoration: underline; }
+
+  /* Notes list */
+  .notes-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .note-item { padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--orange); }
+  .note-content { font-size: 0.85rem; line-height: 1.55; }
+  .note-meta { font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; }
+
+  /* Modal */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  .modal-backdrop.hidden { display: none; }
+  .modal { background: var(--white); width: 100%; max-width: 500px; padding: 2rem; max-height: 90vh; overflow-y: auto; }
+  .modal-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; }
+  .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+  /* Client overview */
+  .client-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; }
+  .client-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; }
+  .client-program { font-size: 0.78rem; color: var(--gray); margin-top: 0.25rem; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 3rem 1.5rem; color: var(--gray); font-size: 0.85rem; }
+  .empty-icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.4; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--black); color: var(--white); padding: 0.85rem 1.25rem; font-size: 0.8rem; z-index: 1000; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Tabs within client panel */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; gap: 0; }
+  .tab-btn { padding: 0.75rem 1.25rem; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--gray); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+  .tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab-btn:hover:not(.active) { color: var(--black); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Template chip buttons */
+  .template-chip { display: inline-flex; align-items: center; padding: 0.3rem 0.75rem; font-size: 0.72rem; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--gray); font-family: 'Inter', sans-serif; transition: all 0.15s; margin-right: 0.4rem; margin-bottom: 0.4rem; }
+  .template-chip:hover { border-color: var(--orange); color: var(--orange); }
+
+  @media (max-width: 800px) {
+    .sidebar { width: 220px; }
+    .main { margin-left: 220px; }
+    .signals-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .content { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="index.html"><em>E</em>levare</a>
+      <div class="sidebar-logo-sub">Admin Portal</div>
+    </div>
+
+    <div class="sidebar-section">Overview</div>
+    <button class="nav-item active" onclick="showPanel('overview')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="showPanel('codes'); loadCodes();">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Cohort Codes
+    </button>
+
+    <div class="sidebar-section">Clients</div>
+    <div id="clientList">
+      <div style="padding:0.5rem 1.5rem; font-size:0.75rem; color:rgba(255,255,255,0.25);">Loading…</div>
+    </div>
+    <button class="add-client-btn" onclick="openAddClientModal()">
+      <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Client
+    </button>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="signOut()">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title" id="topbarTitle">Admin Dashboard</div>
+      <div id="adminName" style="font-size:0.78rem;color:var(--gray);"></div>
+    </div>
+
+    <div class="content">
+
+      <!-- Overview Panel -->
+      <div class="panel active" id="panel-overview">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem;">
+          <div class="card" style="padding:1.25rem;">
+            <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.5rem;">Total Clients</div>
+            <div id="stat-clients" style="font-size:2rem;font-weight:300;">—</div>
+          </div>
+          <div class="card" style="padding:1.25rem;border-top:2px solid var(--orange);">
+            <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.5rem;">Signals Logged</div>
+            <div id="stat-signals" style="font-size:2rem;font-weight:300;">—</div>
+          </div>
+          <div class="card" style="padding:1.25rem;">
+            <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.5rem;">Files Shared</div>
+            <div id="stat-files" style="font-size:2rem;font-weight:300;">—</div>
+          </div>
+        </div>
+
+        <div id="clientsTable">
+          <div class="empty"><div class="empty-icon">👥</div>No clients yet.</div>
+        </div>
+      </div>
+
+      <!-- Client Panel -->
+      <div class="panel" id="panel-client">
+        <div class="client-header">
+          <div>
+            <div class="client-name" id="client-display-name">Client Name</div>
+            <div class="client-program" id="client-display-program"></div>
+          </div>
+          <button class="btn btn-outline" onclick="showPanel('overview')" style="font-size:0.72rem;">← All Clients</button>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('signals')">4 Signals</button>
+          <button class="tab-btn" onclick="switchTab('transfer')">Knowledge Transfer</button>
+          <button class="tab-btn" onclick="switchTab('files')">Files</button>
+          <button class="tab-btn" onclick="switchTab('notes')">Coach Notes</button>
+          <button class="tab-btn" onclick="switchTab('sessions')">Sessions</button>
+        </div>
+
+        <!-- Signals tab -->
+        <div class="tab-panel active" id="tab-signals">
+          <div class="signals-grid" id="signalsGrid">
+            <div class="empty"><div class="empty-icon">📊</div>No signal entries yet.</div>
+          </div>
+        </div>
+
+        <!-- Knowledge Transfer tab -->
+        <div class="tab-panel" id="tab-transfer">
+          <div class="card" id="transferCard">
+            <div class="empty"><div class="empty-icon">🔄</div>No knowledge transfer entry yet.</div>
+          </div>
+        </div>
+
+        <!-- Files tab -->
+        <div class="tab-panel" id="tab-files">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-title">Add File / Link</div>
+            <label>Title</label>
+            <input type="text" id="file-title" placeholder="e.g. Leadership Assessment Q3">
+            <label>URL (Google Drive, Dropbox, etc.)</label>
+            <input type="url" id="file-url" placeholder="https://drive.google.com/…">
+            <label>Description (optional)</label>
+            <input type="text" id="file-desc" placeholder="Brief description">
+            <div style="margin-top:1rem;">
+              <button class="btn btn-primary" onclick="addFile()">Add File</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Shared Files</div>
+            <div class="files-list" id="filesList">
+              <div class="empty"><div class="empty-icon">📁</div>No files shared yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes tab -->
+        <div class="tab-panel" id="tab-notes">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-title">Add Coach Note</div>
+            <label>Note</label>
+            <textarea id="note-content" placeholder="Enter coaching observation, insight, or action item…" style="min-height:120px;"></textarea>
+            <div style="margin-top:1rem;">
+              <button class="btn btn-primary" onclick="addNote()">Save Note</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Coach Notes</div>
+            <div class="notes-list" id="notesList">
+              <div class="empty"><div class="empty-icon">📝</div>No notes yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sessions tab -->
+        <div class="tab-panel" id="tab-sessions">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div style="margin-bottom:1rem;">
+              <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.6rem;">Quick Templates</div>
+              <button class="template-chip" onclick="fillSessionTemplate('kickoff')">Kickoff</button>
+              <button class="template-chip" onclick="fillSessionTemplate('midprogram')">Mid-Program Check-in</button>
+              <button class="template-chip" onclick="fillSessionTemplate('closing')">Closing Session</button>
+            </div>
+            <div class="card-title">Add Session</div>
+            <label>Title</label>
+            <input type="text" id="sess-title" placeholder="e.g. Kickoff Session">
+            <label>Date</label>
+            <input type="date" id="sess-date">
+            <div class="form-row" style="margin-top:1rem;">
+              <div>
+                <label style="margin-top:0;">Session Number</label>
+                <input type="number" id="sess-number" min="1" placeholder="e.g. 1">
+              </div>
+              <div>
+                <label style="margin-top:0;">Total Sessions</label>
+                <input type="number" id="sess-total" min="1" placeholder="e.g. 12" value="12">
+              </div>
+            </div>
+            <label>Notes (optional)</label>
+            <textarea id="sess-notes" placeholder="Session notes, agenda, or observations…"></textarea>
+            <div style="margin-top:1rem;">
+              <button class="btn btn-primary" onclick="addSession()">Add Session</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Sessions</div>
+            <div id="adminSessionsList">
+              <div class="empty"><div class="empty-icon">📅</div>No sessions yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cohort Codes Panel -->
+      <div class="panel" id="panel-codes">
+        <div class="card">
+          <div class="card-title">Create Access Code</div>
+          <p style="font-size:0.82rem;color:var(--gray);margin-bottom:1.25rem;line-height:1.6;">Participants use this code to self-register on the portal — no manual setup needed. One code can be shared with an entire cohort.</p>
+          <label>Code</label>
+          <input type="text" id="new-code" placeholder="e.g. FALL2025" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+          <label>Program / Cohort Name (shown on client profile)</label>
+          <input type="text" id="new-program" placeholder="e.g. Executive Coaching — Fall 2025">
+          <div style="margin-top:1rem;">
+            <button class="btn btn-primary" onclick="createCode()">Create Code</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Active Codes</div>
+          <div id="codesList"><div class="empty"><div class="empty-icon">🔑</div>No codes yet.</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Message a Cohort</div>
+          <p style="font-size:0.82rem;color:var(--gray);margin-bottom:1.25rem;line-height:1.6;">Send a note to all clients in a cohort — it will appear in each client's Coach Notes feed.</p>
+          <label>Select Cohort</label>
+          <select id="cohort-msg-select">
+            <option value="">— Select a cohort —</option>
+          </select>
+          <label>Message</label>
+          <textarea id="cohort-msg-text" placeholder="Enter your message to all clients in this cohort…" style="min-height:100px;"></textarea>
+          <div style="margin-top:1rem;">
+            <button class="btn btn-primary" onclick="sendCohortMessage()">Send to Cohort</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Add Client Modal -->
+<div class="modal-backdrop hidden" id="addClientModal">
+  <div class="modal">
+    <div class="modal-title">Add New Client</div>
+    <label>Full Name</label>
+    <input type="text" id="nc-name" placeholder="Jane Smith">
+    <label>Email</label>
+    <input type="email" id="nc-email" placeholder="jane@company.com">
+    <label>Temporary Password</label>
+    <input type="text" id="nc-pass" placeholder="Min 6 characters">
+    <label>Program / Cohort (optional)</label>
+    <input type="text" id="nc-program" placeholder="e.g. Executive Coaching — Fall 2025">
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('addClientModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="createClient()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://djjtgsdnorxgxzkfbxbj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_F5RpcjB3xhZjY8j_AHzODQ_8K7Nw719';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentClientId = null;
+
+const SIGNAL_LABELS = {
+  knowledge: 'Knowledge',
+  experience: 'Experience',
+  capacity: 'Leadership Capacity',
+  risk: 'Performance Risk'
+};
+
+async function init() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { window.location.href = 'portal.html'; return; }
+  currentUser = session.user;
+
+  const { data: profile } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+  if (!profile || profile.role !== 'admin') { window.location.href = 'dashboard.html'; return; }
+
+  document.getElementById('adminName').textContent = profile.full_name || profile.email;
+
+  loadClients();
+  loadOverviewStats();
+}
+
+async function loadClients() {
+  const { data: clients } = await db.from('profiles').select('*').eq('role', 'client').order('full_name');
+  if (!clients) return;
+
+  const listEl = document.getElementById('clientList');
+  if (clients.length === 0) {
+    listEl.innerHTML = '<div style="padding:0.5rem 1.5rem;font-size:0.75rem;color:rgba(255,255,255,0.25);">No clients yet</div>';
+    return;
+  }
+
+  // Group by cohort code (falls back to program, then Unassigned)
+  const groups = {};
+  clients.forEach(c => {
+    const key = c.cohort || c.program || 'Unassigned';
+    if (!groups[key]) groups[key] = { program: c.program || '', members: [] };
+    groups[key].members.push(c);
+  });
+
+  // Sidebar grouped by cohort code
+  listEl.innerHTML = Object.entries(groups).map(([code, group]) => `
+    <div style="padding:0.5rem 1.5rem 0.2rem;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:0.5rem;">${escHtml(code)}</div>
+    ${group.members.map(c => {
+      const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      return `<button class="client-link" id="cl-${c.id}" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">
+        <div class="client-avatar">${initials}</div>
+        <span>${escHtml(c.full_name || c.email)}</span>
+      </button>`;
+    }).join('')}
+  `).join('');
+
+  // Overview: one card per cohort code
+  const tableEl = document.getElementById('clientsTable');
+  tableEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:1.25rem;">` +
+    Object.entries(groups).map(([code, group]) => `
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:#fafafa;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);margin-bottom:0.2rem;">Access Code</div>
+          <div style="font-size:1rem;font-weight:700;letter-spacing:0.05em;">${escHtml(code)}</div>
+          ${group.program ? `<div style="font-size:0.78rem;color:var(--gray);margin-top:0.15rem;">${escHtml(group.program)}</div>` : ''}
+        </div>
+        <div style="font-size:0.75rem;color:var(--gray);font-weight:500;">${group.members.length} ${group.members.length === 1 ? 'participant' : 'participants'}</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <tbody>${group.members.map(c => {
+          const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+          return `<tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
+            <td style="padding:0.85rem 1.25rem;width:40px;">
+              <div style="width:32px;height:32px;background:rgba(200,90,30,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--orange);">${initials}</div>
+            </td>
+            <td style="padding:0.85rem 0;font-size:0.88rem;font-weight:500;">${escHtml(c.full_name || '—')}</td>
+            <td style="padding:0.85rem 0;font-size:0.82rem;color:var(--gray);">${escHtml(c.email || '—')}</td>
+            <td style="padding:0.85rem 1.25rem;text-align:right;"><button class="btn btn-outline" style="font-size:0.7rem;padding:0.35rem 0.85rem;" onclick="openClient('${c.id}','${escHtml(c.full_name || c.email)}','${escHtml(c.program || '')}')">View →</button></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>
+  `).join('') + `</div>`;
+
+  document.getElementById('stat-clients').textContent = clients.length;
+}
+
+async function loadOverviewStats() {
+  const [{ count: sCount }, { count: fCount }] = await Promise.all([
+    db.from('signal_entries').select('*', { count: 'exact', head: true }),
+    db.from('client_files').select('*', { count: 'exact', head: true })
+  ]);
+  document.getElementById('stat-signals').textContent = sCount ?? '—';
+  document.getElementById('stat-files').textContent = fCount ?? '—';
+}
+
+async function openClient(id, name, program) {
+  currentClientId = id;
+
+  document.querySelectorAll('.client-link').forEach(el => el.classList.remove('active'));
+  const link = document.getElementById('cl-' + id);
+  if (link) link.classList.add('active');
+
+  document.getElementById('client-display-name').textContent = name;
+  document.getElementById('client-display-program').textContent = program;
+  document.getElementById('topbarTitle').textContent = name;
+
+  showPanel('client');
+  switchTab('signals');
+  loadSignals(id);
+}
+
+async function loadSignals(clientId) {
+  const { data } = await db.from('signal_entries').select('*').eq('client_id', clientId);
+  const grid = document.getElementById('signalsGrid');
+
+  if (!data || data.length === 0) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">📊</div>Client has not filled in any signals yet.</div>';
+    return;
+  }
+
+  const map = {};
+  data.forEach(s => { map[s.signal_type] = s; });
+
+  grid.innerHTML = Object.entries(SIGNAL_LABELS).map(([type, label]) => {
+    const s = map[type];
+    const isPriority = s?.is_priority;
+    return `<div class="signal-card ${isPriority ? 'priority' : ''}">
+      <div class="signal-name">${label}${isPriority ? ' <span class="priority-badge"><span class="priority-dot"></span>Priority</span>' : ''}</div>
+      ${s ? `
+        <div style="margin-bottom:0.75rem;">
+          <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">1-Year Goal</div>
+          <div class="signal-goal">${escHtml(s.goal || '—')}</div>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+          <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Current State</div>
+          <div class="signal-goal">${escHtml(s.current_state || '—')}</div>
+        </div>
+        <div>
+          <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Next Step</div>
+          <div class="signal-goal">${escHtml(s.next_step || '—')}</div>
+        </div>
+      ` : '<div class="signal-meta">Not yet completed</div>'}
+    </div>`;
+  }).join('');
+}
+
+async function loadTransfer(clientId) {
+  const { data } = await db.from('knowledge_transfer').select('*').eq('client_id', clientId).single();
+  const card = document.getElementById('transferCard');
+
+  if (!data) {
+    card.innerHTML = '<div class="empty"><div class="empty-icon">🔄</div>Client has not filled in Knowledge Transfer yet.</div>';
+    return;
+  }
+
+  card.innerHTML = `
+    <div class="card-title">Knowledge Transfer</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+      <div>
+        <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Person</div>
+        <div style="font-size:0.85rem;">${escHtml(data.person_name || '—')}</div>
+      </div>
+      <div>
+        <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Their Role</div>
+        <div style="font-size:0.85rem;">${escHtml(data.person_role || '—')}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Knowledge Being Transferred</div>
+      <div style="font-size:0.85rem;line-height:1.55;">${escHtml(data.knowledge_being_transferred || '—')}</div>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">1-Year Goal</div>
+      <div style="font-size:0.85rem;line-height:1.55;">${escHtml(data.goal || '—')}</div>
+    </div>
+    <div>
+      <div style="font-size:0.65rem;color:var(--gray);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">Next Step</div>
+      <div style="font-size:0.85rem;line-height:1.55;">${escHtml(data.next_step || '—')}</div>
+    </div>
+  `;
+}
+
+async function loadFiles(clientId) {
+  const { data } = await db.from('client_files').select('*').eq('client_id', clientId).order('created_at', { ascending: false });
+  const list = document.getElementById('filesList');
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📁</div>No files shared yet.</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(f => `
+    <div class="file-item">
+      <div class="file-info">
+        <div class="file-title">${escHtml(f.title)}</div>
+        ${f.description ? `<div class="file-desc">${escHtml(f.description)}</div>` : ''}
+        <a class="file-url" href="${escHtml(f.url)}" target="_blank" rel="noopener">${escHtml(f.url)}</a>
+      </div>
+      <button class="btn btn-ghost" onclick="deleteFile('${f.id}')" style="color:#dc2626;font-size:0.72rem;">Remove</button>
+    </div>
+  `).join('');
+}
+
+async function loadNotes(clientId) {
+  const { data } = await db.from('client_notes').select('*').eq('client_id', clientId).order('created_at', { ascending: false });
+  const list = document.getElementById('notesList');
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📝</div>No notes yet.</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(n => `
+    <div class="note-item">
+      <div class="note-content">${escHtml(n.content)}</div>
+      <div class="note-meta">${n.created_by ? escHtml(n.created_by) + ' · ' : ''}${formatDate(n.created_at)}
+        <button onclick="deleteNote('${n.id}')" style="margin-left:1rem;background:none;border:none;color:#dc2626;font-size:0.7rem;cursor:pointer;">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function addFile() {
+  const title = document.getElementById('file-title').value.trim();
+  const url = document.getElementById('file-url').value.trim();
+  const desc = document.getElementById('file-desc').value.trim();
+
+  if (!title || !url) { showToast('Title and URL are required.'); return; }
+
+  const { error } = await db.from('client_files').insert({
+    client_id: currentClientId,
+    title,
+    url,
+    description: desc || null,
+    file_type: 'link'
+  });
+
+  if (error) { showToast('Error: ' + error.message); return; }
+
+  document.getElementById('file-title').value = '';
+  document.getElementById('file-url').value = '';
+  document.getElementById('file-desc').value = '';
+  showToast('File added.');
+  loadFiles(currentClientId);
+  loadOverviewStats();
+}
+
+async function deleteFile(id) {
+  if (!confirm('Remove this file?')) return;
+  await db.from('client_files').delete().eq('id', id);
+  loadFiles(currentClientId);
+  loadOverviewStats();
+}
+
+async function addNote() {
+  const content = document.getElementById('note-content').value.trim();
+  if (!content) { showToast('Note cannot be empty.'); return; }
+
+  const { data: profile } = await db.from('profiles').select('full_name').eq('id', currentUser.id).single();
+
+  const { error } = await db.from('client_notes').insert({
+    client_id: currentClientId,
+    content,
+    created_by: profile?.full_name || currentUser.email
+  });
+
+  if (error) { showToast('Error: ' + error.message); return; }
+  document.getElementById('note-content').value = '';
+  showToast('Note saved.');
+  loadNotes(currentClientId);
+}
+
+async function deleteNote(id) {
+  if (!confirm('Delete this note?')) return;
+  await db.from('client_notes').delete().eq('id', id);
+  loadNotes(currentClientId);
+}
+
+function openAddClientModal() {
+  document.getElementById('addClientModal').classList.remove('hidden');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+}
+
+async function createClient() {
+  const name = document.getElementById('nc-name').value.trim();
+  const email = document.getElementById('nc-email').value.trim();
+  const pass = document.getElementById('nc-pass').value.trim();
+  const program = document.getElementById('nc-program').value.trim();
+
+  if (!name || !email || !pass) { showToast('Name, email, and password required.'); return; }
+  if (pass.length < 6) { showToast('Password must be at least 6 characters.'); return; }
+
+  const { data, error } = await db.auth.signUp({
+    email,
+    password: pass,
+    options: { data: { full_name: name, role: 'client' } }
+  });
+
+  if (error) { showToast('Error: ' + error.message); return; }
+
+  if (data?.user) {
+    await db.from('profiles').upsert({
+      id: data.user.id,
+      full_name: name,
+      email,
+      role: 'client',
+      program: program || null
+    }, { onConflict: 'id' });
+  }
+
+  showToast(`Account created for ${name}.`);
+  closeModal('addClientModal');
+  document.getElementById('nc-name').value = '';
+  document.getElementById('nc-email').value = '';
+  document.getElementById('nc-pass').value = '';
+  document.getElementById('nc-program').value = '';
+  loadClients();
+}
+
+async function loadCodes() {
+  const { data } = await db.from('cohort_codes').select('*').order('created_at', { ascending: false });
+  const list = document.getElementById('codesList');
+  const sel = document.getElementById('cohort-msg-select');
+  if (sel) {
+    const active = (data || []).filter(c => c.active);
+    sel.innerHTML = '<option value="">— Select a cohort —</option>' +
+      active.map(c => '<option value="' + escHtml(c.code) + '">' + escHtml(c.code) + (c.program ? ' — ' + escHtml(c.program) : '') + '</option>').join('');
+  }
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🔑</div>No codes yet.</div>';
+    return;
+  }
+  list.innerHTML = `<table style="width:100%;border-collapse:collapse;">
+    <thead><tr style="border-bottom:1px solid var(--border);">
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Code</th>
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Program</th>
+      <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.7rem;color:var(--gray);font-weight:600;">Status</th>
+      <th style="padding:0.5rem 0.75rem;"></th>
+    </tr></thead>
+    <tbody>${data.map(c => `<tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.75rem;font-size:0.88rem;font-weight:700;letter-spacing:0.08em;">${escHtml(c.code)}</td>
+      <td style="padding:0.75rem;font-size:0.82rem;color:var(--gray);">${escHtml(c.program || '—')}</td>
+      <td style="padding:0.75rem;">
+        <span style="font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;background:${c.active ? '#dcfce7' : '#f3f4f6'};color:${c.active ? '#166534' : '#6b7280'};">
+          ${c.active ? 'Active' : 'Inactive'}
+        </span>
+      </td>
+      <td style="padding:0.75rem;text-align:right;display:flex;gap:0.5rem;justify-content:flex-end;">
+        <button class="btn btn-outline" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="copyCode('${escHtml(c.code)}')">Copy</button>
+        <button class="btn ${c.active ? 'btn-outline' : 'btn-primary'}" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="toggleCode('${c.id}',${!c.active})">${c.active ? 'Deactivate' : 'Reactivate'}</button>
+        <button class="btn btn-danger" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="deleteCode('${c.id}')">Delete</button>
+      </td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+async function createCode() {
+  const code = document.getElementById('new-code').value.trim().toUpperCase();
+  const program = document.getElementById('new-program').value.trim();
+  if (!code) { showToast('Enter a code first.'); return; }
+  const { error } = await db.from('cohort_codes').insert({ code, program: program || null, active: true });
+  if (error) { showToast('Error: ' + (error.message.includes('unique') ? 'That code already exists.' : error.message)); return; }
+  document.getElementById('new-code').value = '';
+  document.getElementById('new-program').value = '';
+  showToast('Code created: ' + code);
+  loadCodes();
+}
+
+async function toggleCode(id, active) {
+  const { error } = await db.from('cohort_codes').update({ active }).eq('id', id);
+  if (error) { showToast('Failed: ' + error.message, 'error'); return; }
+  loadCodes();
+}
+
+async function deleteCode(id) {
+  if (!confirm('Delete this code? Existing accounts created with it are not affected.')) return;
+  const { error } = await db.from('cohort_codes').delete().eq('id', id);
+  if (error) { showToast('Failed: ' + error.message, 'error'); return; }
+  loadCodes();
+}
+
+function copyCode(code) {
+  navigator.clipboard.writeText(code).then(() => showToast('Copied: ' + code));
+}
+
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+
+  if (name === 'overview') {
+    document.getElementById('topbarTitle').textContent = 'Admin Dashboard';
+    document.querySelectorAll('.client-link').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelector('.nav-item').classList.add('active');
+  }
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+
+  if (currentClientId) {
+    if (name === 'signals') loadSignals(currentClientId);
+    if (name === 'transfer') loadTransfer(currentClientId);
+    if (name === 'files') loadFiles(currentClientId);
+    if (name === 'notes') loadNotes(currentClientId);
+    if (name === 'sessions') loadAdminSessions(currentClientId);
+  }
+}
+
+async function loadAdminSessions(clientId) {
+  const { data } = await db.from('sessions').select('*').eq('client_id', clientId).order('session_date', { ascending: true });
+  const list = document.getElementById('adminSessionsList');
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📅</div>No sessions yet.</div>';
+    return;
+  }
+  list.innerHTML = data.map(s => {
+    const dateStr = s.session_date
+      ? new Date(s.session_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      : 'No date';
+    const sessionLabel = s.session_number && s.total_sessions
+      ? `Session ${s.session_number} of ${s.total_sessions}`
+      : s.session_number ? `Session ${s.session_number}` : 'Session';
+    return `<div style="padding:1rem;border:1px solid var(--border);border-left:3px solid ${s.completed ? '#16a34a' : 'var(--orange)'};margin-bottom:0.75rem;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+        <div style="flex:1;">
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);margin-bottom:0.25rem;">${escHtml(sessionLabel)} · ${escHtml(dateStr)}</div>
+          <div style="font-size:0.9rem;font-weight:600;margin-bottom:${s.notes ? '0.4rem' : '0'};">${escHtml(s.title || 'Coaching Session')}</div>
+          ${s.notes ? `<div style="font-size:0.82rem;color:var(--gray);line-height:1.5;white-space:pre-wrap;">${escHtml(s.notes)}</div>` : ''}
+          ${s.completed ? '<div style="margin-top:0.4rem;font-size:0.65rem;font-weight:700;color:#16a34a;letter-spacing:0.1em;text-transform:uppercase;">Completed</div>' : ''}
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-shrink:0;">
+          ${!s.completed ? `<button class="btn btn-outline" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="markSessionComplete('${s.id}')">Mark Complete</button>` : ''}
+          <button class="btn btn-danger" style="font-size:0.68rem;padding:0.3rem 0.75rem;" onclick="deleteSession('${s.id}')">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function addSession() {
+  const title = document.getElementById('sess-title').value.trim();
+  const date = document.getElementById('sess-date').value;
+  const number = parseInt(document.getElementById('sess-number').value) || null;
+  const total = parseInt(document.getElementById('sess-total').value) || 12;
+  const notes = document.getElementById('sess-notes').value.trim();
+
+  if (!title) { showToast('Title is required.'); return; }
+
+  const { error } = await db.from('sessions').insert({
+    client_id: currentClientId,
+    title,
+    session_date: date || null,
+    session_number: number,
+    total_sessions: total,
+    notes: notes || null,
+    completed: false
+  });
+
+  if (error) { showToast('Error: ' + error.message); return; }
+
+  document.getElementById('sess-title').value = '';
+  document.getElementById('sess-date').value = '';
+  document.getElementById('sess-number').value = '';
+  document.getElementById('sess-total').value = '12';
+  document.getElementById('sess-notes').value = '';
+  showToast('Session added.');
+  loadAdminSessions(currentClientId);
+}
+
+async function markSessionComplete(id) {
+  const { error } = await db.from('sessions').update({ completed: true }).eq('id', id);
+  if (error) { showToast('Error: ' + error.message); return; }
+  showToast('Session marked complete.');
+  loadAdminSessions(currentClientId);
+}
+
+async function deleteSession(id) {
+  if (!confirm('Delete this session?')) return;
+  await db.from('sessions').delete().eq('id', id);
+  showToast('Session deleted.');
+  loadAdminSessions(currentClientId);
+}
+
+async function sendCohortMessage() {
+  const code = document.getElementById('cohort-msg-select').value.trim();
+  const message = document.getElementById('cohort-msg-text').value.trim();
+  if (!code) { showToast('Select a cohort first.'); return; }
+  if (!message) { showToast('Message cannot be empty.'); return; }
+
+  const { data: clients } = await db.from('profiles').select('id').eq('cohort', code).eq('role', 'client');
+  if (!clients || clients.length === 0) { showToast('No clients found in that cohort.'); return; }
+
+  const rows = clients.map(c => ({ client_id: c.id, content: message, created_by: 'Your Coach' }));
+  const { error } = await db.from('client_notes').insert(rows);
+  if (error) { showToast('Error: ' + error.message); return; }
+
+  document.getElementById('cohort-msg-text').value = '';
+  showToast('Message sent to ' + clients.length + ' client' + (clients.length !== 1 ? 's' : '') + '.');
+}
+
+function fillSessionTemplate(type) {
+  const templates = {
+    kickoff: {
+      title: 'Kickoff Session',
+      notes: 'Introductions, goal-setting, program overview, and establishing our coaching agreement.'
+    },
+    midprogram: {
+      title: 'Mid-Program Check-in',
+      notes: 'Progress review, obstacles check, re-alignment on 90-day goals.'
+    },
+    closing: {
+      title: 'Closing Session',
+      notes: 'Final reflection, wins celebration, 90-day action plan, next steps beyond the program.'
+    }
+  };
+  const t = templates[type];
+  if (!t) return;
+  document.getElementById('sess-title').value = t.title;
+  document.getElementById('sess-notes').value = t.notes;
+}
+
+async function signOut() {
+  await db.auth.signOut();
+  window.location.href = 'portal.html';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+init();
+</script>
+</body>
+</html>

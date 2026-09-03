@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign In — Elevare</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.2/dist/umd/supabase.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; }
+  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--black); }
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+
+  .card { background: var(--white); width: 100%; max-width: 420px; padding: 3rem; border-top: 3px solid var(--orange); }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--black); display: block; margin-bottom: 0.35rem; }
+  .logo em { color: var(--orange); font-style: normal; }
+  .portal-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); display: block; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; margin-bottom: 1.75rem; border-bottom: 1px solid var(--border); }
+  .tab { flex: 1; text-align: center; padding: 0.6rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--gray); transition: all 0.15s; background: none; border-left: none; border-right: none; border-top: none; font-family: 'Inter', sans-serif; }
+  .tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  label { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 0.45rem; margin-top: 1rem; }
+  label:first-of-type { margin-top: 0; }
+  input[type="email"], input[type="password"], input[type="text"] {
+    width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--border);
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--black);
+    background: #fafafa; outline: none; transition: border-color 0.15s; margin-bottom: 0;
+  }
+  input:focus { border-color: var(--orange); background: var(--white); }
+  .btn {
+    width: 100%; padding: 0.9rem; background: var(--orange); color: var(--white); border: none;
+    font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-top: 1.25rem;
+  }
+  .btn:hover { background: #a34716; }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .err { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 0.75rem 1rem; font-size: 0.82rem; margin-bottom: 1rem; display: none; }
+  .success-msg { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 0.75rem 1rem; font-size: 0.82rem; margin-bottom: 1rem; display: none; }
+  .info { font-size: 0.72rem; color: var(--gray); margin-top: 0.75rem; line-height: 1.5; }
+  .back { display: block; text-align: center; margin-top: 1.75rem; font-size: 0.75rem; color: var(--gray); text-decoration: none; }
+  .back:hover { color: var(--orange); }
+  .forgot { text-align: right; margin-top: 0.4rem; margin-bottom: 0.75rem; }
+  .forgot a { font-size: 0.72rem; color: var(--gray); text-decoration: none; }
+  .forgot a:hover { color: var(--orange); }
+  #resetView { display: none; }
+  .code-hint { font-size: 0.7rem; color: var(--gray); margin-top: 0.35rem; }
+</style>
+</head>
+<body>
+<div class="card">
+  <a href="index.html" class="logo"><em>E</em>LEVARE</a>
+  <span class="portal-label">Leadership Portal</span>
+
+  <!-- Main views: Sign In / Join -->
+  <div id="mainView">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab" onclick="switchTab('signup')">Join with a Code</button>
+    </div>
+
+    <!-- Sign In -->
+    <div class="tab-panel active" id="tab-login">
+      <div class="err" id="loginErr"></div>
+      <form id="loginForm">
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail" placeholder="you@company.com" required>
+        <label for="loginPass">Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••" required>
+        <div class="forgot"><a href="#" id="forgotLink">Forgot password?</a></div>
+        <button type="submit" class="btn" id="loginBtn">Sign In →</button>
+      </form>
+    </div>
+
+    <!-- Join with Code -->
+    <div class="tab-panel" id="tab-signup">
+      <div class="err" id="signupErr"></div>
+      <div class="success-msg" id="signupSuccess"></div>
+      <form id="signupForm">
+        <label for="signupName">Full Name</label>
+        <input type="text" id="signupName" placeholder="Jane Smith" required>
+        <label for="signupEmail">Email Address</label>
+        <input type="email" id="signupEmail" placeholder="you@company.com" required>
+        <label for="signupPass">Create Password</label>
+        <input type="password" id="signupPass" placeholder="At least 6 characters" required>
+        <label for="signupCode">Access Code</label>
+        <input type="text" id="signupCode" placeholder="e.g. FALL2025" style="text-transform:uppercase;" required>
+        <div class="code-hint">Your access code was provided by your coach or program coordinator.</div>
+        <button type="submit" class="btn" id="signupBtn">Create My Account →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Forgot Password view -->
+  <div id="resetView">
+    <div class="success-msg" id="resetSuccess"></div>
+    <div class="err" id="resetErr"></div>
+    <form id="resetForm">
+      <label for="resetEmail">Email Address</label>
+      <input type="email" id="resetEmail" placeholder="you@company.com" required>
+      <button type="submit" class="btn" id="resetBtn">Send Reset Link →</button>
+    </form>
+    <a href="#" id="backToLogin" class="back">← Back to sign in</a>
+  </div>
+
+  <a href="index.html" class="back" id="siteBack">← Back to Elevare Website</a>
+</div>
+
+<script>
+const { createClient } = supabase
+const db = createClient('https://djjtgsdnorxgxzkfbxbj.supabase.co', 'sb_publishable_F5RpcjB3xhZjY8j_AHzODQ_8K7Nw719')
+
+db.auth.getSession().then(({ data: { session } }) => {
+  if (session) redirectByRole(session.user.id)
+})
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+  document.getElementById('tab-' + name).classList.add('active')
+  event.target.classList.add('active')
+}
+
+// ── Sign In ──
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault()
+  const btn = document.getElementById('loginBtn')
+  const err = document.getElementById('loginErr')
+  btn.disabled = true; btn.textContent = 'Signing in…'
+  err.style.display = 'none'
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email: document.getElementById('loginEmail').value.trim(),
+    password: document.getElementById('loginPass').value
+  })
+
+  if (error) {
+    err.textContent = error.message || 'Invalid email or password. Please try again.'
+    err.style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Sign In →'
+    return
+  }
+  redirectByRole(data.user.id)
+})
+
+// ── Sign Up with Code ──
+document.getElementById('signupForm').addEventListener('submit', async e => {
+  e.preventDefault()
+  const btn = document.getElementById('signupBtn')
+  const err = document.getElementById('signupErr')
+  const ok  = document.getElementById('signupSuccess')
+  btn.disabled = true; btn.textContent = 'Creating account…'
+  err.style.display = 'none'
+  ok.style.display = 'none'
+
+  const name  = document.getElementById('signupName').value.trim()
+  const email = document.getElementById('signupEmail').value.trim()
+  const pass  = document.getElementById('signupPass').value
+  const code  = document.getElementById('signupCode').value.trim().toUpperCase()
+
+  if (pass.length < 6) {
+    err.textContent = 'Password must be at least 6 characters.'
+    err.style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Create My Account →'
+    return
+  }
+
+  // Validate code
+  const { data: cohort, error: codeErr } = await db
+    .from('cohort_codes')
+    .select('*')
+    .eq('code', code)
+    .eq('active', true)
+    .single()
+
+  if (codeErr || !cohort) {
+    err.textContent = 'That access code is not valid or has been deactivated. Check with your coach.'
+    err.style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Create My Account →'
+    return
+  }
+
+  // Create auth account — pass all profile data as metadata so the
+  // handle_new_user trigger can store it even before email confirmation
+  const { data, error: signupErr } = await db.auth.signUp({
+    email,
+    password: pass,
+    options: {
+      data: {
+        full_name: name,
+        role: 'client',
+        program: cohort.program || null,
+        cohort_code: code
+      }
+    }
+  })
+
+  if (signupErr) {
+    err.textContent = signupErr.message
+    err.style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Create My Account →'
+    return
+  }
+
+  // Also attempt direct upsert — works if email confirmation is off
+  // or if the user already has a session (e.g. magic link confirmed)
+  if (data?.user?.id) {
+    const { error: upsertErr } = await db.from('profiles').upsert({
+      id: data.user.id,
+      full_name: name,
+      email,
+      role: 'client',
+      program: cohort.program || null,
+      cohort: code
+    }, { onConflict: 'id' })
+    if (upsertErr) console.warn('Profile upsert (expected if email unconfirmed):', upsertErr.message)
+  }
+
+  document.getElementById('signupForm').style.display = 'none'
+  ok.textContent = `Welcome, ${name}! Your account has been created. Check your email to confirm, then sign in.`
+  ok.style.display = 'block'
+  btn.disabled = false
+})
+
+// ── Forgot Password ──
+document.getElementById('forgotLink').addEventListener('click', e => {
+  e.preventDefault()
+  document.getElementById('mainView').style.display = 'none'
+  document.getElementById('resetView').style.display = 'block'
+  document.getElementById('siteBack').style.display = 'none'
+})
+document.getElementById('backToLogin').addEventListener('click', e => {
+  e.preventDefault()
+  document.getElementById('mainView').style.display = 'block'
+  document.getElementById('resetView').style.display = 'none'
+  document.getElementById('siteBack').style.display = 'block'
+})
+document.getElementById('resetForm').addEventListener('submit', async e => {
+  e.preventDefault()
+  const btn = document.getElementById('resetBtn')
+  btn.disabled = true; btn.textContent = 'Sending…'
+  const { error } = await db.auth.resetPasswordForEmail(
+    document.getElementById('resetEmail').value.trim(),
+    { redirectTo: window.location.origin + '/portal.html' }
+  )
+  if (error) {
+    document.getElementById('resetErr').textContent = error.message
+    document.getElementById('resetErr').style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Send Reset Link →'
+  } else {
+    document.getElementById('resetSuccess').textContent = 'Check your email for a reset link.'
+    document.getElementById('resetSuccess').style.display = 'block'
+    document.getElementById('resetForm').style.display = 'none'
+  }
+})
+
+async function redirectByRole(userId) {
+  const { data } = await db.from('profiles').select('role').eq('id', userId).single()
+  window.location.href = data?.role === 'admin' ? 'admin.html' : 'dashboard.html'
+}
+</script>
+</body>
+</html>
