@@ -3,223 +3,512 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Elevare Leadership Solutions | Executive Coaching & Organizational Development</title>
+  <title>Elevare Leadership Solutions</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --orange: #C85A1E;
-      --black:  #111111;
-      --white:  #FFFFFF;
-      --gray:   #6b7280;
-      --light:  #f5f5f5;
-      --border: #e5e7eb;
-      --serif:  'Cormorant Garamond', Georgia, serif;
-      --sans:   'Inter', system-ui, sans-serif;
+      --bg:           #09090B;
+      --surface:      #111113;
+      --card:         #1C1C1E;
+      --text:         #FFFFFF;
+      --muted:        #A1A1AA;
+      --faint:        #71717A;
+      --ultra-faint:  #52525B;
+      --light-bg:     #F9FAFB;
+      --light-card:   #FFFFFF;
+      --light-text:   #09090B;
+      --light-muted:  #6B7280;
+      --accent:       #C85A1E;
+      --accent-hover: #a34716;
+      --accent-soft:  rgba(200,90,30,0.08);
+      --accent-glow:  rgba(200,90,30,0.15);
+      --border-dark:  rgba(255,255,255,0.06);
+      --border-light: #E5E7EB;
+      --display:      'Hanken Grotesk', system-ui, sans-serif;
+      --body:         'Inter', system-ui, sans-serif;
     }
 
     html { scroll-behavior: smooth; overflow-x: hidden; }
-    body { font-family: var(--sans); background: var(--white); color: var(--black); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body {
+      font-family: var(--body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-    .container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
-    section { padding: 7rem 0; }
+    .container { max-width: 1160px; margin: 0 auto; padding-inline: 1.5rem; }
 
-    h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.1; }
-
+    /* ── EYEBROW ── */
     .eyebrow {
-      font-family: var(--sans); font-size: 0.68rem; font-weight: 600;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--gray); display: block; margin-bottom: 1.2rem;
+      font-family: var(--body);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 1rem;
     }
 
-    .btn {
-      display: inline-block; padding: 0.9rem 2.2rem;
-      font-family: var(--sans); font-size: 0.8rem; font-weight: 600;
-      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
-      border: none; cursor: pointer; transition: all 0.2s ease;
+    /* ── BUTTONS ── */
+    .btn-primary {
+      display: inline-block;
+      border-radius: 9999px;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.875rem 2rem;
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
     }
-    .btn-orange { background: var(--orange); color: var(--white); }
-    .btn-orange:hover { opacity: 0.88; }
-    .btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.5); }
-    .btn-ghost:hover { border-color: var(--white); }
-    .btn-ghost-dark { background: transparent; color: var(--black); border: 1px solid var(--border); }
-    .btn-ghost-dark:hover { border-color: var(--black); }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    .btn-outline {
+      display: inline-block;
+      border-radius: 9999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 0.875rem 2rem;
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      background: transparent;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.04); }
 
     /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(255,255,255,0.96); backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
-      transition: padding 0.3s ease, box-shadow 0.3s ease;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border-dark);
+      height: 56px;
     }
-    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
     .nav-inner {
-      max-width: 1160px; margin: 0 auto; padding: 0 2rem;
-      height: 68px; display: flex; align-items: center; justify-content: space-between;
-      transition: height 0.3s ease;
+      max-width: 1160px; margin: 0 auto;
+      padding-inline: 1.5rem;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    nav.scrolled .nav-inner { height: 56px; }
-    .nav-logo { font-family: var(--serif); font-size: 1.45rem; font-weight: 700; letter-spacing: 0.08em; color: var(--black); text-decoration: none; }
-    .nav-logo em { color: var(--orange); font-style: normal; }
-    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
-    .nav-links a { font-size: 0.82rem; font-weight: 500; color: var(--black); text-decoration: none; letter-spacing: 0.04em; opacity: 0.8; transition: opacity 0.2s; }
-    .nav-links a:hover { opacity: 1; }
-    .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
-    .nav-actions .btn { padding: 0.55rem 1.3rem; font-size: 0.75rem; }
-    .nav-actions .btn-ghost-dark { border-color: var(--border); }
+    .nav-logo {
+      font-family: var(--display);
+      font-size: 1rem; font-weight: 800;
+      letter-spacing: 0.15em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; align-items: center; gap: 1.75rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--body);
+      font-size: 13px; font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-pill {
+      display: inline-block;
+      padding: 0.375rem 1rem;
+      border-radius: 9999px;
+      background: #fff;
+      color: #000;
+      font-family: var(--body);
+      font-size: 13px; font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-pill:hover { opacity: 0.88; }
 
-    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--black); transition: all 0.3s; }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: #fff; transition: all 0.3s;
+    }
     .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
     .mobile-menu {
-      display: none; position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
-      background: var(--white); z-index: 999; padding: 3rem 2rem;
-      flex-direction: column; gap: 2rem; overflow-y: auto;
+      display: none; position: fixed;
+      top: 56px; left: 0; right: 0; bottom: 0;
+      background: var(--bg); z-index: 999;
+      padding: 2.5rem 1.5rem;
+      flex-direction: column; gap: 1.75rem; overflow-y: auto;
+      border-top: 1px solid var(--border-dark);
     }
     .mobile-menu.open { display: flex; }
-    .mobile-menu a { font-size: 1.5rem; font-family: var(--serif); font-weight: 600; color: var(--black); text-decoration: none; }
-    .mobile-menu .mobile-actions { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+    .mobile-menu a {
+      font-family: var(--display); font-size: 1.6rem; font-weight: 800;
+      color: var(--text); text-decoration: none;
+    }
+    .mobile-menu .mob-actions { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
 
     /* ── REVEAL ── */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
 
     /* ── HERO ── */
     .hero {
-      position: relative; height: 100vh; min-height: 640px;
+      position: relative;
+      padding: 9rem 1.5rem 7rem;
       display: flex; align-items: center; justify-content: center;
-      overflow: hidden; background: var(--black);
+      overflow: hidden;
+      background: var(--bg);
+      margin-top: 56px;
     }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background-image: url('jason-presenting.jpg');
-      background-size: cover; background-position: center;
-      opacity: 0.35;
+    .hero-glow {
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(200,90,30,0.2) 0%, transparent 70%);
+      filter: blur(80px);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
     }
     .hero-content {
-      position: relative; z-index: 1; text-align: center;
-      max-width: 860px; padding: 0 2rem;
+      position: relative; z-index: 1;
+      text-align: center; max-width: 820px;
     }
     .hero h1 {
-      font-size: clamp(2.8rem, 6vw, 5.5rem);
-      color: var(--white); font-weight: 700; line-height: 1.08; margin-bottom: 1.75rem;
+      font-family: var(--display);
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-wrap: balance;
+      margin-bottom: 1.5rem;
     }
-    .hero-word { color: var(--orange); }
-    .cursor { display: inline-block; width: 3px; height: 0.85em; background: var(--orange); vertical-align: middle; margin-left: 4px; animation: blink 0.9s step-end infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
     .hero p {
-      font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,0.72);
-      max-width: 580px; margin: 0 auto 2.5rem; line-height: 1.7; font-weight: 300;
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      border-top: 1px solid var(--border-dark);
+      border-bottom: 1px solid var(--border-dark);
+      padding: 2.5rem 0;
+      background: var(--bg);
+    }
+    .stats-row {
+      display: flex; gap: 0; justify-content: center;
+    }
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      padding: 0 2rem;
+      border-right: 1px solid var(--border-dark);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--display);
+      font-size: clamp(1.6rem, 3vw, 2.25rem);
+      font-weight: 900;
+      color: var(--text);
+      display: block;
+      letter-spacing: -0.02em;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--faint);
+      margin-top: 0.3rem;
+      display: block;
     }
 
-    /* ── LOGOS ── */
-    .logos { padding: 4rem 0; border-bottom: 1px solid var(--border); }
-    .logos-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); text-align: center; margin-bottom: 2rem; }
-    .ticker-wrap { overflow: hidden; }
-    .ticker {
-      display: flex; gap: 4rem; width: max-content;
-      animation: ticker 24s linear infinite;
+    /* ── PROBLEM SECTION (light) ── */
+    .problem {
+      background: var(--light-bg);
+      padding: 7rem 0;
     }
-    .ticker:hover { animation-play-state: paused; }
-    @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-    .ticker-item { display: flex; align-items: center; white-space: nowrap; }
-    .ticker-item img { height: 32px; object-fit: contain; filter: brightness(0) opacity(0.35); }
-    .ticker-item span { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.06em; color: rgba(17,17,17,0.35); text-transform: uppercase; }
-
-    /* ── PROBLEM STATEMENT ── */
-    .problem { background: var(--white); }
     .problem-quote {
-      font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.2rem);
-      font-weight: 600; line-height: 1.2; max-width: 820px;
-      margin: 0 auto 3rem; text-align: center;
+      font-family: var(--display);
+      font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--light-text);
+      max-width: 780px;
+      margin: 0 auto 3rem;
+      text-align: center;
+      text-wrap: balance;
     }
-    .problem-body { max-width: 680px; margin: 0 auto; text-align: center; }
-    .problem-body p { color: var(--gray); line-height: 1.8; margin-bottom: 1.25rem; font-size: 1.05rem; }
+    .problem-quote em { color: var(--accent); font-style: normal; }
+    .problem-body {
+      max-width: 640px; margin: 0 auto; text-align: center;
+    }
+    .problem-body p {
+      color: var(--light-muted);
+      line-height: 1.75;
+      font-size: 1.05rem;
+      margin-bottom: 1.25rem;
+    }
+    .problem-body p:last-child { margin-bottom: 0; }
 
-    /* ── CORE ── */
-    .core { background: var(--light); }
-    .core-header { text-align: center; margin-bottom: 4rem; }
-    .core-header h2 { font-size: clamp(2rem, 3.5vw, 3rem); margin-top: 0.5rem; }
-    .core-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-    .core-card { background: var(--white); padding: 3rem 2rem; text-align: center; }
-    .core-letter { font-family: var(--serif); font-size: 5rem; font-weight: 700; color: var(--orange); line-height: 1; margin-bottom: 0.5rem; }
-    .core-word { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--black); margin-bottom: 1rem; }
-    .core-desc { font-size: 0.9rem; color: var(--gray); line-height: 1.65; }
+    /* ── CORE SECTION ── */
+    .core { background: #F9FAFB; padding: 7rem 0; }
+    .core-header { text-align: center; margin-bottom: 3.5rem; }
+    .core-header h2 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--light-text);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-top: 0.5rem;
+    }
+    .core-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .core-card {
+      background: var(--light-card);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .core-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .core-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .core-card h3 {
+      font-family: var(--display);
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--light-text);
+      margin-bottom: 0.6rem;
+    }
+    .core-card p {
+      font-size: 0.9rem;
+      color: var(--light-muted);
+      line-height: 1.65;
+    }
 
-    /* ── SERVICES TEASER ── */
-    .services-teaser { background: var(--white); }
-    .services-teaser h2 { font-size: clamp(2rem, 3.5vw, 3rem); text-align: center; margin-bottom: 0.75rem; }
-    .services-teaser > .container > p { text-align: center; color: var(--gray); margin-bottom: 3.5rem; font-size: 1.05rem; }
-    .teaser-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-    .teaser-card { background: var(--light); padding: 3.5rem 3rem; }
-    .teaser-card h3 { font-size: 1.8rem; margin-bottom: 1rem; }
-    .teaser-card p { color: var(--gray); line-height: 1.7; margin-bottom: 2rem; font-size: 0.95rem; }
-    .teaser-link { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--black); text-decoration: none; border-bottom: 1px solid var(--black); padding-bottom: 2px; transition: color 0.2s; }
-    .teaser-link:hover { color: var(--orange); border-color: var(--orange); }
+    /* ── SERVICES TEASER (dark) ── */
+    .services-dark {
+      background: var(--bg);
+      padding: 7rem 0;
+    }
+    .services-dark-header { text-align: center; margin-bottom: 3.5rem; }
+    .services-dark-header h2 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-top: 0.5rem;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .service-card-dark {
+      background: var(--card);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      border: 1px solid var(--border-dark);
+    }
+    .service-tag {
+      display: inline-block;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      margin-bottom: 1.25rem;
+    }
+    .service-card-dark h3 {
+      font-family: var(--display);
+      font-size: 1.3rem; font-weight: 800;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+    .service-card-dark p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    .service-link {
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      transition: gap 0.2s;
+    }
+    .service-link:hover { gap: 0.5rem; }
 
     /* ── TESTIMONIALS ── */
-    .testimonials { background: var(--black); }
-    .testimonials .eyebrow { color: rgba(255,255,255,0.45); }
-    .testimonials h2 { font-size: clamp(2rem, 3.5vw, 3rem); color: var(--white); text-align: center; margin-bottom: 3.5rem; }
-    .quotes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-    .quote-card { background: rgba(255,255,255,0.05); padding: 3rem 2.5rem; }
-    .quote-mark { font-family: var(--serif); font-size: 4rem; color: var(--orange); line-height: 0.8; margin-bottom: 1rem; }
-    .quote-text { font-size: 1rem; color: rgba(255,255,255,0.75); line-height: 1.75; margin-bottom: 2rem; font-style: italic; font-family: var(--serif); }
-    .quote-author { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    .testimonials { background: var(--bg); padding: 7rem 0; }
+    .testimonials-header { text-align: center; margin-bottom: 3.5rem; }
+    .testimonials-header h2 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-top: 0.5rem;
+    }
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .quote-card {
+      background: var(--card);
+      border-radius: 1rem;
+      padding: 2rem 2rem 2rem;
+      border: 1px solid var(--border-dark);
+      border-left: 3px solid var(--accent);
+    }
+    .quote-text {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+    .quote-author {
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--faint);
+    }
 
-    /* ── CTA ── */
-    .cta-section { background: var(--white); text-align: center; }
-    .cta-section h2 { font-size: clamp(2rem, 4vw, 3.5rem); max-width: 680px; margin: 0 auto 2rem; }
-    .cta-section p { color: var(--gray); margin-bottom: 2.5rem; font-size: 1.05rem; }
+    /* ── CTA SECTION ── */
+    .cta-section {
+      background: var(--bg);
+      padding: 7rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-glow {
+      position: absolute;
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(200,90,30,0.15) 0%, transparent 70%);
+      filter: blur(60px);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .cta-section > .container { position: relative; z-index: 1; }
+    .cta-section h2 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      max-width: 640px;
+      margin: 0 auto 1.5rem;
+    }
+    .cta-section p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.75;
+    }
 
     /* ── FOOTER ── */
-    footer { background: var(--black); padding: 4rem 0 2rem; }
-    .footer-inner { display: flex; align-items: center; justify-content: space-between; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; gap: 2rem; }
-    .footer-logo { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; letter-spacing: 0.08em; color: var(--white); text-decoration: none; }
-    .footer-logo em { color: var(--orange); font-style: normal; }
-    .footer-nav { display: flex; gap: 2rem; list-style: none; }
-    .footer-nav a { font-size: 0.8rem; color: rgba(255,255,255,0.5); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
-    .footer-nav a:hover { color: var(--white); }
+    footer {
+      background: #111;
+      border-top: 1px solid var(--border-dark);
+      padding: 3.5rem 0 2rem;
+    }
+    .footer-inner {
+      display: flex; align-items: flex-start;
+      justify-content: space-between;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-dark);
+      flex-wrap: wrap; gap: 2rem;
+    }
+    .footer-brand {}
+    .footer-logo {
+      font-family: var(--display);
+      font-size: 0.95rem; font-weight: 800;
+      letter-spacing: 0.15em;
+      color: var(--text); text-decoration: none;
+      display: block; margin-bottom: 0.5rem;
+    }
+    .footer-tagline {
+      font-size: 0.8rem; color: var(--faint);
+    }
+    .footer-nav { display: flex; gap: 1.75rem; list-style: none; align-items: center; }
+    .footer-nav a {
+      font-size: 0.82rem; color: rgba(255,255,255,0.45);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-nav a:hover { color: var(--text); }
     .footer-social { display: flex; gap: 1.25rem; align-items: center; }
-    .footer-social a { color: rgba(255,255,255,0.45); transition: color 0.2s; }
-    .footer-social a:hover { color: var(--white); }
-    .footer-social svg { width: 18px; height: 18px; fill: currentColor; }
-    .footer-copy { margin-top: 1.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.28); text-align: center; }
+    .footer-social a { color: rgba(255,255,255,0.35); transition: color 0.2s; }
+    .footer-social a:hover { color: var(--text); }
+    .footer-social svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+    .footer-copy {
+      margin-top: 1.75rem;
+      font-size: 0.72rem;
+      color: var(--ultra-faint);
+      text-align: center;
+    }
 
+    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .core-grid { grid-template-columns: repeat(2, 1fr); }
       .quotes-grid { grid-template-columns: 1fr; }
-      .teaser-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .stats-row { flex-direction: column; gap: 1.5rem; }
+      .stat-item { border-right: none; border-bottom: 1px solid var(--border-dark); padding-block: 1rem; }
+      .stat-item:last-child { border-bottom: none; }
     }
     @media (max-width: 700px) {
-      .nav-links, .nav-actions { display: none; }
+      .nav-links, .nav-pill { display: none; }
       .hamburger { display: flex; }
-      .core-grid { grid-template-columns: 1fr 1fr; }
-      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .core-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav id="nav">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><em>E</em>LEVARE</a>
+    <a href="index.html" class="nav-logo">ELEVARE</a>
     <ul class="nav-links">
       <li><a href="services.html">Services</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <div class="nav-actions">
-      <a href="portal.html" class="btn btn-ghost-dark">Client Login</a>
-      <a href="https://calendly.com/jason-staten/discovery-call" class="btn btn-orange" target="_blank" rel="noopener">Book a Call</a>
-    </div>
+    <a href="portal.html" class="nav-pill">Sign In</a>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -230,40 +519,42 @@
   <a href="services.html">Services</a>
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
-  <div class="mobile-actions">
-    <a href="portal.html" class="btn btn-ghost-dark">Client Login</a>
-    <a href="https://calendly.com/jason-staten/discovery-call" class="btn btn-orange" target="_blank" rel="noopener">Book a Call</a>
+  <div class="mob-actions">
+    <a href="portal.html" class="btn-outline" style="text-align:center;">Sign In</a>
+    <a href="https://calendly.com/jason-staten/discovery-call" class="btn-primary" style="text-align:center;" target="_blank" rel="noopener">Book a Call</a>
   </div>
 </div>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
   <div class="hero-content">
-    <h1>Leadership that <span class="hero-word" id="typeword"></span><span class="cursor" id="cursor"></span><br>organizations forward.</h1>
+    <span class="eyebrow">Elevare Leadership Solutions</span>
+    <h1>Leadership that moves organizations forward.</h1>
     <p>Elevare works inside your organization — building the culture, clarity, and capacity that high-performing teams require.</p>
-    <a href="https://calendly.com/jason-staten/discovery-call" class="btn btn-orange" target="_blank" rel="noopener">Book a Discovery Call</a>
+    <div class="hero-actions">
+      <a href="https://calendly.com/jason-staten/discovery-call" class="btn-primary" target="_blank" rel="noopener">Book a Discovery Call</a>
+      <a href="services.html" class="btn-outline">Explore Services</a>
+    </div>
   </div>
 </section>
 
-<!-- LOGOS -->
-<div class="logos">
+<!-- STATS BAR -->
+<div class="stats-bar">
   <div class="container">
-    <p class="logos-label">Trusted by</p>
-  </div>
-  <div class="ticker-wrap">
-    <div class="ticker">
-      <div class="ticker-item"><img src="logo-dc-water.png" alt="DC Water" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">DC Water</span></div>
-      <div class="ticker-item"><img src="logo-iet.png" alt="IET Corporation" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">IET Corporation</span></div>
-      <div class="ticker-item"><img src="logo-freyssinet.webp" alt="Freyssinet" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">Freyssinet</span></div>
-      <div class="ticker-item"><img src="logo-mercy-house.png" alt="Mercy House" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">Mercy House</span></div>
-      <div class="ticker-item"><img src="logo-upci.png" alt="UPCI" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">UPCI</span></div>
-      <!-- duplicate for seamless loop -->
-      <div class="ticker-item"><img src="logo-dc-water.png" alt="DC Water" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">DC Water</span></div>
-      <div class="ticker-item"><img src="logo-iet.png" alt="IET Corporation" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">IET Corporation</span></div>
-      <div class="ticker-item"><img src="logo-freyssinet.webp" alt="Freyssinet" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">Freyssinet</span></div>
-      <div class="ticker-item"><img src="logo-mercy-house.png" alt="Mercy House" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">Mercy House</span></div>
-      <div class="ticker-item"><img src="logo-upci.png" alt="UPCI" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">UPCI</span></div>
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-num">10+ Years</span>
+        <span class="stat-label">Developing leaders at every level</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">50+ Organizations</span>
+        <span class="stat-label">Across sectors and sizes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3 Flagship Programs</span>
+        <span class="stat-label">Built around real organizational challenges</span>
+      </div>
     </div>
   </div>
 </div>
@@ -271,7 +562,7 @@
 <!-- PROBLEM STATEMENT -->
 <section class="problem">
   <div class="container">
-    <p class="problem-quote reveal">"Most leadership problems aren't skills problems. They're culture problems."</p>
+    <p class="problem-quote reveal">"Most leadership problems aren't skills problems. They're <em>culture</em> problems."</p>
     <div class="problem-body reveal">
       <p>Organizations invest in training programs and leadership seminars. Yet dysfunction persists — not because people lack capability, but because the culture they operate in makes it impossible to lead well.</p>
       <p>Elevare addresses the root, not the symptom. We work alongside executive teams to diagnose what is actually happening beneath the surface, and build the systems, language, and practices that allow culture to shift — sustainably.</p>
@@ -284,50 +575,61 @@
 <section class="core">
   <div class="container">
     <div class="core-header reveal">
-      <span class="eyebrow">The Method</span>
-      <h2>The CORE System</h2>
+      <span class="eyebrow">The CORE System</span>
+      <h2>A framework for culture that sticks.</h2>
     </div>
     <div class="core-grid">
       <div class="core-card reveal">
-        <div class="core-letter">C</div>
-        <div class="core-word">Culture</div>
-        <p class="core-desc">Define the environment where your people can do their best work — intentionally, not by default.</p>
+        <div class="core-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Culture</h3>
+        <p>Define the environment where your people can do their best work — intentionally, not by default.</p>
       </div>
       <div class="core-card reveal">
-        <div class="core-letter">O</div>
-        <div class="core-word">Ownership</div>
-        <p class="core-desc">Build leaders at every level who take full accountability and move without waiting to be told.</p>
+        <div class="core-icon">
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3>Ownership</h3>
+        <p>Build leaders at every level who take full accountability and move without waiting to be told.</p>
       </div>
       <div class="core-card reveal">
-        <div class="core-letter">R</div>
-        <div class="core-word">Results</div>
-        <p class="core-desc">Align individual performance to organizational outcomes so progress is measurable and repeatable.</p>
+        <div class="core-icon">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3>Results</h3>
+        <p>Align individual performance to organizational outcomes so progress is measurable and repeatable.</p>
       </div>
       <div class="core-card reveal">
-        <div class="core-letter">E</div>
-        <div class="core-word">Evolution</div>
-        <p class="core-desc">Institutionalize continuous growth so your culture compounds — not stagnates — over time.</p>
+        <div class="core-icon">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <h3>Evolution</h3>
+        <p>Institutionalize continuous growth so your culture compounds — not stagnates — over time.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- SERVICES TEASER -->
-<section class="services-teaser">
+<section class="services-dark">
   <div class="container">
-    <span class="eyebrow" style="text-align:center;display:block">How We Work Together</span>
-    <h2 class="reveal">Two ways to engage.</h2>
-    <p class="reveal">Whether you need embedded expertise or a singular event, Elevare meets you where the need is greatest.</p>
-    <div class="teaser-grid">
-      <div class="teaser-card reveal">
+    <div class="services-dark-header reveal">
+      <span class="eyebrow">How We Work Together</span>
+      <h2>Two ways to engage.</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card-dark reveal">
+        <span class="service-tag">Fractional Engagement</span>
         <h3>Fractional CCO</h3>
         <p>A seasoned Chief Culture Officer embedded within your leadership team on a fractional basis. Strategy, systems, and culture architecture — without the full-time overhead.</p>
-        <a href="services.html" class="teaser-link">Learn more →</a>
+        <a href="services.html" class="service-link">Learn more &#8594;</a>
       </div>
-      <div class="teaser-card reveal">
+      <div class="service-card-dark reveal">
+        <span class="service-tag">Speaking &amp; Training</span>
         <h3>Keynote &amp; Workshops</h3>
         <p>High-impact speaking engagements and facilitated workshops that move an audience from information to transformation — built around your organization's real challenges.</p>
-        <a href="services.html" class="teaser-link">Learn more →</a>
+        <a href="services.html" class="service-link">Learn more &#8594;</a>
       </div>
     </div>
   </div>
@@ -336,21 +638,20 @@
 <!-- TESTIMONIALS -->
 <section class="testimonials">
   <div class="container">
-    <span class="eyebrow" style="text-align:center;display:block">What Leaders Say</span>
-    <h2>Results that speak.</h2>
+    <div class="testimonials-header reveal">
+      <span class="eyebrow">What Leaders Say</span>
+      <h2>Results that speak.</h2>
+    </div>
     <div class="quotes-grid">
       <div class="quote-card reveal">
-        <div class="quote-mark">"</div>
         <p class="quote-text">Jason didn't just come in and deliver content — he listened first, then built something that actually fit our culture. The shift in our leadership team was visible within weeks.</p>
         <p class="quote-author">Senior Director, DC Water</p>
       </div>
       <div class="quote-card reveal">
-        <div class="quote-mark">"</div>
         <p class="quote-text">I've heard hundreds of speakers. Jason is the rare one who combines real substance with genuine relatability. Our team left motivated and equipped.</p>
         <p class="quote-author">Executive VP, IET Corporation</p>
       </div>
       <div class="quote-card reveal">
-        <div class="quote-mark">"</div>
         <p class="quote-text">The CORE framework gave us a shared language for culture that we didn't have before. It's now baked into how we hire, develop, and lead.</p>
         <p class="quote-author">CEO, Mercy House</p>
       </div>
@@ -360,10 +661,11 @@
 
 <!-- CTA -->
 <section class="cta-section">
+  <div class="cta-glow"></div>
   <div class="container">
     <h2 class="reveal">Ready to build a culture that lasts?</h2>
     <p class="reveal">Schedule a 30-minute discovery call. No pitch — just a real conversation about where you are and where you want to go.</p>
-    <a href="https://calendly.com/jason-staten/discovery-call" class="btn btn-orange reveal" target="_blank" rel="noopener">Book a Discovery Call</a>
+    <a href="https://calendly.com/jason-staten/discovery-call" class="btn-primary reveal" target="_blank" rel="noopener">Book a Discovery Call</a>
   </div>
 </section>
 
@@ -371,22 +673,22 @@
 <footer>
   <div class="container">
     <div class="footer-inner">
-      <a href="index.html" class="footer-logo"><em>E</em>LEVARE</a>
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">ELEVARE</a>
+        <p class="footer-tagline">Culture. Leadership. Growth.</p>
+      </div>
       <ul class="footer-nav">
-        <li><a href="services.html">Services</a></li>
         <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
         <li><a href="contact.html">Contact</a></li>
-        <li><a href="portal.html">Client Login</a></li>
+        <li><a href="portal.html">Sign In</a></li>
       </ul>
       <div class="footer-social">
         <a href="#" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
         </a>
         <a href="#" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </a>
-        <a href="mailto:jason@elevaresolutions.com" aria-label="Email">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
         </a>
       </div>
     </div>
@@ -395,42 +697,22 @@
 </footer>
 
 <script>
-  // Nav scroll
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
-  });
-
   // Hamburger
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.addEventListener('click', () => {
+  var hamburger = document.getElementById('hamburger');
+  var mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', function() {
     hamburger.classList.toggle('open');
     mobileMenu.classList.toggle('open');
   });
 
   // Reveal on scroll
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  var revealEls = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
   }, { threshold: 0.12 });
-  reveals.forEach(el => observer.observe(el));
-
-  // Typewriter on hero
-  const word = 'moves';
-  const el = document.getElementById('typeword');
-  const cursor = document.getElementById('cursor');
-  let i = 0;
-  function type() {
-    if (i <= word.length) {
-      el.textContent = word.slice(0, i);
-      i++;
-      setTimeout(type, 110);
-    } else {
-      cursor.style.display = 'none';
-    }
-  }
-  setTimeout(type, 800);
+  revealEls.forEach(function(el) { observer.observe(el); });
 </script>
 </body>
 </html>
