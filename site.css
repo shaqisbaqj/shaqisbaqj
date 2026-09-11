@@ -248,6 +248,11 @@ footer {
   font-family: 'Courier Prime', monospace;
   font-size: 11px; color: var(--brass); letter-spacing: 0.04em;
 }
+.footer-veteran {
+  display: block; margin-top: 6px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px; color: var(--accent); letter-spacing: 0.04em;
+}
 .footer-nav { display: flex; gap: 20px; list-style: none; align-items: center; flex-wrap: wrap; }
 .footer-nav a {
   font-family: 'Courier Prime', monospace;
