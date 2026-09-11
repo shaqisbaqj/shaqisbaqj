@@ -7,168 +7,70 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="site.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    .contact-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; align-items: start; }
+    .contact-grid .h2 { font-size: clamp(22px, 3.5vw, 28px); margin-bottom: 14px; }
+    .contact-grid .body-copy { margin-bottom: 26px; }
 
-    :root {
-      --bg:           #09090B;
-      --surface:      #111113;
-      --card:         #1C1C1E;
-      --text:         #FFFFFF;
-      --muted:        #A1A1AA;
-      --faint:        #71717A;
-      --ultra-faint:  #52525B;
-      --light-bg:     #F9FAFB;
-      --light-card:   #FFFFFF;
-      --light-text:   #09090B;
-      --light-muted:  #6B7280;
-      --accent:       #C85A1E;
-      --accent-hover: #a34716;
-      --accent-soft:  rgba(200,90,30,0.08);
-      --border-dark:  rgba(255,255,255,0.06);
-      --border-light: #E5E7EB;
-      --display:      'Hanken Grotesk', system-ui, sans-serif;
-      --body:         'Inter', system-ui, sans-serif;
+    form { border: 1px solid var(--ink); padding: 24px; background: var(--paper); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-family: 'Courier Prime', monospace; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--brass);
+      margin-bottom: 6px;
     }
-
-    html { scroll-behavior: smooth; overflow-x: hidden; }
-    body { font-family: var(--body); background: var(--bg); color: var(--text); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-    .container { max-width: 1160px; margin: 0 auto; padding-inline: 1.5rem; }
-
-    .eyebrow { font-family: var(--body); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 1rem; }
-    .eyebrow-light { color: var(--light-muted); }
-
-    .btn-primary { display: inline-block; border-radius: 9999px; background: var(--accent); color: #fff; padding: 0.875rem 2rem; font-family: var(--body); font-weight: 700; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s, transform 0.2s; }
-    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-    .btn-outline { display: inline-block; border-radius: 9999px; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.875rem 2rem; font-family: var(--body); font-weight: 600; font-size: 0.95rem; text-decoration: none; background: transparent; cursor: pointer; transition: border-color 0.2s; }
-    .btn-outline:hover { border-color: rgba(255,255,255,0.5); }
-
-    /* NAV */
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--bg); border-bottom: 1px solid var(--border-dark); height: 56px; }
-    .nav-inner { max-width: 1160px; margin: 0 auto; padding-inline: 1.5rem; height: 56px; display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo { font-family: var(--display); font-size: 1rem; font-weight: 800; letter-spacing: 0.15em; color: var(--text); text-decoration: none; }
-    .nav-links { display: flex; align-items: center; gap: 1.75rem; list-style: none; }
-    .nav-links a { font-family: var(--body); font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: #fff; }
-    .nav-pill { display: inline-block; padding: 0.375rem 1rem; border-radius: 9999px; background: #fff; color: #000; font-family: var(--body); font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
-    .nav-pill:hover { opacity: 0.88; }
-    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .hamburger span { display: block; width: 22px; height: 1.5px; background: #fff; transition: all 0.3s; }
-    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-    .mobile-menu { display: none; position: fixed; top: 56px; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 999; padding: 2.5rem 1.5rem; flex-direction: column; gap: 1.75rem; overflow-y: auto; border-top: 1px solid var(--border-dark); }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { font-family: var(--display); font-size: 1.6rem; font-weight: 800; color: var(--text); text-decoration: none; }
-    .mobile-menu .mob-actions { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
-
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
-
-    /* PAGE HERO */
-    .page-hero { background: var(--bg); padding: 7rem 1.5rem 5rem; margin-top: 56px; position: relative; overflow: hidden; }
-    .page-hero-glow { position: absolute; width: 500px; height: 300px; background: radial-gradient(ellipse, rgba(200,90,30,0.12) 0%, transparent 70%); filter: blur(60px); top: 50%; left: 30%; transform: translate(-50%, -50%); pointer-events: none; }
-    .page-hero > .container { position: relative; z-index: 1; }
-    .page-hero h1 { font-family: var(--display); font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.06; letter-spacing: -0.02em; color: var(--text); text-wrap: balance; margin-top: 0.5rem; }
-    .page-hero p { color: var(--muted); margin-top: 1.25rem; font-size: 1.05rem; max-width: 520px; line-height: 1.75; }
-
-    /* CONTACT SECTION */
-    .contact-section { background: var(--light-bg); padding: 7rem 0; }
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-
-    /* FORM SIDE */
-    .form-side h2 { font-family: var(--display); font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 900; color: var(--light-text); letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 0.75rem; margin-top: 0.5rem; }
-    .form-side > p { color: var(--light-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 2rem; }
-
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--light-text); margin-bottom: 0.45rem; }
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
+    input, select, textarea {
       width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1.5px solid var(--border-light);
-      border-radius: 0.5rem;
-      font-family: var(--body);
-      font-size: 0.95rem;
-      color: var(--light-text);
-      background: var(--light-card);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      appearance: none;
-      -webkit-appearance: none;
+      font-family: 'Inter', sans-serif; font-size: 14.5px; color: var(--ink);
+      background: #fff; border: 1px solid var(--line); border-radius: 0;
+      padding: 11px 12px; outline: none;
+      transition: border-color 0.18s;
+      -webkit-appearance: none; appearance: none;
     }
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(200,90,30,0.1);
-    }
-    .form-group textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
-    .form-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; cursor: pointer; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    textarea { min-height: 140px; resize: vertical; }
+    select { background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 36px; }
+    .btn-submit { width: 100%; margin-top: 6px; }
+    .form-note { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--brass); letter-spacing: 0.03em; margin-top: 12px; }
 
-    .btn-submit { display: inline-block; border-radius: 9999px; background: var(--accent); color: #fff; padding: 0.875rem 2.5rem; font-family: var(--body); font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; transition: background 0.2s, transform 0.2s; width: 100%; margin-top: 0.5rem; }
-    .btn-submit:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .contact-link { display: grid; grid-template-columns: 90px 1fr; gap: 14px; padding-block: 14px; border-bottom: 1px solid var(--line); align-items: baseline; }
+    .contact-link:first-of-type { border-top: 1px solid var(--line); }
+    .contact-link-label { font-family: 'Courier Prime', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brass); }
+    .contact-link a { font-size: 15px; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--accent); transition: color 0.18s; word-break: break-word; }
+    .contact-link a:hover { color: var(--accent); }
 
-    /* INFO SIDE */
-    .info-side h2 { font-family: var(--display); font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 900; color: var(--light-text); letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 0.75rem; margin-top: 0.5rem; }
-    .info-side > p { color: var(--light-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 2rem; }
+    .expect { margin-top: 36px; }
+    .expect .lbl { margin-bottom: 4px; }
+    .expect-row { display: grid; grid-template-columns: 36px 1fr; gap: 14px; padding-block: 16px; border-bottom: 1px solid var(--line); }
+    .expect-row:nth-of-type(1) { border-top: 1px solid var(--line); }
+    .expect-step { font-family: 'Courier Prime', monospace; font-size: 12px; font-weight: 700; color: var(--accent); padding-top: 3px; }
+    .expect-row h4 { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .expect-row p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
 
-    .contact-link-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
-    .contact-link-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .contact-link-icon svg { width: 18px; height: 18px; fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .contact-link-body {}
-    .contact-link-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-muted); display: block; margin-bottom: 0.2rem; }
-    .contact-link-value { font-size: 0.95rem; font-weight: 500; color: var(--light-text); text-decoration: none; }
-    .contact-link-value:hover { color: var(--accent); }
-
-    .expect-list { margin-top: 2.5rem; }
-    .expect-list h3 { font-family: var(--display); font-size: 1rem; font-weight: 800; color: var(--light-text); margin-bottom: 1.25rem; }
-    .expect-item { display: flex; gap: 1rem; padding: 1.25rem 0; border-bottom: 1px solid var(--border-light); }
-    .expect-item:first-of-type { border-top: 1px solid var(--border-light); }
-    .expect-step { font-family: var(--display); font-size: 0.8rem; font-weight: 800; color: var(--accent); width: 1.5rem; flex-shrink: 0; padding-top: 0.1rem; }
-    .expect-body h4 { font-size: 0.9rem; font-weight: 600; color: var(--light-text); margin-bottom: 0.3rem; }
-    .expect-body p { font-size: 0.85rem; color: var(--light-muted); line-height: 1.6; }
-
-    /* FOOTER */
-    footer { background: #111; border-top: 1px solid var(--border-dark); padding: 3.5rem 0 2rem; }
-    .footer-inner { display: flex; align-items: flex-start; justify-content: space-between; padding-bottom: 2rem; border-bottom: 1px solid var(--border-dark); flex-wrap: wrap; gap: 2rem; }
-    .footer-logo { font-family: var(--display); font-size: 0.95rem; font-weight: 800; letter-spacing: 0.15em; color: var(--text); text-decoration: none; display: block; margin-bottom: 0.5rem; }
-    .footer-tagline { font-size: 0.8rem; color: var(--faint); }
-    .footer-nav { display: flex; gap: 1.75rem; list-style: none; align-items: center; }
-    .footer-nav a { font-size: 0.82rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
-    .footer-nav a:hover { color: var(--text); }
-    .footer-social { display: flex; gap: 1.25rem; align-items: center; }
-    .footer-social a { color: rgba(255,255,255,0.35); transition: color 0.2s; }
-    .footer-social a:hover { color: var(--text); }
-    .footer-social svg { width: 18px; height: 18px; fill: currentColor; display: block; }
-    .footer-copy { margin-top: 1.75rem; font-size: 0.72rem; color: var(--ultra-faint); text-align: center; }
-
-    @media (max-width: 900px) {
-      .contact-grid { grid-template-columns: 1fr; gap: 3.5rem; }
-      .form-row { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 700px) {
-      .nav-links, .nav-pill { display: none; }
-      .hamburger { display: flex; }
-      .footer-inner { flex-direction: column; }
+    @media (max-width: 760px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
     }
   </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav id="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">ELEVARE</a>
-    <ul class="nav-links">
-      <li><a href="services.html">Services</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html" class="active">Contact</a></li>
-    </ul>
-    <a href="portal.html" class="nav-pill">Sign In</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="services.html">Services</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+      <a href="portal.html" class="nav-signin">Sign In &#8594;</a>
+    </div>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -180,36 +82,37 @@
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
   <div class="mob-actions">
-    <a href="portal.html" class="btn-outline" style="text-align:center;">Sign In</a>
-    <a href="https://calendly.com/jason-staten/discovery-call" class="btn-primary" style="text-align:center;" target="_blank" rel="noopener">Book a Call</a>
+    <a href="portal.html" class="btn-ghost">Sign In</a>
+    <a href="https://calendly.com/jason-staten/discovery-call" class="btn" target="_blank" rel="noopener">Book a Call</a>
   </div>
 </div>
 
 <!-- PAGE HERO -->
 <div class="page-hero">
-  <div class="page-hero-glow"></div>
-  <div class="container">
-    <span class="eyebrow">Get in Touch</span>
-    <h1 class="reveal">Start a conversation.</h1>
-    <p class="reveal">Every engagement begins here. No pitch decks, no pressure — just an honest dialogue about your organization and what it needs.</p>
+  <div class="wrap">
+    <span class="lbl">Contact</span>
+    <h1>Let's start a conversation.</h1>
+    <p>Tell us about your organization, or book a discovery call directly. Either way, you'll hear back within one business day.</p>
   </div>
 </div>
 
-<!-- CONTACT SECTION -->
-<section class="contact-section">
-  <div class="container">
+<!-- CONTACT -->
+<section>
+  <div class="wrap">
     <div class="contact-grid">
 
       <!-- FORM -->
-      <div class="form-side reveal">
-        <span class="eyebrow eyebrow-light">Send a Message</span>
-        <h2>Tell us about your organization.</h2>
-        <p>Fill out the form and we'll be in touch within one business day. Prefer to book directly? Use the Calendly link below.</p>
-        <form id="contactForm" action="https://formspree.io/f/placeholder" method="POST" novalidate>
+      <div class="reveal">
+        <span class="lbl">Send a Message</span>
+        <h2 class="h2">Tell us about your organization.</h2>
+        <div class="body-copy">
+          <p>Fill out the form and we'll be in touch within one business day. Prefer to book directly? Use the Calendly link on the right.</p>
+        </div>
+        <form id="contactForm" action="https://formspree.io/f/placeholder" method="POST">
           <div class="form-row">
             <div class="form-group">
               <label for="name">Your Name</label>
-              <input type="text" id="name" name="name" placeholder="Jason Staten" required />
+              <input type="text" id="name" name="name" placeholder="Jane Smith" required />
             </div>
             <div class="form-group">
               <label for="org">Organization</label>
@@ -224,10 +127,12 @@
             <label for="help">How can we help?</label>
             <select id="help" name="help_type">
               <option value="" disabled selected>Select a topic</option>
-              <option value="executive-coaching">Executive Coaching</option>
+              <option value="fractional-cco">Fractional CCO</option>
               <option value="keynote">Keynote Speaking</option>
               <option value="workshop">Workshop or Training</option>
-              <option value="fractional-cco">Fractional CCO</option>
+              <option value="five-voices">5 Voices for Teams</option>
+              <option value="culture-shaping">Culture Shaping Leadership Series</option>
+              <option value="executive-coaching">Executive Coaching</option>
               <option value="other">Other</option>
             </select>
           </div>
@@ -235,65 +140,52 @@
             <label for="message">Message</label>
             <textarea id="message" name="message" placeholder="Tell us a bit about your organization and what you're hoping to accomplish..." required></textarea>
           </div>
-          <button type="submit" class="btn-submit">Send Message</button>
+          <button type="submit" class="btn btn-submit">Send Message &#8594;</button>
+          <p class="form-note">No newsletters. No spam. Just a reply.</p>
         </form>
       </div>
 
       <!-- INFO -->
-      <div class="info-side reveal">
-        <span class="eyebrow eyebrow-light">Or Book Directly</span>
-        <h2>Prefer a call? Let's get one on the calendar.</h2>
-        <p>A 30-minute discovery call is the fastest way to find out whether Elevare is the right fit for your organization.</p>
-
-        <div class="contact-link-item">
-          <div class="contact-link-icon">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </div>
-          <div class="contact-link-body">
-            <span class="contact-link-label">Email</span>
-            <a href="mailto:jason@elevaresolutions.com" class="contact-link-value">jason@elevaresolutions.com</a>
-          </div>
+      <div class="reveal">
+        <span class="lbl">Or Book Directly</span>
+        <h2 class="h2">Prefer a call? Let's get one on the calendar.</h2>
+        <div class="body-copy">
+          <p>A 30-minute discovery call is the fastest way to find out whether Elevare is the right fit for your organization.</p>
+          <p><a href="https://calendly.com/jason-staten/discovery-call" class="btn" target="_blank" rel="noopener">Book a Discovery Call &#8594;</a></p>
         </div>
 
-        <div class="contact-link-item">
-          <div class="contact-link-icon">
-            <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          </div>
-          <div class="contact-link-body">
-            <span class="contact-link-label">LinkedIn</span>
-            <a href="https://linkedin.com/in/jason-staten" class="contact-link-value" target="_blank" rel="noopener">linkedin.com/in/jason-staten</a>
-          </div>
+        <div class="contact-link">
+          <span class="contact-link-label">Email</span>
+          <a href="mailto:jason@elevaresolutions.com">jason@elevaresolutions.com</a>
+        </div>
+        <div class="contact-link">
+          <span class="contact-link-label">LinkedIn</span>
+          <a href="https://linkedin.com/in/jason-staten" target="_blank" rel="noopener">linkedin.com/in/jason-staten</a>
+        </div>
+        <div class="contact-link">
+          <span class="contact-link-label">Schedule</span>
+          <a href="https://calendly.com/jason-staten/discovery-call" target="_blank" rel="noopener">Book on Calendly</a>
         </div>
 
-        <div class="contact-link-item">
-          <div class="contact-link-icon">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          </div>
-          <div class="contact-link-body">
-            <span class="contact-link-label">Schedule</span>
-            <a href="https://calendly.com/jason-staten/discovery-call" class="contact-link-value" target="_blank" rel="noopener">Book on Calendly</a>
-          </div>
-        </div>
-
-        <div class="expect-list">
-          <h3>What to expect</h3>
-          <div class="expect-item">
-            <span class="expect-step">1</span>
-            <div class="expect-body">
+        <div class="expect">
+          <span class="lbl">What to Expect</span>
+          <div class="expect-row">
+            <span class="expect-step">01</span>
+            <div>
               <h4>30-Minute Discovery Conversation</h4>
               <p>A focused, no-pressure call to understand your organization — your challenges, your goals, and the gap between where you are and where you want to be.</p>
             </div>
           </div>
-          <div class="expect-item">
-            <span class="expect-step">2</span>
-            <div class="expect-body">
+          <div class="expect-row">
+            <span class="expect-step">02</span>
+            <div>
               <h4>Custom Engagement Proposal</h4>
               <p>If there's a fit, you'll receive a tailored proposal outlining the specific engagement — scope, approach, and outcomes — built for your context.</p>
             </div>
           </div>
-          <div class="expect-item">
-            <span class="expect-step">3</span>
-            <div class="expect-body">
+          <div class="expect-row">
+            <span class="expect-step">03</span>
+            <div>
               <h4>Kickoff Within Two Weeks</h4>
               <p>Once aligned, we move quickly. Most engagements are ready to kick off within two weeks of a signed agreement.</p>
             </div>
@@ -307,11 +199,11 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="container">
+  <div class="wrap">
     <div class="footer-inner">
       <div>
         <a href="index.html" class="footer-logo">ELEVARE</a>
-        <p class="footer-tagline">Culture. Leadership. Growth.</p>
+        <span class="footer-tagline">Culture. Leadership. Growth.</span>
       </div>
       <ul class="footer-nav">
         <li><a href="about.html">About</a></li>
@@ -319,10 +211,6 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="portal.html">Sign In</a></li>
       </ul>
-      <div class="footer-social">
-        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
-        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-      </div>
     </div>
     <p class="footer-copy">&copy; 2025 Elevare Leadership Solutions. All rights reserved.</p>
   </div>
@@ -335,9 +223,12 @@
     hamburger.classList.toggle('open');
     mobileMenu.classList.toggle('open');
   });
+
   var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.12 });
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); }
+    });
+  }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
 </script>
 </body>
