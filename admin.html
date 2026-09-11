@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Admin — Elevare</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.2/dist/umd/supabase.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; --pale: #FBF0EA; --bg: #f9fafb; }
+  :root { --orange: #C85A1E; --black: #1a2118; --white: #f7f4ee; --gray: #4a5548; --border: #c5bba8; --pale: #fbf3ec; --bg: #f0ebe1; --brass: #7a5c2a; --serif: 'Fraunces', Georgia, serif; --mono: 'Courier Prime', 'Courier New', monospace; }
   html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
   .layout { display: flex; min-height: 100vh; }
@@ -131,6 +131,26 @@
     .main { margin-left: 0; }
     .content { padding: 1.25rem; }
   }
+
+  /* ── PARCHMENT THEME OVERRIDES ── */
+  .sidebar-logo a { font-family: var(--serif); letter-spacing: 0.1em; font-weight: 700; }
+  .sidebar-logo-sub, .sidebar-section, .logout-btn, .add-client-btn,
+  .card-title, label, .signal-name, .signal-meta, .priority-badge, .note-meta,
+  .file-desc, .file-url, .client-program, .tab-btn, .template-chip, .btn, .toast, .empty { font-family: var(--mono); }
+  .card-title, .signal-name, label { color: var(--brass); letter-spacing: 0.06em; }
+  .sidebar-section { color: #c9a86a; opacity: 0.7; }
+  .client-link, .nav-item { font-family: var(--mono); font-size: 0.78rem; }
+  .client-avatar { border-radius: 0; }
+  .priority-dot { border-radius: 0; }
+  .topbar { background: var(--bg); }
+  .page-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 600; }
+  .client-name { font-family: var(--serif); font-size: 1.85rem; }
+  .card-subtitle, .modal-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 600; }
+  .card, .signal-card, .file-item, .note-item, .modal, input, textarea, select, .btn, .template-chip, .toast { border-radius: 0; }
+  .file-item, .note-item { background: var(--bg); }
+  .btn-outline { border-color: var(--black); }
+  .modal-backdrop { background: rgba(26,33,24,0.72); }
+  .modal { border: 1px solid var(--black); }
 </style>
 </head>
 <body>
@@ -443,7 +463,7 @@ async function loadClients() {
           const initials = (c.full_name || c.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
           return `<tr style="border-bottom:1px solid var(--border);" onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
             <td style="padding:0.85rem 1.25rem;width:40px;">
-              <div style="width:32px;height:32px;background:rgba(200,90,30,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--orange);">${initials}</div>
+              <div style="width:32px;height:32px;background:rgba(200,90,30,0.12);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--orange);">${initials}</div>
             </td>
             <td style="padding:0.85rem 0;font-size:0.88rem;font-weight:500;">${escHtml(c.full_name || '—')}</td>
             <td style="padding:0.85rem 0;font-size:0.82rem;color:var(--gray);">${escHtml(c.email || '—')}</td>

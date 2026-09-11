@@ -5,22 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>My Portal — Elevare</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.2/dist/umd/supabase.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --orange: #C85A1E;
   --orange-soft: rgba(200,90,30,0.08);
-  --black: #111;
-  --white: #fff;
-  --warm: #faf8f5;
-  --warm-mid: #f2ede8;
-  --gray: #6b7280;
-  --gray-light: #9ca3af;
-  --border: #e8e2da;
-  --serif: 'Cormorant Garamond', Georgia, serif;
+  --black: #1a2118;
+  --white: #f7f4ee;
+  --warm: #f0ebe1;
+  --warm-mid: #e5dece;
+  --gray: #4a5548;
+  --gray-light: #7a5c2a;
+  --border: #c5bba8;
+  --serif: 'Fraunces', Georgia, serif;
   --sans: 'Inter', sans-serif;
+  --mono: 'Courier Prime', 'Courier New', monospace;
 }
 html, body { height: 100%; font-family: var(--sans); background: var(--warm); color: var(--black); -webkit-font-smoothing: antialiased; }
 .layout-wrapper { overflow-x: hidden; }
@@ -255,6 +256,39 @@ input.journal-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px r
   .content { padding: 2.5rem 2rem; }
   .overview-heading { font-size: 2.5rem; }
 }
+
+/* ── PARCHMENT THEME OVERRIDES ── */
+.sb-logo a { font-family: var(--serif); letter-spacing: 0.1em; font-weight: 700; }
+.sb-logo-sub, .sb-section, .sb-program, .logout-btn,
+.topbar-title, .topbar-date,
+.overview-eyebrow, .signal-number, .signal-tile-num, .signal-tile-goal-label,
+.journal-field-label, .kt-label, .coach-eyebrow, .note-meta, .save-note, .save-btn,
+.priority-banner-label, .priority-toggle-text, .progress-section-label, .progress-stat-label,
+.upcoming-banner-eyebrow, .upcoming-banner-link, .signal-tile-arrow, .file-desc {
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+}
+.nav-item { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.02em; }
+.sb-section { color: #c9a86a; opacity: 0.7; }
+.overview-eyebrow, .signal-number, .journal-field-label, .coach-eyebrow, .upcoming-banner-eyebrow { color: var(--gray-light); }
+.overview-heading { font-size: 2.4rem; font-weight: 600; letter-spacing: -0.01em; }
+.signal-name-lg { font-size: 2.6rem; }
+.coach-heading { font-size: 2rem; }
+.priority-banner-value { font-size: 1.4rem; }
+.signal-tile-name { font-size: 1.35rem; }
+.journal-field-prompt { font-size: 1.15rem; font-weight: 500; }
+.signal-definition { font-weight: 300; }
+.empty-state-heading { font-size: 1.15rem; }
+.signal-grid, .signal-tile, .file-card, .note-card, .empty-state, .priority-toggle,
+textarea.journal-input, input.journal-input, .progress-stats-row, .progress-stat { border-color: var(--border); border-radius: 0; }
+.signal-tile:hover { background: #fbf9f5; }
+textarea.journal-input:focus, input.journal-input:focus { box-shadow: none; border-color: var(--orange); }
+.save-btn, .priority-toggle { border-radius: 0; }
+.save-btn-primary.saved { background: var(--black); }
+.toast { border-radius: 0; font-family: var(--mono); font-size: 0.72rem; }
+.priority-banner { border-left: 3px solid var(--orange); }
+#panel-profile input, #panel-profile button { border-radius: 0; }
+@media (max-width: 768px) { .overview-heading { font-size: 1.85rem; } .signal-name-lg { font-size: 2rem; } }
 </style>
 </head>
 <body>

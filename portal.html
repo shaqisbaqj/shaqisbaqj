@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sign In — Elevare</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.2/dist/umd/supabase.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --orange: #C85A1E; --black: #111111; --white: #FFFFFF; --gray: #6b7280; --border: #e5e7eb; }
-  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--black); }
+  :root { --orange: #C85A1E; --black: #1a2118; --white: #f7f4ee; --gray: #4a5548; --border: #c5bba8; --brass: #7a5c2a; --paper: #f0ebe1; }
+  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--paper); }
   body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
 
   .card { background: var(--white); width: 100%; max-width: 420px; padding: 3rem; border-top: 3px solid var(--orange); }
@@ -50,6 +50,15 @@
   .forgot a:hover { color: var(--orange); }
   #resetView { display: none; }
   .code-hint { font-size: 0.7rem; color: var(--gray); margin-top: 0.35rem; }
+
+  /* ── PARCHMENT THEME OVERRIDES ── */
+  .card { border: 1px solid var(--black); border-top: 3px solid var(--orange); }
+  .logo { font-family: 'Fraunces', Georgia, serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.1em; }
+  .portal-label, .tab, label, .info, .back, .forgot a, .code-hint, .btn { font-family: 'Courier Prime', 'Courier New', monospace; }
+  .portal-label, label { color: var(--brass); letter-spacing: 0.06em; }
+  .btn { font-family: 'Inter', sans-serif; letter-spacing: 0.02em; text-transform: none; font-size: 0.9rem; }
+  input[type="email"], input[type="password"], input[type="text"] { background: var(--white); border-radius: 0; }
+  .err, .success-msg { border-radius: 0; }
 </style>
 </head>
 <body>
