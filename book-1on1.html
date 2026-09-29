@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a 1-on-1 Call | Elevare Leadership Solutions</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="site.css" />
+  <style>
+    .book-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: start; }
+    .book-grid .h2 { font-size: clamp(22px, 3.5vw, 28px); margin-bottom: 14px; }
+    .book-grid .body-copy { margin-bottom: 26px; }
+
+    .price-card { border: 1px solid var(--ink); padding: 28px; background: var(--paper); }
+    .price-tag { font-family: 'Fraunces', Georgia, serif; font-size: 44px; font-weight: 600; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+    .price-tag span { font-family: 'Courier Prime', monospace; font-size: 13px; color: var(--ink-soft); font-weight: 400; margin-left: 6px; }
+    .price-desc { font-size: 14px; color: var(--ink-soft); margin-bottom: 22px; line-height: 1.6; }
+    .pay-btn { width: 100%; text-align: center; font-size: 15.5px; padding: 15px 22px; }
+    .price-note { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--brass); letter-spacing: 0.03em; margin-top: 14px; text-align: center; }
+    .test-mode-flag { margin-top: 14px; padding: 10px 12px; border: 1px solid var(--accent); background: #fbf3ec; font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.03em; }
+
+    /* Success / booking state */
+    #successState { display: none; }
+    .success-banner { border-left: 3px solid var(--accent); background: var(--paper-dim); padding: 16px 20px; margin-bottom: 28px; }
+    .success-banner .lbl { margin-bottom: 4px; }
+    .success-banner p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+    .calendly-frame-wrap { border: 1px solid var(--ink); min-height: 700px; }
+    .calendly-frame-wrap iframe { width: 100%; height: 700px; border: none; display: block; }
+
+    @media (max-width: 760px) {
+      .book-grid { grid-template-columns: 1fr; gap: 36px; }
+      .calendly-frame-wrap, .calendly-frame-wrap iframe { min-height: 620px; height: 620px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">ELEVARE</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="services.html">Services</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <a href="portal.html" class="nav-signin">Sign In &#8594;</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="services.html">Services</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="mob-actions">
+    <a href="portal.html" class="btn-ghost">Sign In</a>
+    <a href="https://calendly.com/jason-staten/discovery-call" class="btn" target="_blank" rel="noopener">Book a Call</a>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="wrap">
+    <span class="lbl">1-on-1 Coaching</span>
+    <h1>Work directly with Jason.</h1>
+    <p>A focused, private 60-minute session — one-on-one, no group setting. Bring the specific challenge you're navigating and leave with a clear path forward.</p>
+  </div>
+</div>
+
+<!-- BOOKING -->
+<section>
+  <div class="wrap">
+
+    <!-- PAYMENT STATE -->
+    <div id="payState" class="book-grid">
+      <div class="reveal">
+        <span class="lbl">What's Included</span>
+        <h2 class="h2">A private session, built around you.</h2>
+        <div class="body-copy">
+          <p>This is not a discovery call — it's direct access to a full working session with Jason. Come with a real challenge: a leadership decision, a culture problem, a career crossroads, a conversation you need to prepare for.</p>
+        </div>
+        <div>
+          <div class="line-item compact"><div class="line-dash">&#8212;</div><p>60 minutes, one-on-one, video call</p></div>
+          <div class="line-item compact"><div class="line-dash">&#8212;</div><p>Direct access to Jason Staten — no substitutes</p></div>
+          <div class="line-item compact"><div class="line-dash">&#8212;</div><p>Built around the specific challenge you bring</p></div>
+          <div class="line-item compact"><div class="line-dash">&#8212;</div><p>Practical next steps you can act on immediately</p></div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="price-card">
+          <span class="lbl">Investment</span>
+          <div class="price-tag">$500<span>one-time</span></div>
+          <p class="price-desc">Pay securely by card through Stripe. Once payment is complete, you'll be brought straight back here to pick your time on Jason's calendar.</p>
+          <a href="https://buy.stripe.com/test_aFaeVc7nOdiOgV8e5d2ZO00" class="btn pay-btn">Pay &amp; Continue to Booking &#8594;</a>
+          <p class="price-note">Secure checkout powered by Stripe</p>
+          <div class="test-mode-flag" id="testModeFlag">Test mode — no real charge will be made.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS / SCHEDULING STATE -->
+    <div id="successState">
+      <div class="success-banner reveal">
+        <span class="lbl">Payment Received</span>
+        <p>Thank you — your 1-on-1 call with Jason is paid for. Pick a time below that works for you.</p>
+      </div>
+      <div class="calendly-frame-wrap reveal">
+        <iframe src="https://calendly.com/jason-staten/new-meeting?hide_gdpr_banner=1" title="Book your 1-on-1 call"></iframe>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div>
+        <a href="index.html" class="footer-logo">ELEVARE</a>
+        <span class="footer-tagline">Culture. Leadership. Growth.</span>
+        <span class="footer-veteran">Veteran Owned</span>
+      </div>
+      <ul class="footer-nav">
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="portal.html">Sign In</a></li>
+      </ul>
+    </div>
+    <p class="footer-copy">&copy; 2025 Elevare Leadership Solutions. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  var hamburger = document.getElementById('hamburger');
+  var mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', function() {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+  // Show the Calendly booking state once Stripe redirects back with ?paid=1
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('paid') === '1') {
+    document.getElementById('payState').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+    document.querySelectorAll('#successState .reveal').forEach(function(el) { el.classList.add('in'); });
+  }
+
+  // Remove the test-mode banner automatically once a live Payment Link is swapped in
+  var payLink = document.querySelector('.pay-btn').getAttribute('href');
+  if (payLink.indexOf('/test_') === -1) {
+    document.getElementById('testModeFlag').style.display = 'none';
+  }
+</script>
+</body>
+</html>
