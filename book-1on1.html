@@ -30,6 +30,15 @@
     .calendly-frame-wrap { border: 1px solid var(--ink); min-height: 700px; }
     .calendly-frame-wrap iframe { width: 100%; height: 700px; border: none; display: block; }
 
+    /* Verification states */
+    #verifyingState, #verifyFailedState { display: none; text-align: center; padding: 64px 24px; }
+    #verifyingState .lbl, #verifyFailedState .lbl { margin-bottom: 10px; }
+    #verifyingState p, #verifyFailedState p { font-size: 14px; color: var(--ink-soft); max-width: 44ch; margin: 0 auto; line-height: 1.65; }
+    .spinner { width: 28px; height: 28px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 20px; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #verifyFailedState { border: 1px solid #c0442a; background: #fbf3ec; }
+    #verifyFailedState .btn { margin-top: 18px; }
+
     @media (max-width: 760px) {
       .book-grid { grid-template-columns: 1fr; gap: 36px; }
       .calendly-frame-wrap, .calendly-frame-wrap iframe { min-height: 620px; height: 620px; }
@@ -107,11 +116,25 @@
       </div>
     </div>
 
+    <!-- VERIFYING STATE -->
+    <div id="verifyingState">
+      <div class="spinner"></div>
+      <span class="lbl">Confirming Payment</span>
+      <p>Verifying your payment with Stripe before opening the scheduler. This takes just a moment.</p>
+    </div>
+
+    <!-- VERIFICATION FAILED STATE -->
+    <div id="verifyFailedState">
+      <span class="lbl" style="color:#c0442a;">Could Not Verify Payment</span>
+      <p>We couldn't confirm a completed payment for this link. If you just paid, this may be a temporary issue — try again, or contact us and we'll get you scheduled directly.</p>
+      <a href="book-1on1.html" class="btn">Try Again &#8594;</a>
+    </div>
+
     <!-- SUCCESS / SCHEDULING STATE -->
     <div id="successState">
       <div class="success-banner reveal">
-        <span class="lbl">Payment Received</span>
-        <p>Thank you — your 1-on-1 call with Jason is paid for. Pick a time below that works for you.</p>
+        <span class="lbl">Payment Verified</span>
+        <p>Thank you — Stripe has confirmed your payment for the 1-on-1 call with Jason. Pick a time below that works for you.</p>
       </div>
       <div class="calendly-frame-wrap reveal">
         <iframe src="https://calendly.com/jason-staten/new-meeting?hide_gdpr_banner=1" title="Book your 1-on-1 call"></iframe>
@@ -156,12 +179,33 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
 
-  // Show the Calendly booking state once Stripe redirects back with ?paid=1
+  // Gate the Calendly scheduler behind a real, server-side Stripe verification.
+  // The URL only ever carries Stripe's own opaque checkout session ID — the
+  // frontend never decides "paid" on its own. A serverless function
+  // (/api/verify-session) asks Stripe directly whether that exact session
+  // completed payment for the expected amount, and only then do we reveal
+  // the booking calendar. This closes the gap where someone could otherwise
+  // type a query param into the URL to skip payment.
   var params = new URLSearchParams(window.location.search);
-  if (params.get('paid') === '1') {
-    document.getElementById('payState').style.display = 'none';
-    document.getElementById('successState').style.display = 'block';
-    document.querySelectorAll('#successState .reveal').forEach(function(el) { el.classList.add('in'); });
+  var sessionId = params.get('session_id');
+
+  function showState(id) {
+    ['payState', 'verifyingState', 'verifyFailedState', 'successState'].forEach(function(s) {
+      document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+    });
+    document.querySelectorAll('#' + id + ' .reveal').forEach(function(el) { el.classList.add('in'); });
+  }
+
+  if (sessionId) {
+    showState('verifyingState');
+    fetch('/api/verify-session?session_id=' + encodeURIComponent(sessionId))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        showState(data && data.verified ? 'successState' : 'verifyFailedState');
+      })
+      .catch(function() {
+        showState('verifyFailedState');
+      });
   }
 
   // Remove the test-mode banner automatically once a live Payment Link is swapped in
